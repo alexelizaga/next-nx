@@ -1,5 +1,7 @@
-import './global.css';
 import { ClerkProvider } from '@clerk/nextjs';
+
+import { ToastProvider } from '@/components/providers/toaster-provider';
+import './global.css';
 
 export const metadata = {
   title: 'Welcome to lms',
@@ -14,7 +16,10 @@ export default function RootLayout({
   return (
     <ClerkProvider>
       <html lang="en">
-        <body>{children}</body>
+        <body>
+          <ToastProvider />
+          {children}
+        </body>
       </html>
     </ClerkProvider>
   );
