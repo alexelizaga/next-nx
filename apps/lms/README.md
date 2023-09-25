@@ -35,3 +35,9 @@ Ver base de datos
 ```
 npx prisma studio
 ```
+
+## Script
+
+```
+node scripts/seed.ts
+```
