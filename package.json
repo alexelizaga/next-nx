@@ -6,6 +6,7 @@
   "private": true,
   "dependencies": {
     "@clerk/nextjs": "^4.23.5",
+    "@hello-pangea/dnd": "^16.3.0",
     "@hookform/resolvers": "^3.3.1",
     "@nx/next": "16.8.1",
     "@prisma/client": "^5.3.1",
