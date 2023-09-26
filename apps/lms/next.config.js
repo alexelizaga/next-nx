@@ -8,7 +8,7 @@ const { composePlugins, withNx } = require('@nx/next');
  **/
 const nextConfig = {
   images: {
-    domains: ['utfs.io']
+    domains: ['utfs.io', 'www.ionos.es']
   },
   nx: {
     // Set this to true if you would like to use SVGR

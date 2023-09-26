@@ -26,6 +26,9 @@ export const FileUpload = ({
           }}
           onUploadError={(error: Error) => {
             toast.error(`${error?.message}`);
+            onChange(
+              'https://www.ionos.es/digitalguide/fileadmin/DigitalGuide/Teaser/exif-t.jpg'
+            );
           }}
         />
       )}
@@ -36,8 +39,10 @@ export const FileUpload = ({
             onChange(res?.[0].url);
           }}
           onUploadError={(error: Error) => {
-            console.log({ error });
             toast.error(`${error?.message}`);
+            onChange(
+              'https://www.ionos.es/digitalguide/fileadmin/DigitalGuide/Teaser/exif-t.jpg'
+            );
           }}
         />
       )}
