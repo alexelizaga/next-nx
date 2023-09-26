@@ -2,12 +2,12 @@
 
 import toast from 'react-hot-toast';
 
-import { ourFileRouter } from '@/app/api/uploadthing/core';
 import { UploadButton, UploadDropzone } from '@/lib/uploadthing';
+import { uploadRouter } from '@/app/api/uploadthing/core';
 
 interface FileUploadProps {
   onChange: (url?: string) => void;
-  endpoint: keyof typeof ourFileRouter;
+  endpoint: keyof typeof uploadRouter;
   dropzone?: boolean;
 }
 
@@ -26,9 +26,6 @@ export const FileUpload = ({
           }}
           onUploadError={(error: Error) => {
             toast.error(`${error?.message}`);
-            onChange(
-              'https://www.ionos.es/digitalguide/fileadmin/DigitalGuide/Teaser/exif-t.jpg'
-            );
           }}
         />
       )}

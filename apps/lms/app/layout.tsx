@@ -4,7 +4,7 @@ import { extractRouterConfig } from 'uploadthing/server';
 
 import { ToastProvider } from '@/components/providers/toaster-provider';
 import './global.css';
-import { ourFileRouter } from './api/uploadthing/core';
+import { uploadRouter } from './api/uploadthing/core';
 
 export const metadata = {
   title: 'Welcome to lms',
@@ -20,7 +20,7 @@ export default function RootLayout({
     <ClerkProvider>
       <html lang="en">
         <body>
-          <NextSSRPlugin routerConfig={extractRouterConfig(ourFileRouter)} />
+          <NextSSRPlugin routerConfig={extractRouterConfig(uploadRouter)} />
           <ToastProvider />
           {children}
         </body>

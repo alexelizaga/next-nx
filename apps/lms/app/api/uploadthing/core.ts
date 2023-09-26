@@ -9,7 +9,7 @@ const handleAuth = () => {
   return { userId };
 };
 
-export const ourFileRouter = {
+export const uploadRouter = {
   courseImage: f({ image: { maxFileSize: '4MB', maxFileCount: 1 } })
     .middleware(() => handleAuth())
     .onUploadComplete(({ file }) => console.log('file', file)),
@@ -21,4 +21,4 @@ export const ourFileRouter = {
     .onUploadComplete(({ file }) => console.log('file', file)),
 } satisfies FileRouter;
 
-export type OurFileRouter = typeof ourFileRouter;
+export type OurFileRouter = typeof uploadRouter;

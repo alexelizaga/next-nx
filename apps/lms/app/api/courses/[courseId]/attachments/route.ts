@@ -10,11 +10,6 @@ export async function POST(
     const { userId } = auth();
     const { url } = await req.json();
 
-    console.log({
-      userId,
-      url,
-    });
-
     if (!userId) {
       return new NextResponse('Unauthorized', { status: 401 });
     }
@@ -24,10 +19,6 @@ export async function POST(
         id: params.courseId,
         userId: userId,
       },
-    });
-
-    console.log({
-      courseOwner,
     });
 
     if (!courseOwner) {
@@ -41,8 +32,6 @@ export async function POST(
         courseId: params.courseId,
       },
     });
-
-    console.log({ attachement: JSON.stringify(attachement) });
 
     return NextResponse.json(attachement);
   } catch (error) {
