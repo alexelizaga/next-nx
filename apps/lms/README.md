@@ -41,3 +41,10 @@ npx prisma studio
 ```
 node scripts/seed.ts
 ```
+
+## NVM
+
+```
+nvm list
+nvm use v18
+```

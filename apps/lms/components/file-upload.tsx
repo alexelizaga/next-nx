@@ -22,6 +22,7 @@ export const FileUpload = ({
         <UploadButton
           endpoint={endpoint}
           onClientUploadComplete={(res) => {
+            console.log({ res });
             onChange(res?.[0].url);
           }}
           onUploadError={(error: Error) => {
@@ -37,9 +38,6 @@ export const FileUpload = ({
           }}
           onUploadError={(error: Error) => {
             toast.error(`${error?.message}`);
-            onChange(
-              'https://www.ionos.es/digitalguide/fileadmin/DigitalGuide/Teaser/exif-t.jpg'
-            );
           }}
         />
       )}
