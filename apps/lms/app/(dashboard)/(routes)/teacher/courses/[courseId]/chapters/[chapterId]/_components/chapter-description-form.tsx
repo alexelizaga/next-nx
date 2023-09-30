@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { useRouter } from 'next/navigation';
 import * as z from 'zod';
 import axios from 'axios';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -15,28 +16,27 @@ import {
   FormItem,
   FormMessage
 } from '@/components/ui/form';
-
-import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
-import { useRouter } from 'next/navigation';
+import { cn } from '@/lib/utils';
+import { Chapter } from '@prisma/client';
+import { Editor } from '@/components/editor';
+import { Preview } from '@/components/preview';
 
-interface ChapterTitleFormProps {
-  initialData: {
-    title: string;
-  };
+interface ChapterDescriptionFormProps {
+  initialData: Chapter;
   courseId: string;
   chapterId: string;
 }
 
 const formSchema = z.object({
-  title: z.string().min(1)
+  description: z.string().min(1)
 });
 
-const ChapterTitleForm = ({
+const ChapterDescriptionForm = ({
   initialData,
   courseId,
   chapterId
-}: ChapterTitleFormProps) => {
+}: ChapterDescriptionFormProps) => {
   const [isEditing, setIsEditing] = useState(false);
   const router = useRouter();
 
@@ -44,7 +44,7 @@ const ChapterTitleForm = ({
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
-    defaultValues: initialData
+    defaultValues: { description: initialData.description ?? '' }
   });
 
   const { isSubmitting, isValid } = form.formState;
@@ -65,19 +65,31 @@ const ChapterTitleForm = ({
   return (
     <div className="mt-6 border bg-slate-100 rounded-md p-4">
       <div className="font-medium flex items-center justify-between">
-        Chapter title
+        Chapter description
         <Button onClick={toggleEdit} variant="ghost">
           {isEditing ? (
             <>Cancel</>
           ) : (
             <>
               <Pencil className="h-4 w-4 mr-2" />
-              Edit title
+              Edit description
             </>
           )}
         </Button>
       </div>
-      {!isEditing && <p className="text-sm mt-2">{initialData.title}</p>}
+      {!isEditing && (
+        <div
+          className={cn(
+            'text-sm mt-2',
+            !initialData.description && 'text-slate-500 italic'
+          )}
+        >
+          {!initialData.description && 'No description'}
+          {initialData.description && (
+            <Preview value={initialData.description} />
+          )}
+        </div>
+      )}
       {isEditing && (
         <Form {...form}>
           <form
@@ -86,15 +98,11 @@ const ChapterTitleForm = ({
           >
             <FormField
               control={form.control}
-              name="title"
+              name="description"
               render={({ field }) => (
                 <FormItem>
                   <FormControl>
-                    <Input
-                      disabled={isSubmitting}
-                      placeholder="e.g. 'Introduction to the course'"
-                      {...field}
-                    />
+                    <Editor {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -112,4 +120,4 @@ const ChapterTitleForm = ({
   );
 };
 
-export default ChapterTitleForm;
+export default ChapterDescriptionForm;
