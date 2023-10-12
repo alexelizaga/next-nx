@@ -5,6 +5,7 @@ import { extractRouterConfig } from 'uploadthing/server';
 import { ToastProvider } from '@/components/providers/toaster-provider';
 import './global.css';
 import { uploadRouter } from './api/uploadthing/core';
+import { ConfettiProvider } from '@/components/providers/confetti-provider';
 
 export const metadata = {
   title: 'Welcome to lms',
@@ -21,6 +22,7 @@ export default function RootLayout({
       <html lang="en">
         <body>
           <NextSSRPlugin routerConfig={extractRouterConfig(uploadRouter)} />
+          <ConfettiProvider />
           <ToastProvider />
           {children}
         </body>
