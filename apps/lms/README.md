@@ -27,7 +27,7 @@ npx prisma generate
 Publicar
 
 ```
-npx prisma push
+npx prisma db push
 ```
 
 Ver base de datos
