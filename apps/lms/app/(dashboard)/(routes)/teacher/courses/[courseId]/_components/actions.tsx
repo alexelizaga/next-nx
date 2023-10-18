@@ -8,7 +8,7 @@ import { Button } from '@/components/ui/button';
 import { ConfirmModal } from '@/components/modals/confirm-modal';
 import axios from 'axios';
 import { useRouter } from 'next/navigation';
-import { UseConfettiStore } from '@/hooks/use-confetti-store';
+import { useConfettiStore } from '@/hooks/use-confetti-store';
 
 interface ActionsProps {
   disabled: boolean;
@@ -18,7 +18,7 @@ interface ActionsProps {
 
 export const Actions = ({ disabled, courseId, isPublished }: ActionsProps) => {
   const router = useRouter();
-  const confetti = UseConfettiStore();
+  const confetti = useConfettiStore();
   const [isLoading, setIsLoading] = useState(false);
 
   const onClick = async () => {

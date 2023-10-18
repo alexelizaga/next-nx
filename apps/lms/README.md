@@ -36,13 +36,19 @@ Ver base de datos
 npx prisma studio
 ```
 
+Borrar base de datos
+
+```
+npx prisma migrate dev
+```
+
 ## Script
 
 ```
 node scripts/seed.ts
 ```
 
-## Stipr
+## Stripe
 
 In dev mode webhook simulator
 
