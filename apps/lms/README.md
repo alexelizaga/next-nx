@@ -42,6 +42,14 @@ npx prisma studio
 node scripts/seed.ts
 ```
 
+## Stipr
+
+In dev mode webhook simulator
+
+```
+stripe listen --forward-to localhost:3000/api/webhook
+```
+
 ## NVM
 
 ```
