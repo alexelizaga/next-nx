@@ -20,11 +20,11 @@ export const CoursesList = ({ items }: CoursesListProps) => {
             key={item.id}
             id={item.id}
             title={item.title}
-            imageUrl={item.imageUrl!}
-            chaptersLength={item.chapters.length!}
-            price={item.price!}
+            imageUrl={item.imageUrl || ''}
+            chaptersLength={item.chapters.length}
+            price={item.price || 0}
             progress={item.progress}
-            category={item.category.name!}
+            category={item?.category?.name || ''}
           />
         ))}
       </div>
