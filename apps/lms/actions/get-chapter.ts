@@ -1,6 +1,5 @@
 import { db } from '@/lib/db';
 import { Attachment, Chapter } from '@prisma/client';
-import { redirect } from 'next/navigation';
 
 interface GetChapterProps {
   userId: string;
