@@ -2,7 +2,9 @@
   "name": "@next-nx/source",
   "version": "0.0.0",
   "license": "MIT",
-  "scripts": {},
+  "scripts": {
+    "postinstall": "npx prisma generate --schema=./apps/lms/prisma/schema.prisma"
+  },
   "private": true,
   "dependencies": {
     "@clerk/nextjs": "^4.23.5",
