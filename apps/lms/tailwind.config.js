@@ -2,8 +2,10 @@ const { createGlobPatternsForDependencies } = require('@nx/react/tailwind');
 const { join } = require('path');
 const { fontFamily } = require('tailwindcss/defaultTheme');
 
+const { withUt } = require('uploadthing/tw');
+
 /** @type {import('tailwindcss').Config} */
-module.exports = {
+module.exports = withUt({
   darkMode: ['class'],
   content: [
     join(
@@ -81,4 +83,4 @@ module.exports = {
     }
   },
   plugins: [require('tailwindcss-animate')]
-};
+});

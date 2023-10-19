@@ -85,3 +85,9 @@ body,
     font-feature-settings: 'rlig' 1, 'calt' 1;
   }
 }
+
+.ql-container {
+  font-size: 16px !important;
+}
+
+@import '~@uploadthing/react/styles.css';
