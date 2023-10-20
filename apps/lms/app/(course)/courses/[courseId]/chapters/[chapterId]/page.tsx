@@ -10,6 +10,7 @@ import { Preview } from '@/components/preview';
 import { VideoPlayer } from './_components/video-player';
 import { CourseEnrollButton } from './_components/course-enroll-button';
 import { CourseProgressButton } from './_components/course-progress-button';
+import { YoutubePlayer } from './_components/youtube-player';
 
 const ChapterIdPage = async ({
   params
@@ -51,17 +52,35 @@ const ChapterIdPage = async ({
         />
       )}
       <div className="flex flex-col max-w-4xl mx-auto pb-20">
-        <div className="p-4">
-          <VideoPlayer
-            chapterId={params.chapterId}
-            title={chapter.title}
-            courseId={params.courseId}
-            nextChapterId={nextChapter?.id}
-            playbackId={muxData?.playbackId!}
-            isLocked={isLocked}
-            completeOnEnd={completeOnEnd!}
-          />
-        </div>
+        {chapter.youtubeUrl && (
+          <div className="p-4">
+            <YoutubePlayer
+              url={chapter.youtubeUrl}
+              completeOnEnd={completeOnEnd}
+              chapterId={params.chapterId}
+              courseId={params.courseId}
+              nextChapterId={nextChapter?.id}
+              playing={true}
+              isLocked={isLocked}
+              start={chapter.youtubeStartTime}
+              end={chapter.youtubeEndTime}
+            />
+          </div>
+        )}
+        {chapter.videoUrl && (
+          <div className="p-4">
+            <VideoPlayer
+              chapterId={params.chapterId}
+              title={chapter.title}
+              courseId={params.courseId}
+              nextChapterId={nextChapter?.id}
+              playbackId={muxData?.playbackId!}
+              isLocked={isLocked}
+              completeOnEnd={completeOnEnd!}
+            />
+          </div>
+        )}
+
         <div>
           <div className="p-4 flex flex-col md:flex-row items-center justify-between">
             <h2 className="text-2xl font-semibold mb-2">{chapter.title}</h2>

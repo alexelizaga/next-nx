@@ -60,6 +60,9 @@ model Chapter {
   title String
   description String? @db.Text
   videoUrl String? @db.Text
+  youtubeUrl String? @db.Text
+  youtubeStartTime Int?
+  youtubeEndTime Int?
   position Int
   isPublished Boolean @default(false)
   isFree Boolean @default(false)
