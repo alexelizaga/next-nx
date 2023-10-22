@@ -35,8 +35,7 @@ export async function PATCH(
     });
 
     if (
-      !chapter ||
-      !chapter.title ||
+      !chapter?.title ||
       !chapter.description ||
       !(chapter.youtubeUrl || (chapter.videoUrl && muxData))
     ) {
