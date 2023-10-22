@@ -35,11 +35,9 @@ export async function PATCH(
     });
 
     if (
-      !chapter ||
-      !muxData ||
-      !chapter.title ||
+      !chapter?.title ||
       !chapter.description ||
-      !chapter.videoUrl
+      !(chapter.youtubeUrl || (chapter.videoUrl && muxData))
     ) {
       return new NextResponse('Missing required fields', { status: 400 });
     }
