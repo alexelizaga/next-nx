@@ -12,6 +12,7 @@ import ChapterDescriptionForm from './_components/chapter-description-form';
 import ChapterAccessForm from './_components/chapter-access-form';
 import ChapterVideoForm from './_components/chapter-video-form';
 import { ChapterActions } from './_components/chapter-actions';
+import ChapterYoutubeForm from './_components/chapter-youtube-form';
 
 const ChapterIdPage = async ({
   params
@@ -34,7 +35,11 @@ const ChapterIdPage = async ({
 
   if (!chapter) return redirect('/');
 
-  const requiredFields = [chapter.title, chapter.description, chapter.videoUrl];
+  const requiredFields = [
+    chapter.title,
+    chapter.description,
+    chapter.videoUrl || chapter.youtubeUrl
+  ];
 
   const totalFields = requiredFields.length;
   const completedFields = requiredFields.filter(Boolean).length;
@@ -112,6 +117,11 @@ const ChapterIdPage = async ({
               <IconBadge icon={Video} />
               <h2 className="text-xl">Add a video</h2>
             </div>
+            <ChapterYoutubeForm
+              initialData={chapter}
+              courseId={params.courseId}
+              chapterId={params.chapterId}
+            />
             <ChapterVideoForm
               initialData={chapter}
               courseId={params.courseId}

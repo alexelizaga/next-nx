@@ -62,21 +62,22 @@ const ChapterIdPage = async ({
               nextChapterId={nextChapter?.id}
               playing={true}
               isLocked={isLocked}
-              start={chapter.youtubeStartTime}
-              end={chapter.youtubeEndTime}
+              start={chapter.youtubeStartTime ?? 0}
+              end={chapter.youtubeEndTime ?? 60}
+              controls={false}
             />
           </div>
         )}
-        {chapter.videoUrl && (
+        {chapter.videoUrl && muxData?.playbackId && (
           <div className="p-4">
             <VideoPlayer
               chapterId={params.chapterId}
               title={chapter.title}
               courseId={params.courseId}
               nextChapterId={nextChapter?.id}
-              playbackId={muxData?.playbackId!}
+              playbackId={muxData.playbackId}
               isLocked={isLocked}
-              completeOnEnd={completeOnEnd!}
+              completeOnEnd={completeOnEnd}
             />
           </div>
         )}
