@@ -14,20 +14,23 @@ const SearchInput = () => {
 
   const router = useRouter();
   const pathname = usePathname();
+  const searchParams = useSearchParams();
+  const sort = searchParams.get('sort');
 
   useEffect(() => {
     const url = qs.stringifyUrl(
       {
         url: pathname,
         query: {
-          q: debouncedValue
+          q: debouncedValue,
+          sort
         }
       },
       { skipEmptyString: true, skipNull: true }
     );
 
     router.push(url);
-  }, [debouncedValue, router, pathname]);
+  }, [debouncedValue, router, pathname, sort]);
 
   return (
     <div className="flex gap-4">
