@@ -34,7 +34,7 @@ const ProductCard = ({ title, description, email, image, price }: Product) => {
         <Image fill className="object-cover" alt={title} src={image} />
         <button
           onClick={onClick}
-          className="absolute text-orange-700 z-30 top-3 left-3 "
+          className="absolute text-orange-600 top-3 left-3 "
         >
           {isFavorite(title) ? (
             <PiHeartFill size={28} />
