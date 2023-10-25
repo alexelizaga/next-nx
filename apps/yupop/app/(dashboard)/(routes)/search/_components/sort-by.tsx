@@ -62,7 +62,7 @@ const SortBy = () => {
       </button>
 
       {isOpen && (
-        <div className="bg-white absolute top-[30px] w-full z-50 flex flex-col border rounded-lg overflow-hidden">
+        <div className="bg-white absolute top-[30px] w-full z-40 flex flex-col border rounded-lg overflow-hidden">
           {Sort.map(({ label, value }) => (
             <button
               key={value}
