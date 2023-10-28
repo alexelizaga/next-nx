@@ -1,21 +1,19 @@
 import { byPrice, byString } from '@/lib/match';
 import productsMock from '@/mock/data.json';
 import { Product } from '@/models/product';
+import { NextRequest, NextResponse } from 'next/server';
 
-type GetProducts = {
-  q?: string;
-  sort?: 'title' | 'description' | 'price' | 'email';
-  limit?: number;
-  offset?: number;
-};
-
-export const getProducts = ({
-  q,
-  sort,
-  limit = 5,
-  offset = 0,
-}: GetProducts): Product[] => {
+export async function GET(request: NextRequest) {
   let findProduct: Product[] = productsMock.items;
+
+  const q = request.nextUrl.searchParams.get('q');
+  const sort = request.nextUrl.searchParams.get('sort') as
+    | 'title'
+    | 'description'
+    | 'price'
+    | 'email';
+  const offset = request.nextUrl.searchParams.get('offset');
+  const limit = request.nextUrl.searchParams.get('limit');
 
   if (q) {
     findProduct = findProduct.filter(
@@ -39,5 +37,8 @@ export const getProducts = ({
     });
   }
 
-  return findProduct.slice(offset, limit);
-};
+  const start = parseInt(offset ?? '');
+  const end = parseInt(limit ?? '') + start;
+
+  return NextResponse.json(findProduct.slice(start, end));
+}

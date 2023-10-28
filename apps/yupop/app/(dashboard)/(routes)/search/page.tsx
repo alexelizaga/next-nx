@@ -7,6 +7,7 @@ import SortBy from './_components/sort-by';
 interface SearchPageProps {
   searchParams: {
     q: string;
+    sort: 'title' | 'description' | 'price' | 'email';
   };
 }
 
