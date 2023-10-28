@@ -2,9 +2,9 @@
 
 import { useCallback, useMemo } from 'react';
 import { usePathname, useRouter } from 'next/navigation';
+import { IconType } from 'react-icons/lib';
 
 import { cn } from '@/lib/utils';
-import { IconType } from 'react-icons/lib';
 
 interface NavbarItemProps {
   href: string;
@@ -33,11 +33,11 @@ const NavbarItem = ({ href, label, icon: Icon }: NavbarItemProps) => {
       type="button"
       onClick={onClick}
       className={cn(
-        'hover:text-orange-700 transition duration-500 ease-in-out',
+        'flex gap-2 hover:text-orange-700 transition duration-500 ease-in-out',
         isActive && 'text-orange-700'
       )}
     >
-      {Icon && <Icon size={24} />}
+      {Icon && <Icon aria-label={label} size={24} />}
       {label}
     </button>
   );

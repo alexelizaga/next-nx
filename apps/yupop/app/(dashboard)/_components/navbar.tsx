@@ -3,6 +3,7 @@
 import Image from 'next/image';
 import { LiaShoppingBagSolid } from 'react-icons/lia';
 import { IoSearchOutline } from 'react-icons/io5';
+
 import NavbarItem from './navbar-item';
 import FavoriteButton from './favorite-button';
 
