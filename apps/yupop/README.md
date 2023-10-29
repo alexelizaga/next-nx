@@ -1,6 +1,6 @@
 # Yupop
 
-Show the demo [demo](https://yupop.vercel.app/)
+See the [app](https://yupop.vercel.app/)
 
 ## Install
 
