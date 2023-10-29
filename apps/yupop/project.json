@@ -1,5 +1,5 @@
 {
-  "name": "apps/yupop",
+  "name": "yupop",
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
   "sourceRoot": "apps/yupop",
   "projectType": "application",
@@ -9,8 +9,7 @@
       "outputs": ["{options.outputPath}"],
       "defaultConfiguration": "production",
       "options": {
-        "outputPath": "dist/apps/yupop",
-        "postcssConfig": "apps/yupop/postcss.config.js"
+        "outputPath": "dist/apps/yupop"
       },
       "configurations": {
         "development": {
@@ -23,17 +22,17 @@
       "executor": "@nx/next:server",
       "defaultConfiguration": "development",
       "options": {
-        "buildTarget": "apps/yupop:build",
+        "buildTarget": "yupop:build",
         "dev": true,
-        "port": 3001
+        "port": 3000
       },
       "configurations": {
         "development": {
-          "buildTarget": "apps/yupop:build:development",
+          "buildTarget": "yupop:build:development",
           "dev": true
         },
         "production": {
-          "buildTarget": "apps/yupop:build:production",
+          "buildTarget": "yupop:build:production",
           "dev": false
         }
       }
@@ -41,14 +40,14 @@
     "export": {
       "executor": "@nx/next:export",
       "options": {
-        "buildTarget": "apps/yupop:build:production"
+        "buildTarget": "yupop:build:production"
       }
     },
     "test": {
       "executor": "@nx/jest:jest",
       "outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
       "options": {
-        "jestConfig": "apps/yupop/jest.config.ts",
+        "jestConfig": "yupop/jest.config.ts",
         "passWithNoTests": true
       },
       "configurations": {
