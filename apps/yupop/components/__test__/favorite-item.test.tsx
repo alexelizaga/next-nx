@@ -10,7 +10,7 @@ jest.mock('@/hooks/use-favorite-store', () => ({
 
 describe('Test FavoriteItem', () => {
   const title = 'Sample Title';
-  const image = 'http://sample-image.jpg';
+  const image = 'https://sample-image.jpg';
 
   test('should render the title and the image', () => {
     render(<FavoriteItem title={title} image={image} />);

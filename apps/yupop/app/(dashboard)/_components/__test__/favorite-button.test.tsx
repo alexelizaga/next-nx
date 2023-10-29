@@ -13,7 +13,7 @@ describe('Test FavoriteButton', () => {
     title: 'Sample Product',
     description: 'This is a sample product',
     email: 'sample@example.com',
-    image: 'http://sample-image.jpg',
+    image: 'https://sample-image.jpg',
     price: '19.99'
   };
 
