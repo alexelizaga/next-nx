@@ -42,13 +42,17 @@ describe('Test FavoriteModal', () => {
   test('Filter favorites correctly', () => {
     render(<FavoriteModal />);
 
-    const searchInput = screen.getByPlaceholderText('Search');
+    const searchInput: HTMLInputElement = screen.getByPlaceholderText('Search');
     act(() =>
       fireEvent.change(searchInput, { target: { value: 'Sample Product 1' } })
     );
 
-    screen.debug();
+    expect(searchInput.value).toBe('Sample Product 1');
     expect(screen.getByText(sampleProducts[0].title)).toBeTruthy();
     expect(() => screen.getByText(sampleProducts[1].title)).toThrow();
+
+    const clearBtn: HTMLButtonElement = screen.getByLabelText('modalClose');
+    act(() => clearBtn.click());
+    expect(searchInput.value).toBe('');
   });
 });

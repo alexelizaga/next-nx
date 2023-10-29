@@ -43,7 +43,7 @@ export const FavoriteModal = () => {
             value={value}
           />
 
-          <button onClick={() => setValue('')}>
+          <button aria-label="modalClose" onClick={() => setValue('')}>
             <AiOutlineClose />
           </button>
         </div>

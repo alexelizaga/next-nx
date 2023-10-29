@@ -1,7 +1,6 @@
 'use client';
 
 import Image from 'next/image';
-import { LiaShoppingBagSolid } from 'react-icons/lia';
 import { IoSearchOutline } from 'react-icons/io5';
 
 import NavbarItem from './navbar-item';
@@ -9,23 +8,15 @@ import FavoriteButton from './favorite-button';
 
 const routes1 = [
   {
-    label: 'Dashboard',
-    href: '/'
-  },
-  {
     label: 'Browse',
-    href: '/search'
+    href: '/'
   }
 ];
 
 const routes2 = [
   {
-    icon: LiaShoppingBagSolid,
-    href: '/'
-  },
-  {
     icon: IoSearchOutline,
-    href: '/search'
+    href: '/'
   }
 ];
 

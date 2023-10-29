@@ -6,14 +6,14 @@ import { NextRequest, NextResponse } from 'next/server';
 export async function GET(request: NextRequest) {
   let findProduct: Product[] = productsMock.items;
 
-  const q = request.nextUrl.searchParams.get('q');
-  const sort = request.nextUrl.searchParams.get('sort') as
+  const q = request.nextUrl?.searchParams.get('q');
+  const sort = request.nextUrl?.searchParams.get('sort') as
     | 'title'
     | 'description'
     | 'price'
     | 'email';
-  const offset = request.nextUrl.searchParams.get('offset');
-  const limit = request.nextUrl.searchParams.get('limit');
+  const offset = request.nextUrl?.searchParams.get('offset');
+  const limit = request.nextUrl?.searchParams.get('limit');
 
   if (q) {
     findProduct = findProduct.filter(
@@ -40,5 +40,5 @@ export async function GET(request: NextRequest) {
   const start = parseInt(offset ?? '');
   const end = parseInt(limit ?? '') + start;
 
-  return NextResponse.json(findProduct.slice(start, end));
+  return NextResponse?.json(findProduct.slice(start, end));
 }

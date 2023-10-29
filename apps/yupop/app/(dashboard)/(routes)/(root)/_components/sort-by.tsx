@@ -58,7 +58,11 @@ const SortBy = () => {
         className=" h-[30px] bg-orange-600 text-white px-2 w-full flex items-center justify-between tracking-wider rounded-b-md"
       >
         Sort by
-        {isOpen ? <AiOutlineCaretDown /> : <AiOutlineCaretUp />}
+        {isOpen ? (
+          <AiOutlineCaretDown aria-label="downIcon" />
+        ) : (
+          <AiOutlineCaretUp aria-label="upIcon" />
+        )}
       </button>
 
       {isOpen && (
@@ -66,6 +70,7 @@ const SortBy = () => {
           {Sort.map(({ label, value }) => (
             <button
               key={value}
+              aria-label={`${value}Btn`}
               onClick={() => onClick(value)}
               className="w-full hover:bg-orange-300 border-b py-1"
             >

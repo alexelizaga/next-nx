@@ -9,7 +9,7 @@ import NavbarItem from '../navbar-item';
 jest.mock('next/navigation', () => ({
   useRouter: jest.fn(),
   usePathname: () => ({
-    pathname: '/search',
+    pathname: '/',
     startsWith: () => true
   })
 }));
@@ -18,7 +18,7 @@ describe('Test NavbarItem', () => {
   const item = {
     label: 'Browse',
     icon: IoSearchOutline,
-    href: '/search'
+    href: '/'
   };
 
   it('should render correctly', () => {

@@ -1,12 +1,30 @@
+import { getProducts } from '@/actions/get-products';
 import ProductsList from '@/components/product-list';
-import productsMock from '@/mock/data.json';
 
-const DashboardPage = async () => {
+import Searchbar from './_components/searchbar';
+import SortBy from './_components/sort-by';
+
+interface SearchPageProps {
+  searchParams: {
+    q: string;
+    sort: 'title' | 'description' | 'price' | 'email';
+  };
+}
+
+const SearchPage = ({ searchParams }: SearchPageProps) => {
+  const products = getProducts({
+    ...searchParams
+  });
+
   return (
-    <div>
-      <ProductsList items={productsMock.items} />
-    </div>
+    <>
+      <Searchbar />
+      <div className="w-full flex justify-end px-14">
+        <SortBy />
+      </div>
+      <ProductsList items={products} />
+    </>
   );
 };
 
-export default DashboardPage;
+export default SearchPage;

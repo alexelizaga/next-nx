@@ -16,7 +16,7 @@ const SearchInput = () => {
   const pathname = usePathname();
   const searchParams = useSearchParams();
 
-  const sort = searchParams.get('sort');
+  const sort = searchParams?.get('sort');
 
   useEffect(() => {
     const url = qs.stringifyUrl(

@@ -1,6 +1,6 @@
 'use client';
 
-import { usePathname, useSearchParams } from 'next/navigation';
+import { useSearchParams } from 'next/navigation';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import axios from 'axios';
 import qs from 'query-string';
@@ -18,7 +18,6 @@ const ProductsList = ({ items }: ProductsListProps) => {
   const [products, setProducts] = useState<Product[]>(items);
   const [infiniteScroll, setInfiniteScroll] = useState(true);
 
-  const pathname = usePathname();
   const searchParams = useSearchParams();
 
   const q = searchParams.get('q');
@@ -45,7 +44,7 @@ const ProductsList = ({ items }: ProductsListProps) => {
   const loadMoreProducts = useCallback(() => {
     const url = qs.stringifyUrl(
       {
-        url: '/api' + pathname,
+        url: '/api/search',
         query: {
           q: qRef.current,
           sort: sortRef.current,
@@ -64,13 +63,13 @@ const ProductsList = ({ items }: ProductsListProps) => {
       setProducts((oldProducts) => [...oldProducts, ...data]);
     });
     offsetRef.current += 5;
-  }, [pathname]);
+  }, []);
 
   const handleScroll = useCallback(
     (e: any) => {
       if (
-        window.innerHeight + e.target.documentElement.scrollTop + 1 >=
-        e.target.documentElement.scrollHeight
+        window.innerHeight + e.target.documentElement?.scrollTop + 1 >=
+        e.target.documentElement?.scrollHeight
       ) {
         loadMoreProducts();
       }
