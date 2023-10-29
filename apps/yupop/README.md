@@ -1,7 +1,5 @@
 # Yupop
 
-See the [app](https://yupop.vercel.app/)
-
 ## Install
 
 ```
