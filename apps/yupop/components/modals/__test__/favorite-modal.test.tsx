@@ -7,14 +7,14 @@ const sampleProducts = [
     title: 'Sample Product 1',
     description: 'This is sample product 1',
     email: 'sample1@example.com',
-    image: 'http://sample1-image.jpg',
+    image: 'https://sample1-image.jpg',
     price: '19.99'
   },
   {
     title: 'Sample Product 2',
     description: 'This is sample product 2',
     email: 'sample2@example.com',
-    image: 'http://sample2-image.jpg',
+    image: 'https://sample2-image.jpg',
     price: '29.99'
   }
 ];
