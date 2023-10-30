@@ -11,7 +11,7 @@ interface SearchPageProps {
   };
 }
 
-const SearchPage = async ({ searchParams }: SearchPageProps) => {
+const SearchPage = ({ searchParams }: SearchPageProps) => {
   const products = getProducts({
     ...searchParams
   });
