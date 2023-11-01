@@ -16,18 +16,18 @@
         "name": "next"
       }
     ],
-    "types": ["jest", "node"],
     "paths": {
-      "@/amplify-lms/*": ["apps/amplify-lms/*"]
-    }
+      "@/reddit/*": ["apps/reddit/*"]
+    },
+    "types": ["jest", "node"]
   },
   "include": [
     "**/*.ts",
     "**/*.tsx",
     "**/*.js",
     "**/*.jsx",
-    "../../apps/amplify-lms/.next/types/**/*.ts",
-    "../../dist/apps/amplify-lms/.next/types/**/*.ts",
+    "../../apps/reddit/.next/types/**/*.ts",
+    "../../dist/apps/reddit/.next/types/**/*.ts",
     "next-env.d.ts"
   ],
   "exclude": [
