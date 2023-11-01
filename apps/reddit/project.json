@@ -1,41 +1,7 @@
-# NextNx
-
-## Create new next app
-
-```
-yarn nx g @nx/next:app apps/yupop
-```
-
-## Add Tailwind
-
-```
-yarn nx g @nx/next:setup-tailwind --project=apps/yupop
-```
-
-## tsconfig.json
-
-Add @ paths
-
-```
 {
-  "compilerOptions": {
-    "paths": {
-      "@/*": ["apps/lms/*"]
-    }
-  }
-
-}
-```
-
-## project.json
-
-Change references to
-
-```
-{
-  "name": "yupop",
+  "name": "reddit",
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
-  "sourceRoot": "apps/yupop",
+  "sourceRoot": "apps/reddit",
   "projectType": "application",
   "targets": {
     "build": {
@@ -43,12 +9,11 @@ Change references to
       "outputs": ["{options.outputPath}"],
       "defaultConfiguration": "production",
       "options": {
-        "outputPath": "dist/apps/yupop",
-        "postcssConfig": "apps/yupop/postcss.config.js"
+        "outputPath": "dist/apps/reddit"
       },
       "configurations": {
         "development": {
-          "outputPath": "apps/yupop"
+          "outputPath": "apps/reddit"
         },
         "production": {}
       }
@@ -57,17 +22,17 @@ Change references to
       "executor": "@nx/next:server",
       "defaultConfiguration": "development",
       "options": {
-        "buildTarget": "yupop:build",
+        "buildTarget": "reddit:build",
         "dev": true,
         "port": 3000
       },
       "configurations": {
         "development": {
-          "buildTarget": "yupop:build:development",
+          "buildTarget": "reddit:build:development",
           "dev": true
         },
         "production": {
-          "buildTarget": "yupop:build:production",
+          "buildTarget": "reddit:build:production",
           "dev": false
         }
       }
@@ -75,14 +40,14 @@ Change references to
     "export": {
       "executor": "@nx/next:export",
       "options": {
-        "buildTarget": "yupop:build:production"
+        "buildTarget": "reddit:build:production"
       }
     },
     "test": {
       "executor": "@nx/jest:jest",
       "outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
       "options": {
-        "jestConfig": "apps/yupop/jest.config.ts",
+        "jestConfig": "apps/reddit/jest.config.ts",
         "passWithNoTests": true
       },
       "configurations": {
@@ -96,10 +61,9 @@ Change references to
       "executor": "@nx/linter:eslint",
       "outputs": ["{options.outputFile}"],
       "options": {
-        "lintFilePatterns": ["apps/yupop/**/*.{ts,tsx,js,jsx}"]
+        "lintFilePatterns": ["apps/reddit/**/*.{ts,tsx,js,jsx}"]
       }
     }
   },
   "tags": []
 }
-```
