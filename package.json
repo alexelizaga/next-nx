@@ -7,6 +7,8 @@
   },
   "private": true,
   "dependencies": {
+    "@aws-amplify/ui-react": "^5.3.1",
+    "@aws-amplify/ui-react-storage": "^2.3.1",
     "@clerk/nextjs": "^4.23.5",
     "@hello-pangea/dnd": "^16.3.0",
     "@hookform/resolvers": "^3.3.1",
@@ -25,6 +27,7 @@
     "@radix-ui/react-slot": "^1.0.2",
     "@tanstack/react-table": "^8.10.6",
     "@uploadthing/react": "^5.6.1",
+    "aws-amplify": "^5.3.11",
     "axios": "^1.5.0",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.0.0",

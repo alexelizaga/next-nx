@@ -1,0 +1,14 @@
+{
+  "resourceName": "s3amplifylmsstorageab38f492",
+  "bucketName": "amplify-lms-storage-ab38f492",
+  "policyUUID": "0a633e64",
+  "storageAccess": "authAndGuest",
+  "guestAccess": [
+    "READ"
+  ],
+  "authAccess": [
+    "CREATE_AND_UPDATE",
+    "READ",
+    "DELETE"
+  ]
+}

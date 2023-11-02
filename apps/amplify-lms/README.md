@@ -45,3 +45,12 @@ yarn nx run amplify-lms:build --configuration=production
 ```
 npx nx build amplify-lms --prod
 ```
+
+## Amplify
+
+[tutorial](https://www.youtube.com/watch?v=-j7XpK2UQ3w)
+
+```
+npm i @aws-amplify/cli -g
+npm i @aws-amplify/ui-react aws-amplify @aws-amplify/ui-react-storage
+```
