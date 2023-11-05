@@ -5,7 +5,7 @@
  **************************************************************************/
 
 /* eslint-disable */
-import * as React from "react";
+import * as React from 'react';
 import {
   Autocomplete,
   Badge,
@@ -18,19 +18,12 @@ import {
   SwitchField,
   Text,
   TextField,
-  useTheme,
-} from "@aws-amplify/ui-react";
-import { StorageManager } from "@aws-amplify/ui-react-storage";
-import {
-  fetchByPath,
-  getOverrideProps,
-  processFile,
-  validateField,
-} from "./utils";
-import { API } from "aws-amplify";
-import { listGenres, listPlatforms } from "../graphql/queries";
-import { createProduct } from "../graphql/mutations";
-import { Field } from "@aws-amplify/ui-react/internal";
+  useTheme
+} from '@aws-amplify/ui-react';
+import { fetchByPath, getOverrideProps, validateField } from './utils';
+import { API } from 'aws-amplify';
+import { getProduct, listGenres, listPlatforms } from '../graphql/queries';
+import { updateProduct } from '../graphql/mutations';
 function ArrayField({
   items = [],
   onChange,
@@ -44,15 +37,15 @@ function ArrayField({
   lengthLimit,
   getBadgeText,
   runValidationTasks,
-  errorMessage,
+  errorMessage
 }) {
   const labelElement = <Text>{label}</Text>;
   const {
     tokens: {
       components: {
-        fieldmessages: { error: errorStyles },
-      },
-    },
+        fieldmessages: { error: errorStyles }
+      }
+    }
   } = useTheme();
   const [selectedBadgeIndex, setSelectedBadgeIndex] = React.useState();
   const [isEditing, setIsEditing] = React.useState();
@@ -71,7 +64,7 @@ function ArrayField({
     if (
       currentFieldValue !== undefined &&
       currentFieldValue !== null &&
-      currentFieldValue !== "" &&
+      currentFieldValue !== '' &&
       !hasError
     ) {
       const newItems = [...items];
@@ -88,18 +81,17 @@ function ArrayField({
   const arraySection = (
     <React.Fragment>
       {!!items?.length && (
-        <ScrollView height="inherit" width="inherit" maxHeight={"7rem"}>
+        <ScrollView height="inherit" width="inherit" maxHeight={'7rem'}>
           {items.map((value, index) => {
             return (
               <Badge
                 key={index}
                 style={{
-                  cursor: "pointer",
-                  alignItems: "center",
+                  cursor: 'pointer',
+                  alignItems: 'center',
                   marginRight: 3,
                   marginTop: 3,
-                  backgroundColor:
-                    index === selectedBadgeIndex ? "#B8CEF9" : "",
+                  backgroundColor: index === selectedBadgeIndex ? '#B8CEF9' : ''
                 }}
                 onClick={() => {
                   setSelectedBadgeIndex(index);
@@ -110,17 +102,17 @@ function ArrayField({
                 {getBadgeText ? getBadgeText(value) : value.toString()}
                 <Icon
                   style={{
-                    cursor: "pointer",
+                    cursor: 'pointer',
                     paddingLeft: 3,
                     width: 20,
-                    height: 20,
+                    height: 20
                   }}
                   viewBox={{ width: 20, height: 20 }}
                   paths={[
                     {
-                      d: "M10 10l5.09-5.09L10 10l5.09 5.09L10 10zm0 0L4.91 4.91 10 10l-5.09 5.09L10 10z",
-                      stroke: "black",
-                    },
+                      d: 'M10 10l5.09-5.09L10 10l5.09 5.09L10 10zm0 0L4.91 4.91 10 10l-5.09 5.09L10 10z',
+                      stroke: 'black'
+                    }
                   ]}
                   ariaLabel="button"
                   onClick={(event) => {
@@ -178,7 +170,7 @@ function ArrayField({
             ></Button>
           )}
           <Button size="small" variation="link" onClick={addItem}>
-            {selectedBadgeIndex !== undefined ? "Save" : "Add"}
+            {selectedBadgeIndex !== undefined ? 'Save' : 'Add'}
           </Button>
         </Flex>
       )}
@@ -186,9 +178,10 @@ function ArrayField({
     </React.Fragment>
   );
 }
-export default function ProductCreateForm(props) {
+export default function ProductUpdateForm(props) {
   const {
-    clearOnSuccess = true,
+    id: idProp,
+    product: productModelProp,
     onSuccess,
     onError,
     onSubmit,
@@ -198,12 +191,12 @@ export default function ProductCreateForm(props) {
     ...rest
   } = props;
   const initialValues = {
-    name: "",
+    name: '',
     isSold: false,
-    price: "",
-    image: undefined,
+    price: '',
+    image: '',
     Platform: undefined,
-    Genre: undefined,
+    Genre: undefined
   };
   const [name, setName] = React.useState(initialValues.name);
   const [isSold, setIsSold] = React.useState(initialValues.isSold);
@@ -218,30 +211,53 @@ export default function ProductCreateForm(props) {
   const autocompleteLength = 10;
   const [errors, setErrors] = React.useState({});
   const resetStateValues = () => {
-    setName(initialValues.name);
-    setIsSold(initialValues.isSold);
-    setPrice(initialValues.price);
-    setImage(initialValues.image);
-    setPlatform(initialValues.Platform);
+    const cleanValues = productRecord
+      ? { ...initialValues, ...productRecord, Platform, Genre }
+      : initialValues;
+    setName(cleanValues.name);
+    setIsSold(cleanValues.isSold);
+    setPrice(cleanValues.price);
+    setImage(cleanValues.image);
+    setPlatform(cleanValues.Platform);
     setCurrentPlatformValue(undefined);
-    setCurrentPlatformDisplayValue("");
-    setGenre(initialValues.Genre);
+    setCurrentPlatformDisplayValue('');
+    setGenre(cleanValues.Genre);
     setCurrentGenreValue(undefined);
-    setCurrentGenreDisplayValue("");
+    setCurrentGenreDisplayValue('');
     setErrors({});
   };
+  const [productRecord, setProductRecord] = React.useState(productModelProp);
+  React.useEffect(() => {
+    const queryData = async () => {
+      const record = idProp
+        ? (
+            await API.graphql({
+              query: getProduct.replaceAll('__typename', ''),
+              variables: { id: idProp }
+            })
+          )?.data?.getProduct
+        : productModelProp;
+      const PlatformRecord = record ? await record.Platform : undefined;
+      setPlatform(PlatformRecord);
+      const GenreRecord = record ? await record.Genre : undefined;
+      setGenre(GenreRecord);
+      setProductRecord(record);
+    };
+    queryData();
+  }, [idProp, productModelProp]);
+  React.useEffect(resetStateValues, [productRecord, Platform, Genre]);
   const [currentPlatformDisplayValue, setCurrentPlatformDisplayValue] =
-    React.useState("");
+    React.useState('');
   const [currentPlatformValue, setCurrentPlatformValue] =
     React.useState(undefined);
   const PlatformRef = React.createRef();
   const [currentGenreDisplayValue, setCurrentGenreDisplayValue] =
-    React.useState("");
+    React.useState('');
   const [currentGenreValue, setCurrentGenreValue] = React.useState(undefined);
   const GenreRef = React.createRef();
   const getIDValue = {
     Platform: (r) => JSON.stringify({ id: r?.id }),
-    Genre: (r) => JSON.stringify({ id: r?.id }),
+    Genre: (r) => JSON.stringify({ id: r?.id })
   };
   const PlatformIdSet = new Set(
     Array.isArray(Platform)
@@ -254,8 +270,8 @@ export default function ProductCreateForm(props) {
       : getIDValue.Genre?.(Genre)
   );
   const getDisplayValue = {
-    Platform: (r) => `${r?.name ? r?.name + " - " : ""}${r?.id}`,
-    Genre: (r) => `${r?.name ? r?.name + " - " : ""}${r?.id}`,
+    Platform: (r) => `${r?.name ? r?.name + ' - ' : ''}${r?.id}`,
+    Genre: (r) => `${r?.name ? r?.name + ' - ' : ''}${r?.id}`
   };
   const validations = {
     name: [],
@@ -263,7 +279,7 @@ export default function ProductCreateForm(props) {
     price: [],
     image: [],
     Platform: [],
-    Genre: [],
+    Genre: []
   };
   const runValidationTasks = async (
     fieldName,
@@ -285,21 +301,21 @@ export default function ProductCreateForm(props) {
   const fetchPlatformRecords = async (value) => {
     setPlatformLoading(true);
     const newOptions = [];
-    let newNext = "";
+    let newNext = '';
     while (newOptions.length < autocompleteLength && newNext != null) {
       const variables = {
         limit: autocompleteLength * 5,
         filter: {
-          or: [{ name: { contains: value } }, { id: { contains: value } }],
-        },
+          or: [{ name: { contains: value } }, { id: { contains: value } }]
+        }
       };
       if (newNext) {
-        variables["nextToken"] = newNext;
+        variables['nextToken'] = newNext;
       }
       const result = (
         await API.graphql({
-          query: listPlatforms.replaceAll("__typename", ""),
-          variables,
+          query: listPlatforms.replaceAll('__typename', ''),
+          variables
         })
       )?.data?.listPlatforms?.items;
       var loaded = result.filter(
@@ -314,21 +330,21 @@ export default function ProductCreateForm(props) {
   const fetchGenreRecords = async (value) => {
     setGenreLoading(true);
     const newOptions = [];
-    let newNext = "";
+    let newNext = '';
     while (newOptions.length < autocompleteLength && newNext != null) {
       const variables = {
         limit: autocompleteLength * 5,
         filter: {
-          or: [{ name: { contains: value } }, { id: { contains: value } }],
-        },
+          or: [{ name: { contains: value } }, { id: { contains: value } }]
+        }
       };
       if (newNext) {
-        variables["nextToken"] = newNext;
+        variables['nextToken'] = newNext;
       }
       const result = (
         await API.graphql({
-          query: listGenres.replaceAll("__typename", ""),
-          variables,
+          query: listGenres.replaceAll('__typename', ''),
+          variables
         })
       )?.data?.listGenres?.items;
       var loaded = result.filter(
@@ -341,8 +357,8 @@ export default function ProductCreateForm(props) {
     setGenreLoading(false);
   };
   React.useEffect(() => {
-    fetchPlatformRecords("");
-    fetchGenreRecords("");
+    fetchPlatformRecords('');
+    fetchGenreRecords('');
   }, []);
   return (
     <Grid
@@ -353,12 +369,12 @@ export default function ProductCreateForm(props) {
       onSubmit={async (event) => {
         event.preventDefault();
         let modelFields = {
-          name,
-          isSold,
-          price,
-          image,
-          Platform,
-          Genre,
+          name: name ?? null,
+          isSold: isSold ?? null,
+          price: price ?? null,
+          image: image ?? null,
+          Platform: Platform ?? null,
+          Genre: Genre ?? null
         };
         const validationResponses = await Promise.all(
           Object.keys(validations).reduce((promises, fieldName) => {
@@ -392,40 +408,38 @@ export default function ProductCreateForm(props) {
         }
         try {
           Object.entries(modelFields).forEach(([key, value]) => {
-            if (typeof value === "string" && value === "") {
+            if (typeof value === 'string' && value === '') {
               modelFields[key] = null;
             }
           });
           const modelFieldsToSave = {
-            name: modelFields.name,
-            isSold: modelFields.isSold,
-            price: modelFields.price,
-            image: modelFields.image,
-            platformID: modelFields?.Platform?.id,
-            genreID: modelFields?.Genre?.id,
+            name: modelFields.name ?? null,
+            isSold: modelFields.isSold ?? null,
+            price: modelFields.price ?? null,
+            image: modelFields.image ?? null,
+            platformID: modelFields?.Platform?.id ?? null,
+            genreID: modelFields?.Genre?.id ?? null
           };
           await API.graphql({
-            query: createProduct.replaceAll("__typename", ""),
+            query: updateProduct.replaceAll('__typename', ''),
             variables: {
               input: {
-                ...modelFieldsToSave,
-              },
-            },
+                id: productRecord.id,
+                ...modelFieldsToSave
+              }
+            }
           });
           if (onSuccess) {
             onSuccess(modelFields);
           }
-          if (clearOnSuccess) {
-            resetStateValues();
-          }
         } catch (err) {
           if (onError) {
-            const messages = err.errors.map((e) => e.message).join("\n");
+            const messages = err.errors.map((e) => e.message).join('\n');
             onError(modelFields, messages);
           }
         }
       }}
-      {...getOverrideProps(overrides, "ProductCreateForm")}
+      {...getOverrideProps(overrides, 'ProductUpdateForm')}
       {...rest}
     >
       <TextField
@@ -442,20 +456,20 @@ export default function ProductCreateForm(props) {
               price,
               image,
               Platform,
-              Genre,
+              Genre
             };
             const result = onChange(modelFields);
             value = result?.name ?? value;
           }
           if (errors.name?.hasError) {
-            runValidationTasks("name", value);
+            runValidationTasks('name', value);
           }
           setName(value);
         }}
-        onBlur={() => runValidationTasks("name", name)}
+        onBlur={() => runValidationTasks('name', name)}
         errorMessage={errors.name?.errorMessage}
         hasError={errors.name?.hasError}
-        {...getOverrideProps(overrides, "name")}
+        {...getOverrideProps(overrides, 'name')}
       ></TextField>
       <SwitchField
         label="Is sold"
@@ -471,20 +485,20 @@ export default function ProductCreateForm(props) {
               price,
               image,
               Platform,
-              Genre,
+              Genre
             };
             const result = onChange(modelFields);
             value = result?.isSold ?? value;
           }
           if (errors.isSold?.hasError) {
-            runValidationTasks("isSold", value);
+            runValidationTasks('isSold', value);
           }
           setIsSold(value);
         }}
-        onBlur={() => runValidationTasks("isSold", isSold)}
+        onBlur={() => runValidationTasks('isSold', isSold)}
         errorMessage={errors.isSold?.errorMessage}
         hasError={errors.isSold?.hasError}
-        {...getOverrideProps(overrides, "isSold")}
+        {...getOverrideProps(overrides, 'isSold')}
       ></SwitchField>
       <TextField
         label="Price"
@@ -504,74 +518,50 @@ export default function ProductCreateForm(props) {
               price: value,
               image,
               Platform,
-              Genre,
+              Genre
             };
             const result = onChange(modelFields);
             value = result?.price ?? value;
           }
           if (errors.price?.hasError) {
-            runValidationTasks("price", value);
+            runValidationTasks('price', value);
           }
           setPrice(value);
         }}
-        onBlur={() => runValidationTasks("price", price)}
+        onBlur={() => runValidationTasks('price', price)}
         errorMessage={errors.price?.errorMessage}
         hasError={errors.price?.hasError}
-        {...getOverrideProps(overrides, "price")}
+        {...getOverrideProps(overrides, 'price')}
       ></TextField>
-      <Field
-        errorMessage={errors.image?.errorMessage}
-        hasError={errors.image?.hasError}
-        label={"Image"}
+      <TextField
+        label="Image"
         isRequired={false}
         isReadOnly={false}
-      >
-        <StorageManager
-          onUploadSuccess={({ key }) => {
-            setImage((prev) => {
-              let value = key;
-              if (onChange) {
-                const modelFields = {
-                  name,
-                  isSold,
-                  price,
-                  image: value,
-                  Platform,
-                  Genre,
-                };
-                const result = onChange(modelFields);
-                value = result?.image ?? value;
-              }
-              return value;
-            });
-          }}
-          onFileRemove={({ key }) => {
-            setImage((prev) => {
-              let value = initialValues?.image;
-              if (onChange) {
-                const modelFields = {
-                  name,
-                  isSold,
-                  price,
-                  image: value,
-                  Platform,
-                  Genre,
-                };
-                const result = onChange(modelFields);
-                value = result?.image ?? value;
-              }
-              return value;
-            });
-          }}
-          processFile={processFile}
-          accessLevel={"private"}
-          acceptedFileTypes={[]}
-          isResumable={false}
-          showThumbnails={true}
-          maxFileCount={1}
-          {...getOverrideProps(overrides, "image")}
-        ></StorageManager>
-      </Field>
+        value={image}
+        onChange={(e) => {
+          let { value } = e.target;
+          if (onChange) {
+            const modelFields = {
+              name,
+              isSold,
+              price,
+              image: value,
+              Platform,
+              Genre
+            };
+            const result = onChange(modelFields);
+            value = result?.image ?? value;
+          }
+          if (errors.image?.hasError) {
+            runValidationTasks('image', value);
+          }
+          setImage(value);
+        }}
+        onBlur={() => runValidationTasks('image', image)}
+        errorMessage={errors.image?.errorMessage}
+        hasError={errors.image?.hasError}
+        {...getOverrideProps(overrides, 'image')}
+      ></TextField>
       <ArrayField
         lengthLimit={1}
         onChange={async (items) => {
@@ -583,32 +573,32 @@ export default function ProductCreateForm(props) {
               price,
               image,
               Platform: value,
-              Genre,
+              Genre
             };
             const result = onChange(modelFields);
             value = result?.Platform ?? value;
           }
           setPlatform(value);
           setCurrentPlatformValue(undefined);
-          setCurrentPlatformDisplayValue("");
+          setCurrentPlatformDisplayValue('');
         }}
         currentFieldValue={currentPlatformValue}
-        label={"Platform"}
+        label={'Platform'}
         items={Platform ? [Platform] : []}
         hasError={errors?.Platform?.hasError}
         runValidationTasks={async () =>
-          await runValidationTasks("Platform", currentPlatformValue)
+          await runValidationTasks('Platform', currentPlatformValue)
         }
         errorMessage={errors?.Platform?.errorMessage}
         getBadgeText={getDisplayValue.Platform}
         setFieldValue={(model) => {
           setCurrentPlatformDisplayValue(
-            model ? getDisplayValue.Platform(model) : ""
+            model ? getDisplayValue.Platform(model) : ''
           );
           setCurrentPlatformValue(model);
         }}
         inputFieldRef={PlatformRef}
-        defaultFieldValue={""}
+        defaultFieldValue={''}
       >
         <Autocomplete
           label="Platform"
@@ -620,7 +610,7 @@ export default function ProductCreateForm(props) {
             (r) => !PlatformIdSet.has(getIDValue.Platform?.(r))
           ).map((r) => ({
             id: getIDValue.Platform?.(r),
-            label: getDisplayValue.Platform?.(r),
+            label: getDisplayValue.Platform?.(r)
           }))}
           isLoading={PlatformLoading}
           onSelect={({ id, label }) => {
@@ -632,28 +622,29 @@ export default function ProductCreateForm(props) {
               )
             );
             setCurrentPlatformDisplayValue(label);
-            runValidationTasks("Platform", label);
+            runValidationTasks('Platform', label);
           }}
           onClear={() => {
-            setCurrentPlatformDisplayValue("");
+            setCurrentPlatformDisplayValue('');
           }}
+          defaultValue={Platform}
           onChange={(e) => {
             let { value } = e.target;
             fetchPlatformRecords(value);
             if (errors.Platform?.hasError) {
-              runValidationTasks("Platform", value);
+              runValidationTasks('Platform', value);
             }
             setCurrentPlatformDisplayValue(value);
             setCurrentPlatformValue(undefined);
           }}
           onBlur={() =>
-            runValidationTasks("Platform", currentPlatformDisplayValue)
+            runValidationTasks('Platform', currentPlatformDisplayValue)
           }
           errorMessage={errors.Platform?.errorMessage}
           hasError={errors.Platform?.hasError}
           ref={PlatformRef}
           labelHidden={true}
-          {...getOverrideProps(overrides, "Platform")}
+          {...getOverrideProps(overrides, 'Platform')}
         ></Autocomplete>
       </ArrayField>
       <ArrayField
@@ -667,32 +658,32 @@ export default function ProductCreateForm(props) {
               price,
               image,
               Platform,
-              Genre: value,
+              Genre: value
             };
             const result = onChange(modelFields);
             value = result?.Genre ?? value;
           }
           setGenre(value);
           setCurrentGenreValue(undefined);
-          setCurrentGenreDisplayValue("");
+          setCurrentGenreDisplayValue('');
         }}
         currentFieldValue={currentGenreValue}
-        label={"Genre"}
+        label={'Genre'}
         items={Genre ? [Genre] : []}
         hasError={errors?.Genre?.hasError}
         runValidationTasks={async () =>
-          await runValidationTasks("Genre", currentGenreValue)
+          await runValidationTasks('Genre', currentGenreValue)
         }
         errorMessage={errors?.Genre?.errorMessage}
         getBadgeText={getDisplayValue.Genre}
         setFieldValue={(model) => {
           setCurrentGenreDisplayValue(
-            model ? getDisplayValue.Genre(model) : ""
+            model ? getDisplayValue.Genre(model) : ''
           );
           setCurrentGenreValue(model);
         }}
         inputFieldRef={GenreRef}
-        defaultFieldValue={""}
+        defaultFieldValue={''}
       >
         <Autocomplete
           label="Genre"
@@ -704,7 +695,7 @@ export default function ProductCreateForm(props) {
             (r) => !GenreIdSet.has(getIDValue.Genre?.(r))
           ).map((r) => ({
             id: getIDValue.Genre?.(r),
-            label: getDisplayValue.Genre?.(r),
+            label: getDisplayValue.Genre?.(r)
           }))}
           isLoading={GenreLoading}
           onSelect={({ id, label }) => {
@@ -716,51 +707,56 @@ export default function ProductCreateForm(props) {
               )
             );
             setCurrentGenreDisplayValue(label);
-            runValidationTasks("Genre", label);
+            runValidationTasks('Genre', label);
           }}
           onClear={() => {
-            setCurrentGenreDisplayValue("");
+            setCurrentGenreDisplayValue('');
           }}
+          defaultValue={Genre}
           onChange={(e) => {
             let { value } = e.target;
             fetchGenreRecords(value);
             if (errors.Genre?.hasError) {
-              runValidationTasks("Genre", value);
+              runValidationTasks('Genre', value);
             }
             setCurrentGenreDisplayValue(value);
             setCurrentGenreValue(undefined);
           }}
-          onBlur={() => runValidationTasks("Genre", currentGenreDisplayValue)}
+          onBlur={() => runValidationTasks('Genre', currentGenreDisplayValue)}
           errorMessage={errors.Genre?.errorMessage}
           hasError={errors.Genre?.hasError}
           ref={GenreRef}
           labelHidden={true}
-          {...getOverrideProps(overrides, "Genre")}
+          {...getOverrideProps(overrides, 'Genre')}
         ></Autocomplete>
       </ArrayField>
       <Flex
         justifyContent="space-between"
-        {...getOverrideProps(overrides, "CTAFlex")}
+        {...getOverrideProps(overrides, 'CTAFlex')}
       >
         <Button
-          children="Clear"
+          children="Reset"
           type="reset"
           onClick={(event) => {
             event.preventDefault();
             resetStateValues();
           }}
-          {...getOverrideProps(overrides, "ClearButton")}
+          isDisabled={!(idProp || productModelProp)}
+          {...getOverrideProps(overrides, 'ResetButton')}
         ></Button>
         <Flex
           gap="15px"
-          {...getOverrideProps(overrides, "RightAlignCTASubFlex")}
+          {...getOverrideProps(overrides, 'RightAlignCTASubFlex')}
         >
           <Button
             children="Submit"
             type="submit"
             variation="primary"
-            isDisabled={Object.values(errors).some((e) => e?.hasError)}
-            {...getOverrideProps(overrides, "SubmitButton")}
+            isDisabled={
+              !(idProp || productModelProp) ||
+              Object.values(errors).some((e) => e?.hasError)
+            }
+            {...getOverrideProps(overrides, 'SubmitButton')}
           ></Button>
         </Flex>
       </Flex>

@@ -6,7 +6,7 @@ import {
   TableBody,
   Button
 } from '@aws-amplify/ui-react';
-import { Product } from '../src/API';
+import { Product } from '../API';
 import { StorageImage } from '@aws-amplify/ui-react-storage';
 
 export interface ProductsTableProps {

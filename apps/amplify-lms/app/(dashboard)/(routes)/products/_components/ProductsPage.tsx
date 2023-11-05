@@ -4,7 +4,7 @@ import React from 'react';
 import { useRouter } from 'next/navigation';
 import { Button, Flex, Heading } from '@aws-amplify/ui-react';
 
-import { Product } from '@/amplify-lms/src/API';
+import { Product } from '@/amplify-lms/API';
 import ProductsTable from '@/amplify-lms/components/ProductsTable';
 
 interface ProductsPageProps {
