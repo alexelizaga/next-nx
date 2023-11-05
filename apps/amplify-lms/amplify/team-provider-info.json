@@ -17,6 +17,9 @@
       },
       "storage": {
         "s3amplifylmsstorageab38f492": {}
+      },
+      "api": {
+        "amplifylms": {}
       }
     }
   }

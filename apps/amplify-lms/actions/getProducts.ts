@@ -1,8 +1,8 @@
 import { headers } from 'next/headers';
 import { withSSRContext } from 'aws-amplify';
 
-import { listProducts } from '../src/graphql/queries';
-import { Product } from '../src/API';
+import { listProducts } from '../graphql/queries';
+import { Product } from '../API';
 
 export const getProducts = async (): Promise<Product[]> => {
   try {

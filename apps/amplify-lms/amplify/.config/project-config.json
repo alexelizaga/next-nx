@@ -8,10 +8,10 @@
   "javascript": {
     "framework": "react",
     "config": {
-      "SourceDir": "src",
-      "DistributionDir": "build",
-      "BuildCommand": "npm run-script build",
-      "StartCommand": "npm run-script start"
+      "SourceDir": "apps/amplify-lms",
+      "DistributionDir": "dist/apps/amplify-lms",
+      "BuildCommand": "yarn nx run amplify-lms:build --configuration=production",
+      "StartCommand": ""
     }
   }
 }

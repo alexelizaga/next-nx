@@ -6,9 +6,9 @@ import { API } from 'aws-amplify';
 import { Button, Flex, Heading } from '@aws-amplify/ui-react';
 import { GraphQLQuery } from '@aws-amplify/api';
 
-import * as queries from '@/amplify-lms/src/graphql/queries';
+import * as queries from '@/amplify-lms/graphql/queries';
 import { TableValues } from '@/amplify-lms/types/types';
-import { ListPlatformsQuery } from '@/amplify-lms/src/API';
+import { ListPlatformsQuery } from '@/amplify-lms/API';
 import ItemsTable from '@/amplify-lms/components/ItemsTable';
 
 const PlatformPage = () => {

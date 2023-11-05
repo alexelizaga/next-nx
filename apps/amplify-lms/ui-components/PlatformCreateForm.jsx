@@ -5,7 +5,7 @@
  **************************************************************************/
 
 /* eslint-disable */
-import * as React from "react";
+import * as React from 'react';
 import {
   Autocomplete,
   Badge,
@@ -17,12 +17,12 @@ import {
   ScrollView,
   Text,
   TextField,
-  useTheme,
-} from "@aws-amplify/ui-react";
-import { fetchByPath, getOverrideProps, validateField } from "./utils";
-import { API } from "aws-amplify";
-import { getPlatform, listProducts } from "../graphql/queries";
-import { updatePlatform, updateProduct } from "../graphql/mutations";
+  useTheme
+} from '@aws-amplify/ui-react';
+import { fetchByPath, getOverrideProps, validateField } from './utils';
+import { API } from 'aws-amplify';
+import { listProducts } from '../graphql/queries';
+import { createPlatform, updateProduct } from '../graphql/mutations';
 function ArrayField({
   items = [],
   onChange,
@@ -36,15 +36,15 @@ function ArrayField({
   lengthLimit,
   getBadgeText,
   runValidationTasks,
-  errorMessage,
+  errorMessage
 }) {
   const labelElement = <Text>{label}</Text>;
   const {
     tokens: {
       components: {
-        fieldmessages: { error: errorStyles },
-      },
-    },
+        fieldmessages: { error: errorStyles }
+      }
+    }
   } = useTheme();
   const [selectedBadgeIndex, setSelectedBadgeIndex] = React.useState();
   const [isEditing, setIsEditing] = React.useState();
@@ -63,7 +63,7 @@ function ArrayField({
     if (
       currentFieldValue !== undefined &&
       currentFieldValue !== null &&
-      currentFieldValue !== "" &&
+      currentFieldValue !== '' &&
       !hasError
     ) {
       const newItems = [...items];
@@ -80,18 +80,17 @@ function ArrayField({
   const arraySection = (
     <React.Fragment>
       {!!items?.length && (
-        <ScrollView height="inherit" width="inherit" maxHeight={"7rem"}>
+        <ScrollView height="inherit" width="inherit" maxHeight={'7rem'}>
           {items.map((value, index) => {
             return (
               <Badge
                 key={index}
                 style={{
-                  cursor: "pointer",
-                  alignItems: "center",
+                  cursor: 'pointer',
+                  alignItems: 'center',
                   marginRight: 3,
                   marginTop: 3,
-                  backgroundColor:
-                    index === selectedBadgeIndex ? "#B8CEF9" : "",
+                  backgroundColor: index === selectedBadgeIndex ? '#B8CEF9' : ''
                 }}
                 onClick={() => {
                   setSelectedBadgeIndex(index);
@@ -102,17 +101,17 @@ function ArrayField({
                 {getBadgeText ? getBadgeText(value) : value.toString()}
                 <Icon
                   style={{
-                    cursor: "pointer",
+                    cursor: 'pointer',
                     paddingLeft: 3,
                     width: 20,
-                    height: 20,
+                    height: 20
                   }}
                   viewBox={{ width: 20, height: 20 }}
                   paths={[
                     {
-                      d: "M10 10l5.09-5.09L10 10l5.09 5.09L10 10zm0 0L4.91 4.91 10 10l-5.09 5.09L10 10z",
-                      stroke: "black",
-                    },
+                      d: 'M10 10l5.09-5.09L10 10l5.09 5.09L10 10zm0 0L4.91 4.91 10 10l-5.09 5.09L10 10z',
+                      stroke: 'black'
+                    }
                   ]}
                   ariaLabel="button"
                   onClick={(event) => {
@@ -170,7 +169,7 @@ function ArrayField({
             ></Button>
           )}
           <Button size="small" variation="link" onClick={addItem}>
-            {selectedBadgeIndex !== undefined ? "Save" : "Add"}
+            {selectedBadgeIndex !== undefined ? 'Save' : 'Add'}
           </Button>
         </Flex>
       )}
@@ -178,10 +177,9 @@ function ArrayField({
     </React.Fragment>
   );
 }
-export default function PlatformUpdateForm(props) {
+export default function PlatformCreateForm(props) {
   const {
-    id: idProp,
-    platform: platformModelProp,
+    clearOnSuccess = true,
     onSuccess,
     onError,
     onSubmit,
@@ -191,9 +189,9 @@ export default function PlatformUpdateForm(props) {
     ...rest
   } = props;
   const initialValues = {
-    name: "",
-    value: "",
-    Products: [],
+    name: '',
+    value: '',
+    Products: []
   };
   const [name, setName] = React.useState(initialValues.name);
   const [value, setValue] = React.useState(initialValues.value);
@@ -203,43 +201,20 @@ export default function PlatformUpdateForm(props) {
   const autocompleteLength = 10;
   const [errors, setErrors] = React.useState({});
   const resetStateValues = () => {
-    const cleanValues = platformRecord
-      ? { ...initialValues, ...platformRecord, Products: linkedProducts }
-      : initialValues;
-    setName(cleanValues.name);
-    setValue(cleanValues.value);
-    setProducts(cleanValues.Products ?? []);
+    setName(initialValues.name);
+    setValue(initialValues.value);
+    setProducts(initialValues.Products);
     setCurrentProductsValue(undefined);
-    setCurrentProductsDisplayValue("");
+    setCurrentProductsDisplayValue('');
     setErrors({});
   };
-  const [platformRecord, setPlatformRecord] = React.useState(platformModelProp);
-  const [linkedProducts, setLinkedProducts] = React.useState([]);
-  const canUnlinkProducts = true;
-  React.useEffect(() => {
-    const queryData = async () => {
-      const record = idProp
-        ? (
-            await API.graphql({
-              query: getPlatform.replaceAll("__typename", ""),
-              variables: { id: idProp },
-            })
-          )?.data?.getPlatform
-        : platformModelProp;
-      const linkedProducts = record?.Products?.items ?? [];
-      setLinkedProducts(linkedProducts);
-      setPlatformRecord(record);
-    };
-    queryData();
-  }, [idProp, platformModelProp]);
-  React.useEffect(resetStateValues, [platformRecord, linkedProducts]);
   const [currentProductsDisplayValue, setCurrentProductsDisplayValue] =
-    React.useState("");
+    React.useState('');
   const [currentProductsValue, setCurrentProductsValue] =
     React.useState(undefined);
   const ProductsRef = React.createRef();
   const getIDValue = {
-    Products: (r) => JSON.stringify({ id: r?.id }),
+    Products: (r) => JSON.stringify({ id: r?.id })
   };
   const ProductsIdSet = new Set(
     Array.isArray(Products)
@@ -247,12 +222,12 @@ export default function PlatformUpdateForm(props) {
       : getIDValue.Products?.(Products)
   );
   const getDisplayValue = {
-    Products: (r) => `${r?.name ? r?.name + " - " : ""}${r?.id}`,
+    Products: (r) => `${r?.name ? r?.name + ' - ' : ''}${r?.id}`
   };
   const validations = {
     name: [],
     value: [],
-    Products: [],
+    Products: []
   };
   const runValidationTasks = async (
     fieldName,
@@ -274,21 +249,21 @@ export default function PlatformUpdateForm(props) {
   const fetchProductsRecords = async (value) => {
     setProductsLoading(true);
     const newOptions = [];
-    let newNext = "";
+    let newNext = '';
     while (newOptions.length < autocompleteLength && newNext != null) {
       const variables = {
         limit: autocompleteLength * 5,
         filter: {
-          or: [{ name: { contains: value } }, { id: { contains: value } }],
-        },
+          or: [{ name: { contains: value } }, { id: { contains: value } }]
+        }
       };
       if (newNext) {
-        variables["nextToken"] = newNext;
+        variables['nextToken'] = newNext;
       }
       const result = (
         await API.graphql({
-          query: listProducts.replaceAll("__typename", ""),
-          variables,
+          query: listProducts.replaceAll('__typename', ''),
+          variables
         })
       )?.data?.listProducts?.items;
       var loaded = result.filter(
@@ -301,7 +276,7 @@ export default function PlatformUpdateForm(props) {
     setProductsLoading(false);
   };
   React.useEffect(() => {
-    fetchProductsRecords("");
+    fetchProductsRecords('');
   }, []);
   return (
     <Grid
@@ -312,9 +287,9 @@ export default function PlatformUpdateForm(props) {
       onSubmit={async (event) => {
         event.preventDefault();
         let modelFields = {
-          name: name ?? null,
-          value: value ?? null,
-          Products: Products ?? null,
+          name,
+          value,
+          Products
         };
         const validationResponses = await Promise.all(
           Object.keys(validations).reduce((promises, fieldName) => {
@@ -348,85 +323,55 @@ export default function PlatformUpdateForm(props) {
         }
         try {
           Object.entries(modelFields).forEach(([key, value]) => {
-            if (typeof value === "string" && value === "") {
+            if (typeof value === 'string' && value === '') {
               modelFields[key] = null;
             }
           });
-          const promises = [];
-          const productsToLink = [];
-          const productsToUnLink = [];
-          const productsSet = new Set();
-          const linkedProductsSet = new Set();
-          Products.forEach((r) => productsSet.add(getIDValue.Products?.(r)));
-          linkedProducts.forEach((r) =>
-            linkedProductsSet.add(getIDValue.Products?.(r))
-          );
-          linkedProducts.forEach((r) => {
-            if (!productsSet.has(getIDValue.Products?.(r))) {
-              productsToUnLink.push(r);
-            }
-          });
-          Products.forEach((r) => {
-            if (!linkedProductsSet.has(getIDValue.Products?.(r))) {
-              productsToLink.push(r);
-            }
-          });
-          productsToUnLink.forEach((original) => {
-            if (!canUnlinkProducts) {
-              throw Error(
-                `Product ${original.id} cannot be unlinked from Platform because undefined is a required field.`
-              );
-            }
-            promises.push(
-              API.graphql({
-                query: updateProduct.replaceAll("__typename", ""),
-                variables: {
-                  input: {
-                    id: original.id,
-                  },
-                },
-              })
-            );
-          });
-          productsToLink.forEach((original) => {
-            promises.push(
-              API.graphql({
-                query: updateProduct.replaceAll("__typename", ""),
-                variables: {
-                  input: {
-                    id: original.id,
-                  },
-                },
-              })
-            );
-          });
           const modelFieldsToSave = {
-            name: modelFields.name ?? null,
-            value: modelFields.value ?? null,
+            name: modelFields.name,
+            value: modelFields.value
           };
-          promises.push(
-            API.graphql({
-              query: updatePlatform.replaceAll("__typename", ""),
+          const platform = (
+            await API.graphql({
+              query: createPlatform.replaceAll('__typename', ''),
               variables: {
                 input: {
-                  id: platformRecord.id,
-                  ...modelFieldsToSave,
-                },
-              },
+                  ...modelFieldsToSave
+                }
+              }
             })
+          )?.data?.createPlatform;
+          const promises = [];
+          promises.push(
+            ...Products.reduce((promises, original) => {
+              promises.push(
+                API.graphql({
+                  query: updateProduct.replaceAll('__typename', ''),
+                  variables: {
+                    input: {
+                      id: original.id
+                    }
+                  }
+                })
+              );
+              return promises;
+            }, [])
           );
           await Promise.all(promises);
           if (onSuccess) {
             onSuccess(modelFields);
           }
+          if (clearOnSuccess) {
+            resetStateValues();
+          }
         } catch (err) {
           if (onError) {
-            const messages = err.errors.map((e) => e.message).join("\n");
+            const messages = err.errors.map((e) => e.message).join('\n');
             onError(modelFields, messages);
           }
         }
       }}
-      {...getOverrideProps(overrides, "PlatformUpdateForm")}
+      {...getOverrideProps(overrides, 'PlatformCreateForm')}
       {...rest}
     >
       <TextField
@@ -440,20 +385,20 @@ export default function PlatformUpdateForm(props) {
             const modelFields = {
               name: value,
               value,
-              Products,
+              Products
             };
             const result = onChange(modelFields);
             value = result?.name ?? value;
           }
           if (errors.name?.hasError) {
-            runValidationTasks("name", value);
+            runValidationTasks('name', value);
           }
           setName(value);
         }}
-        onBlur={() => runValidationTasks("name", name)}
+        onBlur={() => runValidationTasks('name', name)}
         errorMessage={errors.name?.errorMessage}
         hasError={errors.name?.hasError}
-        {...getOverrideProps(overrides, "name")}
+        {...getOverrideProps(overrides, 'name')}
       ></TextField>
       <TextField
         label="Value"
@@ -466,20 +411,20 @@ export default function PlatformUpdateForm(props) {
             const modelFields = {
               name,
               value: value,
-              Products,
+              Products
             };
             const result = onChange(modelFields);
             value = result?.value ?? value;
           }
           if (errors.value?.hasError) {
-            runValidationTasks("value", value);
+            runValidationTasks('value', value);
           }
           setValue(value);
         }}
-        onBlur={() => runValidationTasks("value", value)}
+        onBlur={() => runValidationTasks('value', value)}
         errorMessage={errors.value?.errorMessage}
         hasError={errors.value?.hasError}
-        {...getOverrideProps(overrides, "value")}
+        {...getOverrideProps(overrides, 'value')}
       ></TextField>
       <ArrayField
         onChange={async (items) => {
@@ -488,32 +433,32 @@ export default function PlatformUpdateForm(props) {
             const modelFields = {
               name,
               value,
-              Products: values,
+              Products: values
             };
             const result = onChange(modelFields);
             values = result?.Products ?? values;
           }
           setProducts(values);
           setCurrentProductsValue(undefined);
-          setCurrentProductsDisplayValue("");
+          setCurrentProductsDisplayValue('');
         }}
         currentFieldValue={currentProductsValue}
-        label={"Products"}
+        label={'Products'}
         items={Products}
         hasError={errors?.Products?.hasError}
         runValidationTasks={async () =>
-          await runValidationTasks("Products", currentProductsValue)
+          await runValidationTasks('Products', currentProductsValue)
         }
         errorMessage={errors?.Products?.errorMessage}
         getBadgeText={getDisplayValue.Products}
         setFieldValue={(model) => {
           setCurrentProductsDisplayValue(
-            model ? getDisplayValue.Products(model) : ""
+            model ? getDisplayValue.Products(model) : ''
           );
           setCurrentProductsValue(model);
         }}
         inputFieldRef={ProductsRef}
-        defaultFieldValue={""}
+        defaultFieldValue={''}
       >
         <Autocomplete
           label="Products"
@@ -523,7 +468,7 @@ export default function PlatformUpdateForm(props) {
           value={currentProductsDisplayValue}
           options={ProductsRecords.map((r) => ({
             id: getIDValue.Products?.(r),
-            label: getDisplayValue.Products?.(r),
+            label: getDisplayValue.Products?.(r)
           }))}
           isLoading={ProductsLoading}
           onSelect={({ id, label }) => {
@@ -535,57 +480,53 @@ export default function PlatformUpdateForm(props) {
               )
             );
             setCurrentProductsDisplayValue(label);
-            runValidationTasks("Products", label);
+            runValidationTasks('Products', label);
           }}
           onClear={() => {
-            setCurrentProductsDisplayValue("");
+            setCurrentProductsDisplayValue('');
           }}
           onChange={(e) => {
             let { value } = e.target;
             fetchProductsRecords(value);
             if (errors.Products?.hasError) {
-              runValidationTasks("Products", value);
+              runValidationTasks('Products', value);
             }
             setCurrentProductsDisplayValue(value);
             setCurrentProductsValue(undefined);
           }}
           onBlur={() =>
-            runValidationTasks("Products", currentProductsDisplayValue)
+            runValidationTasks('Products', currentProductsDisplayValue)
           }
           errorMessage={errors.Products?.errorMessage}
           hasError={errors.Products?.hasError}
           ref={ProductsRef}
           labelHidden={true}
-          {...getOverrideProps(overrides, "Products")}
+          {...getOverrideProps(overrides, 'Products')}
         ></Autocomplete>
       </ArrayField>
       <Flex
         justifyContent="space-between"
-        {...getOverrideProps(overrides, "CTAFlex")}
+        {...getOverrideProps(overrides, 'CTAFlex')}
       >
         <Button
-          children="Reset"
+          children="Clear"
           type="reset"
           onClick={(event) => {
             event.preventDefault();
             resetStateValues();
           }}
-          isDisabled={!(idProp || platformModelProp)}
-          {...getOverrideProps(overrides, "ResetButton")}
+          {...getOverrideProps(overrides, 'ClearButton')}
         ></Button>
         <Flex
           gap="15px"
-          {...getOverrideProps(overrides, "RightAlignCTASubFlex")}
+          {...getOverrideProps(overrides, 'RightAlignCTASubFlex')}
         >
           <Button
             children="Submit"
             type="submit"
             variation="primary"
-            isDisabled={
-              !(idProp || platformModelProp) ||
-              Object.values(errors).some((e) => e?.hasError)
-            }
-            {...getOverrideProps(overrides, "SubmitButton")}
+            isDisabled={Object.values(errors).some((e) => e?.hasError)}
+            {...getOverrideProps(overrides, 'SubmitButton')}
           ></Button>
         </Flex>
       </Flex>

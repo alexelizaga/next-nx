@@ -1,6 +1,6 @@
 'use client';
 
-import GenreCreateForm from '@/amplify-lms/src/ui-components/GenreCreateForm';
+import GenreCreateForm from '@/amplify-lms/ui-components/GenreCreateForm';
 import { Flex, Heading } from '@aws-amplify/ui-react';
 import { useRouter } from 'next/navigation';
 
