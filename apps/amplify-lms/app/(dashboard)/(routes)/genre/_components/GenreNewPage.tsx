@@ -9,7 +9,7 @@ const GenreNewPage = () => {
   return (
     <div>
       <>
-        <Heading level={1}>Create new genre</Heading>
+        <Heading level={1}>Create new Genre</Heading>
         <Flex justifyContent="center">
           <GenreCreateForm
             width="340px"

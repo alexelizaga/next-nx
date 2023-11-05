@@ -215,7 +215,7 @@ export default function PlatformUpdateForm(props) {
   };
   const [platformRecord, setPlatformRecord] = React.useState(platformModelProp);
   const [linkedProducts, setLinkedProducts] = React.useState([]);
-  const canUnlinkProducts = false;
+  const canUnlinkProducts = true;
   React.useEffect(() => {
     const queryData = async () => {
       const record = idProp
@@ -374,7 +374,7 @@ export default function PlatformUpdateForm(props) {
           productsToUnLink.forEach((original) => {
             if (!canUnlinkProducts) {
               throw Error(
-                `Product ${original.id} cannot be unlinked from Platform because platformID is a required field.`
+                `Product ${original.id} cannot be unlinked from Platform because undefined is a required field.`
               );
             }
             promises.push(
@@ -383,7 +383,6 @@ export default function PlatformUpdateForm(props) {
                 variables: {
                   input: {
                     id: original.id,
-                    platformID: null,
                   },
                 },
               })
@@ -396,7 +395,6 @@ export default function PlatformUpdateForm(props) {
                 variables: {
                   input: {
                     id: original.id,
-                    platformID: platformRecord.id,
                   },
                 },
               })
@@ -523,9 +521,7 @@ export default function PlatformUpdateForm(props) {
           isReadOnly={false}
           placeholder="Search Product"
           value={currentProductsDisplayValue}
-          options={ProductsRecords.filter(
-            (r) => !ProductsIdSet.has(getIDValue.Products?.(r))
-          ).map((r) => ({
+          options={ProductsRecords.map((r) => ({
             id: getIDValue.Products?.(r),
             label: getDisplayValue.Products?.(r),
           }))}

@@ -14,7 +14,7 @@ export interface ItemsTableProps {
 
 export default function ItemsTable({ tableName, data }: ItemsTableProps) {
   return (
-    <Table caption={tableName} width="50%" margin="0 auto">
+    <Table caption={tableName} width="100%" margin="0 auto">
       <TableHead>
         <TableRow>
           <TableCell as="th">Name</TableCell>
