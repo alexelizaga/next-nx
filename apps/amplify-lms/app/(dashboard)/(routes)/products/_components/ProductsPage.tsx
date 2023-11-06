@@ -10,13 +10,10 @@ import axios from 'axios';
 
 const ProductsPage = () => {
   const router = useRouter();
-
   const [products, setProducts] = React.useState<Product[]>();
 
   React.useEffect(() => {
-    axios
-      .get<Product[]>('http://localhost:3000/api/products')
-      .then(({ data }) => setProducts(data));
+    axios.get<Product[]>(`/api/products`).then(({ data }) => setProducts(data));
   }, []);
 
   return (
