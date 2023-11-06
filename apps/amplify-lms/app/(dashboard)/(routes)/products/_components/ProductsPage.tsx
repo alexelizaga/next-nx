@@ -6,13 +6,18 @@ import { Button, Flex, Heading } from '@aws-amplify/ui-react';
 
 import { Product } from '@/amplify-lms/API';
 import ProductsTable from '@/amplify-lms/components/ProductsTable';
+import axios from 'axios';
 
-interface ProductsPageProps {
-  products?: Product[];
-}
-
-const ProductsPage = ({ products = [] }: ProductsPageProps) => {
+const ProductsPage = () => {
   const router = useRouter();
+
+  const [products, setProducts] = React.useState<Product[]>();
+
+  React.useEffect(() => {
+    axios
+      .get<Product[]>('http://localhost:3000/api/products')
+      .then(({ data }) => setProducts(data));
+  }, []);
 
   return (
     <>
