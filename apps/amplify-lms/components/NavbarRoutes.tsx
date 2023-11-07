@@ -14,7 +14,7 @@ const NavbarRoutes = () => {
         menuAlign="end"
         size="small"
         trigger={
-          <div className="md:hidden py-2.5 hover:opacity-75 transtion">
+          <div className="py-2.5 hover:opacity-75 transtion">
             <MdAccountCircle size={24} />
           </div>
         }
