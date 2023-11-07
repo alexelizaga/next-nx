@@ -1,3 +1,7 @@
+/*
+  Server components is not compatible with Amplify hosting
+*/
+
 import { headers } from 'next/headers';
 import { withSSRContext } from 'aws-amplify';
 
