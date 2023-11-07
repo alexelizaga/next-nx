@@ -1,3 +1,5 @@
+'use client';
+
 import NavbarRoutes from '@/amplify-lms/components/NavbarRoutes';
 
 import MobileSidebar from './MobileSidebar';
