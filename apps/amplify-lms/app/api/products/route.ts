@@ -6,12 +6,6 @@ import { listProducts } from '@/amplify-lms/graphql/queries';
 
 export async function GET(request: Request) {
   try {
-    // const req = {
-    //   headers: {
-    //     cookie: headers().get('cookie'),
-    //   },
-    // };
-
     const SSR = withSSRContext({ request } as any);
 
     const { data } = await SSR.API.graphql({ query: listProducts });
