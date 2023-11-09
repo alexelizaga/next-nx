@@ -2,6 +2,7 @@ import { Amplify } from 'aws-amplify';
 
 import awsExports from '../aws-exports';
 import './global.css';
+import { ToastProvider } from '../providers/toaster-provider';
 
 Amplify.configure({ ...awsExports, ssr: true });
 
@@ -17,7 +18,10 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body>{children}</body>
+      <body>
+        <ToastProvider />
+        {children}
+      </body>
     </html>
   );
 }

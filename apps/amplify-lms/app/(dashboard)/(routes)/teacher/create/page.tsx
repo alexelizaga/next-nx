@@ -1,10 +1,20 @@
 'use client';
 
+import { useRouter } from 'next/navigation';
+import Link from 'next/link';
+import {
+  Button,
+  Flex,
+  Input,
+  Label,
+  useAuthenticator
+} from '@aws-amplify/ui-react';
+import axios from 'axios';
+import { useForm } from 'react-hook-form';
 import * as z from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useForm } from 'react-hook-form';
-import { Button, Flex, Input, Label } from '@aws-amplify/ui-react';
-import Link from 'next/link';
+import toast from 'react-hot-toast';
+
 import { API } from 'aws-amplify';
 import { createCourse } from '@/amplify-lms/graphql/mutations';
 
@@ -15,6 +25,8 @@ const formSchema = z.object({
 });
 
 const CreatePage = () => {
+  const { user } = useAuthenticator((context) => [context.user]);
+  const router = useRouter();
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -30,11 +42,19 @@ const CreatePage = () => {
       query: createCourse,
       variables: {
         input: {
+          userId: user.getUsername(),
           ...values
         }
       }
     });
     console.log({ newCourse });
+
+    // try {
+    //   const response = await axios.post('/api/courses', values);
+    //   router.push(`teacher/courses/${response.data.id}`);
+    // } catch (error) {
+    //   toast.error('Something went wrong');
+    // }
   };
 
   return (
