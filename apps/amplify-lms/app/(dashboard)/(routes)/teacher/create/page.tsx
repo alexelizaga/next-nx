@@ -47,10 +47,14 @@ const CreatePage = () => {
         }
       }
     });
+
     console.log({ newCourse });
 
     // try {
-    //   const response = await axios.post('/api/courses', values);
+    //   const response = await axios.post('/api/courses', {
+    //     ...values,
+    //     userId: user.getUsername()
+    //   });
     //   router.push(`teacher/courses/${response.data.id}`);
     // } catch (error) {
     //   toast.error('Something went wrong');

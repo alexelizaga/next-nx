@@ -5,7 +5,7 @@ import { createCourse } from '@/amplify-lms/graphql/mutations';
 
 export async function POST(req: Request) {
   try {
-    const { title } = await req.json();
+    const { title, userId } = await req.json();
 
     const SSR = withSSRContext({ req } as any);
 
@@ -14,6 +14,7 @@ export async function POST(req: Request) {
       variables: {
         input: {
           title,
+          userId,
         },
       },
     });
