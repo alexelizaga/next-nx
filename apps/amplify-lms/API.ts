@@ -2,18 +2,16 @@
 /* eslint-disable */
 //  This file was automatically generated and should not be edited.
 
-export type CreatePlatformInput = {
+export type CreateCourseInput = {
   id?: string | null,
-  name?: string | null,
-  value?: string | null,
+  title?: string | null,
 };
 
-export type ModelPlatformConditionInput = {
-  name?: ModelStringInput | null,
-  value?: ModelStringInput | null,
-  and?: Array< ModelPlatformConditionInput | null > | null,
-  or?: Array< ModelPlatformConditionInput | null > | null,
-  not?: ModelPlatformConditionInput | null,
+export type ModelCourseConditionInput = {
+  title?: ModelStringInput | null,
+  and?: Array< ModelCourseConditionInput | null > | null,
+  or?: Array< ModelCourseConditionInput | null > | null,
+  not?: ModelCourseConditionInput | null,
 };
 
 export type ModelStringInput = {
@@ -54,6 +52,37 @@ export type ModelSizeInput = {
   ge?: number | null,
   gt?: number | null,
   between?: Array< number | null > | null,
+};
+
+export type Course = {
+  __typename: "Course",
+  id: string,
+  title?: string | null,
+  createdAt: string,
+  updatedAt: string,
+};
+
+export type UpdateCourseInput = {
+  id: string,
+  title?: string | null,
+};
+
+export type DeleteCourseInput = {
+  id: string,
+};
+
+export type CreatePlatformInput = {
+  id?: string | null,
+  name?: string | null,
+  value?: string | null,
+};
+
+export type ModelPlatformConditionInput = {
+  name?: ModelStringInput | null,
+  value?: ModelStringInput | null,
+  and?: Array< ModelPlatformConditionInput | null > | null,
+  or?: Array< ModelPlatformConditionInput | null > | null,
+  not?: ModelPlatformConditionInput | null,
 };
 
 export type Platform = {
@@ -202,6 +231,20 @@ export type DeleteProductInput = {
   id: string,
 };
 
+export type ModelCourseFilterInput = {
+  id?: ModelIDInput | null,
+  title?: ModelStringInput | null,
+  and?: Array< ModelCourseFilterInput | null > | null,
+  or?: Array< ModelCourseFilterInput | null > | null,
+  not?: ModelCourseFilterInput | null,
+};
+
+export type ModelCourseConnection = {
+  __typename: "ModelCourseConnection",
+  items:  Array<Course | null >,
+  nextToken?: string | null,
+};
+
 export type ModelPlatformFilterInput = {
   id?: ModelIDInput | null,
   name?: ModelStringInput | null,
@@ -251,12 +294,11 @@ export enum ModelSortDirection {
 }
 
 
-export type ModelSubscriptionPlatformFilterInput = {
+export type ModelSubscriptionCourseFilterInput = {
   id?: ModelSubscriptionIDInput | null,
-  name?: ModelSubscriptionStringInput | null,
-  value?: ModelSubscriptionStringInput | null,
-  and?: Array< ModelSubscriptionPlatformFilterInput | null > | null,
-  or?: Array< ModelSubscriptionPlatformFilterInput | null > | null,
+  title?: ModelSubscriptionStringInput | null,
+  and?: Array< ModelSubscriptionCourseFilterInput | null > | null,
+  or?: Array< ModelSubscriptionCourseFilterInput | null > | null,
 };
 
 export type ModelSubscriptionIDInput = {
@@ -287,6 +329,14 @@ export type ModelSubscriptionStringInput = {
   beginsWith?: string | null,
   in?: Array< string | null > | null,
   notIn?: Array< string | null > | null,
+};
+
+export type ModelSubscriptionPlatformFilterInput = {
+  id?: ModelSubscriptionIDInput | null,
+  name?: ModelSubscriptionStringInput | null,
+  value?: ModelSubscriptionStringInput | null,
+  and?: Array< ModelSubscriptionPlatformFilterInput | null > | null,
+  or?: Array< ModelSubscriptionPlatformFilterInput | null > | null,
 };
 
 export type ModelSubscriptionGenreFilterInput = {
@@ -324,6 +374,51 @@ export type ModelSubscriptionFloatInput = {
   between?: Array< number | null > | null,
   in?: Array< number | null > | null,
   notIn?: Array< number | null > | null,
+};
+
+export type CreateCourseMutationVariables = {
+  input: CreateCourseInput,
+  condition?: ModelCourseConditionInput | null,
+};
+
+export type CreateCourseMutation = {
+  createCourse?:  {
+    __typename: "Course",
+    id: string,
+    title?: string | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type UpdateCourseMutationVariables = {
+  input: UpdateCourseInput,
+  condition?: ModelCourseConditionInput | null,
+};
+
+export type UpdateCourseMutation = {
+  updateCourse?:  {
+    __typename: "Course",
+    id: string,
+    title?: string | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type DeleteCourseMutationVariables = {
+  input: DeleteCourseInput,
+  condition?: ModelCourseConditionInput | null,
+};
+
+export type DeleteCourseMutation = {
+  deleteCourse?:  {
+    __typename: "Course",
+    id: string,
+    title?: string | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
 };
 
 export type CreatePlatformMutationVariables = {
@@ -650,6 +745,40 @@ export type DeleteProductMutation = {
   } | null,
 };
 
+export type GetCourseQueryVariables = {
+  id: string,
+};
+
+export type GetCourseQuery = {
+  getCourse?:  {
+    __typename: "Course",
+    id: string,
+    title?: string | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type ListCoursesQueryVariables = {
+  filter?: ModelCourseFilterInput | null,
+  limit?: number | null,
+  nextToken?: string | null,
+};
+
+export type ListCoursesQuery = {
+  listCourses?:  {
+    __typename: "ModelCourseConnection",
+    items:  Array< {
+      __typename: "Course",
+      id: string,
+      title?: string | null,
+      createdAt: string,
+      updatedAt: string,
+    } | null >,
+    nextToken?: string | null,
+  } | null,
+};
+
 export type GetPlatformQueryVariables = {
   id: string,
 };
@@ -929,6 +1058,48 @@ export type ProductsByGenreIDQuery = {
       updatedAt: string,
     } | null >,
     nextToken?: string | null,
+  } | null,
+};
+
+export type OnCreateCourseSubscriptionVariables = {
+  filter?: ModelSubscriptionCourseFilterInput | null,
+};
+
+export type OnCreateCourseSubscription = {
+  onCreateCourse?:  {
+    __typename: "Course",
+    id: string,
+    title?: string | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type OnUpdateCourseSubscriptionVariables = {
+  filter?: ModelSubscriptionCourseFilterInput | null,
+};
+
+export type OnUpdateCourseSubscription = {
+  onUpdateCourse?:  {
+    __typename: "Course",
+    id: string,
+    title?: string | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type OnDeleteCourseSubscriptionVariables = {
+  filter?: ModelSubscriptionCourseFilterInput | null,
+};
+
+export type OnDeleteCourseSubscription = {
+  onDeleteCourse?:  {
+    __typename: "Course",
+    id: string,
+    title?: string | null,
+    createdAt: string,
+    updatedAt: string,
   } | null,
 };
 

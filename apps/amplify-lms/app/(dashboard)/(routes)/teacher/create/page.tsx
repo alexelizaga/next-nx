@@ -1,12 +1,12 @@
 'use client';
 
 import * as z from 'zod';
-import axios from 'axios';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
-import { useRouter } from 'next/navigation';
-import { Button, Flex, Input, Label, View } from '@aws-amplify/ui-react';
+import { Button, Flex, Input, Label } from '@aws-amplify/ui-react';
 import Link from 'next/link';
+import { API } from 'aws-amplify';
+import { createCourse } from '@/amplify-lms/graphql/mutations';
 
 const formSchema = z.object({
   title: z.string().min(1, {
@@ -25,8 +25,16 @@ const CreatePage = () => {
   const { register } = form;
   const { isSubmitting, isValid, errors } = form.formState;
 
-  const onSubmit = (values: z.infer<typeof formSchema>) => {
-    console.log('form', values);
+  const onSubmit = async (values: z.infer<typeof formSchema>) => {
+    const newCourse = await API.graphql({
+      query: createCourse,
+      variables: {
+        input: {
+          ...values
+        }
+      }
+    });
+    console.log({ newCourse });
   };
 
   return (

@@ -20,6 +20,12 @@
       },
       "api": {
         "amplifylms": {}
+      },
+      "hosting": {
+        "amplifyhosting": {
+          "appId": "dteluihg1uscg",
+          "type": "manual"
+        }
       }
     }
   }

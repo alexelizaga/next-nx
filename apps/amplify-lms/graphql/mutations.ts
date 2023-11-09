@@ -2,12 +2,60 @@
 /* eslint-disable */
 // this is an auto generated file. This will be overwritten
 
-import * as APITypes from '../API';
+import * as APITypes from "../API";
 type GeneratedMutation<InputType, OutputType> = string & {
   __generatedMutationInput: InputType;
   __generatedMutationOutput: OutputType;
 };
 
+export const createCourse = /* GraphQL */ `mutation CreateCourse(
+  $input: CreateCourseInput!
+  $condition: ModelCourseConditionInput
+) {
+  createCourse(input: $input, condition: $condition) {
+    id
+    title
+    createdAt
+    updatedAt
+    __typename
+  }
+}
+` as GeneratedMutation<
+  APITypes.CreateCourseMutationVariables,
+  APITypes.CreateCourseMutation
+>;
+export const updateCourse = /* GraphQL */ `mutation UpdateCourse(
+  $input: UpdateCourseInput!
+  $condition: ModelCourseConditionInput
+) {
+  updateCourse(input: $input, condition: $condition) {
+    id
+    title
+    createdAt
+    updatedAt
+    __typename
+  }
+}
+` as GeneratedMutation<
+  APITypes.UpdateCourseMutationVariables,
+  APITypes.UpdateCourseMutation
+>;
+export const deleteCourse = /* GraphQL */ `mutation DeleteCourse(
+  $input: DeleteCourseInput!
+  $condition: ModelCourseConditionInput
+) {
+  deleteCourse(input: $input, condition: $condition) {
+    id
+    title
+    createdAt
+    updatedAt
+    __typename
+  }
+}
+` as GeneratedMutation<
+  APITypes.DeleteCourseMutationVariables,
+  APITypes.DeleteCourseMutation
+>;
 export const createPlatform = /* GraphQL */ `mutation CreatePlatform(
   $input: CreatePlatformInput!
   $condition: ModelPlatformConditionInput
