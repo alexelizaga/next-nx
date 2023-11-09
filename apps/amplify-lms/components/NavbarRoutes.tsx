@@ -1,38 +1,35 @@
 'use client';
 
-import { Menu, MenuItem, useAuthenticator } from '@aws-amplify/ui-react';
-import { MdAccountCircle } from 'react-icons/md';
-
+import { usePathname } from 'next/navigation';
+import Link from 'next/link';
+import { Button } from '@aws-amplify/ui-react';
 import { LogOut } from 'lucide-react';
 
+import UserButton from './UserBotton';
+
 const NavbarRoutes = () => {
-  const { signOut, user } = useAuthenticator((context) => [context.user]);
+  const pathname = usePathname();
+
+  const isTeacherPage = pathname?.startsWith('/teacher');
+  const isPlayerPage = pathname?.includes('/chapter');
 
   return (
-    <div className="flex gap-2 ml-auto">
-      <Menu
-        menuAlign="end"
-        size="small"
-        trigger={
-          <div className="py-2.5 hover:opacity-75 transtion">
-            <MdAccountCircle size={24} />
-          </div>
-        }
-        overflow="hidden"
-      >
-        {user.attributes?.email && (
-          <div className="w-full py-1.5 px-4">{user.attributes?.email}</div>
-        )}
-        {user.attributes?.phone_number && (
-          <div className="w-full py-1.5 px-4">
-            {user.attributes?.phone_number}
-          </div>
-        )}
-        <MenuItem onClick={signOut}>
-          <LogOut className="mr-4" />
-          Log out
-        </MenuItem>
-      </Menu>
+    <div className="flex gap-2 ml-auto items-center">
+      {isTeacherPage || isPlayerPage ? (
+        <Link href="/">
+          <Button variation="link" colorTheme="overlay" size="small">
+            <LogOut className="h-4 w-4 mr-2" />
+            Exit
+          </Button>
+        </Link>
+      ) : (
+        <Link href="/teacher/courses">
+          <Button variation="link" colorTheme="overlay" size="small">
+            Teacher mode
+          </Button>
+        </Link>
+      )}
+      <UserButton />
     </div>
   );
 };
