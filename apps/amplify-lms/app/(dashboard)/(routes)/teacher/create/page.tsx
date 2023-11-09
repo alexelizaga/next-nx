@@ -38,31 +38,33 @@ const CreatePage = () => {
   const { isSubmitting, isValid, errors } = form.formState;
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
-    try {
-      const { data } = await API.graphql<any>({
-        query: createCourse,
-        variables: {
-          input: {
-            userId: user.getUsername(),
-            ...values
-          }
-        }
-      });
-
-      router.push(`teacher/courses/${data.createCourse.id}`);
-    } catch (error) {
-      toast.error('Something went wrong');
-    }
-
     // try {
-    //   const response = await axios.post('/api/courses', {
-    //     ...values,
-    //     userId: user.getUsername()
+    //   const { data } = await API.graphql<any>({
+    //     query: createCourse,
+    //     variables: {
+    //       input: {
+    //         userId: user.getUsername(),
+    //         ...values
+    //       }
+    //     }
     //   });
-    //   router.push(`teacher/courses/${response.data.id}`);
+
+    //   router.push(`teacher/courses/${data.createCourse.id}`);
+    //   toast.error('Course created');
     // } catch (error) {
     //   toast.error('Something went wrong');
     // }
+
+    try {
+      const response = await axios.post('/api/courses', {
+        ...values,
+        userId: user.getUsername()
+      });
+      router.push(`teacher/courses/${response.data.id}`);
+      toast.error('Course created');
+    } catch (error) {
+      toast.error('Something went wrong');
+    }
   };
 
   return (
