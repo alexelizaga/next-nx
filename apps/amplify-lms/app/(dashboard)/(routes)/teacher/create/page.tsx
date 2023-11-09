@@ -38,17 +38,21 @@ const CreatePage = () => {
   const { isSubmitting, isValid, errors } = form.formState;
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
-    const newCourse = await API.graphql({
-      query: createCourse,
-      variables: {
-        input: {
-          userId: user.getUsername(),
-          ...values
+    try {
+      const { data } = await API.graphql<any>({
+        query: createCourse,
+        variables: {
+          input: {
+            userId: user.getUsername(),
+            ...values
+          }
         }
-      }
-    });
+      });
 
-    console.log({ newCourse });
+      router.push(`teacher/courses/${data.createCourse.id}`);
+    } catch (error) {
+      toast.error('Something went wrong');
+    }
 
     // try {
     //   const response = await axios.post('/api/courses', {
