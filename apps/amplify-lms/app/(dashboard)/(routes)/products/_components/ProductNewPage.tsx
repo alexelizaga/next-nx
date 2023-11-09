@@ -3,7 +3,7 @@
 import { Flex, Heading } from '@aws-amplify/ui-react';
 import { useRouter } from 'next/navigation';
 
-import ProductCreateForm from '@/amplify-lms/ui-components/ProductCreateForm';
+import ProductCreateForm from '@/amplify-lms/components/ui-components/ProductCreateForm';
 
 const ProductNewPage = () => {
   const router = useRouter();

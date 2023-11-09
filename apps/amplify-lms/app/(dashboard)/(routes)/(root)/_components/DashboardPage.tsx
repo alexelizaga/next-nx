@@ -3,7 +3,7 @@
 import { Button, Flex, Heading, useAuthenticator } from '@aws-amplify/ui-react';
 
 const DashboardPage = () => {
-  const { user, signOut } = useAuthenticator((context) => [context.user]);
+  const { signOut } = useAuthenticator((context) => [context.user]);
 
   return (
     <Flex justifyContent="center" alignItems="center" direction="column">

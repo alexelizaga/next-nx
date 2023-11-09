@@ -28,8 +28,8 @@ import {
   validateField
 } from './utils';
 import { API } from 'aws-amplify';
-import { listGenres, listPlatforms } from '../graphql/queries';
-import { createProduct } from '../graphql/mutations';
+import { listGenres, listPlatforms } from '../../graphql/queries';
+import { createProduct } from '../../graphql/mutations';
 import { Field } from '@aws-amplify/ui-react/internal';
 function ArrayField({
   items = [],

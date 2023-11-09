@@ -21,8 +21,8 @@ import {
 } from '@aws-amplify/ui-react';
 import { fetchByPath, getOverrideProps, validateField } from './utils';
 import { API } from 'aws-amplify';
-import { getGenre, listProducts } from '../graphql/queries';
-import { updateGenre, updateProduct } from '../graphql/mutations';
+import { getPlatform, listProducts } from '../../graphql/queries';
+import { updatePlatform, updateProduct } from '../../graphql/mutations';
 function ArrayField({
   items = [],
   onChange,
@@ -177,10 +177,10 @@ function ArrayField({
     </React.Fragment>
   );
 }
-export default function GenreUpdateForm(props) {
+export default function PlatformUpdateForm(props) {
   const {
     id: idProp,
-    genre: genreModelProp,
+    platform: platformModelProp,
     onSuccess,
     onError,
     onSubmit,
@@ -202,8 +202,8 @@ export default function GenreUpdateForm(props) {
   const autocompleteLength = 10;
   const [errors, setErrors] = React.useState({});
   const resetStateValues = () => {
-    const cleanValues = genreRecord
-      ? { ...initialValues, ...genreRecord, Products: linkedProducts }
+    const cleanValues = platformRecord
+      ? { ...initialValues, ...platformRecord, Products: linkedProducts }
       : initialValues;
     setName(cleanValues.name);
     setValue(cleanValues.value);
@@ -212,7 +212,7 @@ export default function GenreUpdateForm(props) {
     setCurrentProductsDisplayValue('');
     setErrors({});
   };
-  const [genreRecord, setGenreRecord] = React.useState(genreModelProp);
+  const [platformRecord, setPlatformRecord] = React.useState(platformModelProp);
   const [linkedProducts, setLinkedProducts] = React.useState([]);
   const canUnlinkProducts = true;
   React.useEffect(() => {
@@ -220,18 +220,18 @@ export default function GenreUpdateForm(props) {
       const record = idProp
         ? (
             await API.graphql({
-              query: getGenre.replaceAll('__typename', ''),
+              query: getPlatform.replaceAll('__typename', ''),
               variables: { id: idProp }
             })
-          )?.data?.getGenre
-        : genreModelProp;
+          )?.data?.getPlatform
+        : platformModelProp;
       const linkedProducts = record?.Products?.items ?? [];
       setLinkedProducts(linkedProducts);
-      setGenreRecord(record);
+      setPlatformRecord(record);
     };
     queryData();
-  }, [idProp, genreModelProp]);
-  React.useEffect(resetStateValues, [genreRecord, linkedProducts]);
+  }, [idProp, platformModelProp]);
+  React.useEffect(resetStateValues, [platformRecord, linkedProducts]);
   const [currentProductsDisplayValue, setCurrentProductsDisplayValue] =
     React.useState('');
   const [currentProductsValue, setCurrentProductsValue] =
@@ -373,7 +373,7 @@ export default function GenreUpdateForm(props) {
           productsToUnLink.forEach((original) => {
             if (!canUnlinkProducts) {
               throw Error(
-                `Product ${original.id} cannot be unlinked from Genre because undefined is a required field.`
+                `Product ${original.id} cannot be unlinked from Platform because undefined is a required field.`
               );
             }
             promises.push(
@@ -405,10 +405,10 @@ export default function GenreUpdateForm(props) {
           };
           promises.push(
             API.graphql({
-              query: updateGenre.replaceAll('__typename', ''),
+              query: updatePlatform.replaceAll('__typename', ''),
               variables: {
                 input: {
-                  id: genreRecord.id,
+                  id: platformRecord.id,
                   ...modelFieldsToSave
                 }
               }
@@ -425,7 +425,7 @@ export default function GenreUpdateForm(props) {
           }
         }
       }}
-      {...getOverrideProps(overrides, 'GenreUpdateForm')}
+      {...getOverrideProps(overrides, 'PlatformUpdateForm')}
       {...rest}
     >
       <TextField
@@ -569,7 +569,7 @@ export default function GenreUpdateForm(props) {
             event.preventDefault();
             resetStateValues();
           }}
-          isDisabled={!(idProp || genreModelProp)}
+          isDisabled={!(idProp || platformModelProp)}
           {...getOverrideProps(overrides, 'ResetButton')}
         ></Button>
         <Flex
@@ -581,7 +581,7 @@ export default function GenreUpdateForm(props) {
             type="submit"
             variation="primary"
             isDisabled={
-              !(idProp || genreModelProp) ||
+              !(idProp || platformModelProp) ||
               Object.values(errors).some((e) => e?.hasError)
             }
             {...getOverrideProps(overrides, 'SubmitButton')}

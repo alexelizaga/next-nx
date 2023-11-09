@@ -21,8 +21,8 @@ import {
 } from '@aws-amplify/ui-react';
 import { fetchByPath, getOverrideProps, validateField } from './utils';
 import { API } from 'aws-amplify';
-import { listProducts } from '../graphql/queries';
-import { createPlatform, updateProduct } from '../graphql/mutations';
+import { listProducts } from '../../graphql/queries';
+import { createGenre, updateProduct } from '../../graphql/mutations';
 function ArrayField({
   items = [],
   onChange,
@@ -177,7 +177,7 @@ function ArrayField({
     </React.Fragment>
   );
 }
-export default function PlatformCreateForm(props) {
+export default function GenreCreateForm(props) {
   const {
     clearOnSuccess = true,
     onSuccess,
@@ -331,16 +331,16 @@ export default function PlatformCreateForm(props) {
             name: modelFields.name,
             value: modelFields.value
           };
-          const platform = (
+          const genre = (
             await API.graphql({
-              query: createPlatform.replaceAll('__typename', ''),
+              query: createGenre.replaceAll('__typename', ''),
               variables: {
                 input: {
                   ...modelFieldsToSave
                 }
               }
             })
-          )?.data?.createPlatform;
+          )?.data?.createGenre;
           const promises = [];
           promises.push(
             ...Products.reduce((promises, original) => {
@@ -371,7 +371,7 @@ export default function PlatformCreateForm(props) {
           }
         }
       }}
-      {...getOverrideProps(overrides, 'PlatformCreateForm')}
+      {...getOverrideProps(overrides, 'GenreCreateForm')}
       {...rest}
     >
       <TextField
