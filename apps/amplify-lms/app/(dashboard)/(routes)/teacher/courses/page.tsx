@@ -1,5 +1,7 @@
+import CoursePage from './_components/CoursePage';
+
 const CoursesPage = () => {
-  return <div>Courses Page!</div>;
+  return <CoursePage />;
 };
 
 export default CoursesPage;
