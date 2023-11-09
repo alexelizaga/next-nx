@@ -60,8 +60,8 @@ const CreatePage = () => {
         ...values,
         userId: user.getUsername()
       });
-      router.push(`teacher/courses/${response.data.id}`);
-      toast.error('Course created');
+      router.push(`/teacher/courses/${response.data.id}`);
+      toast.success('Course created');
     } catch (error) {
       toast.error('Something went wrong');
     }
