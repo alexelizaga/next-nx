@@ -39,7 +39,8 @@ const CreatePage = () => {
         }
       });
 
-      router.push(`/teacher/courses/${data.createCourse.id}`);
+      // router.push(`/teacher/courses/${data.createCourse.id}`);
+      router.push(`/teacher/courses`);
       toast.success('Course created');
     } catch (error) {
       toast.error('Something went wrong');
