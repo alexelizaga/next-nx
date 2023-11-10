@@ -2,20 +2,13 @@
 
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-import {
-  Button,
-  Flex,
-  Input,
-  Label,
-  useAuthenticator
-} from '@aws-amplify/ui-react';
-import axios from 'axios';
+import { API } from 'aws-amplify';
+import { Button, Flex, Input, Label } from '@aws-amplify/ui-react';
 import { useForm } from 'react-hook-form';
 import * as z from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import toast from 'react-hot-toast';
 
-import { API } from 'aws-amplify';
 import { createCourse } from '@/amplify-lms/graphql/mutations';
 
 const formSchema = z.object({
@@ -25,7 +18,6 @@ const formSchema = z.object({
 });
 
 const CreatePage = () => {
-  const { user } = useAuthenticator((context) => [context.user]);
   const router = useRouter();
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -38,33 +30,32 @@ const CreatePage = () => {
   const { isSubmitting, isValid, errors } = form.formState;
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
-    // try {
-    //   const { data } = await API.graphql<any>({
-    //     query: createCourse,
-    //     variables: {
-    //       input: {
-    //         userId: user.getUsername(),
-    //         ...values
-    //       }
-    //     }
-    //   });
-
-    //   router.push(`teacher/courses/${data.createCourse.id}`);
-    //   toast.error('Course created');
-    // } catch (error) {
-    //   toast.error('Something went wrong');
-    // }
-
     try {
-      const response = await axios.post('/api/courses', {
-        ...values,
-        userId: user.getUsername()
+      const { data } = await API.graphql<any>({
+        query: createCourse,
+        variables: {
+          input: {
+            ...values
+          }
+        }
       });
-      router.push(`/teacher/courses/${response.data.id}`);
+
+      router.push(`/teacher/courses/${data.createCourse.id}`);
       toast.success('Course created');
     } catch (error) {
       toast.error('Something went wrong');
     }
+
+    // try {
+    //   const response = await axios.post('/api/courses', {
+    //     ...values
+    //   });
+
+    //   router.push(`/teacher/courses/${response.data.id}`);
+    //   toast.success('Course created');
+    // } catch (error) {
+    //   toast.error('Something went wrong');
+    // }
   };
 
   return (
