@@ -1,12 +1,6 @@
 import React from 'react';
-import { redirect } from 'next/navigation';
-import { API } from 'aws-amplify';
-import { GraphQLQuery } from '@aws-amplify/api';
 
-import { ListCoursesQuery, ListCoursesQueryVariables } from '@/amplify-lms/API';
-import * as queries from '@/amplify-lms/graphql/queries';
-
-const CourseIdPage = async ({ params }: { params: { courseId: string } }) => {
+const CourseIdPage = ({ params }: { params: { courseId: string } }) => {
   // const variables: ListCoursesQueryVariables = {
   //   limit: 1,
   //   filter: {
@@ -24,7 +18,12 @@ const CourseIdPage = async ({ params }: { params: { courseId: string } }) => {
   // }
 
   // return <div>ID: {data?.listCourses?.items[0]?.id}</div>;
-  return <div>Hola mundo</div>;
+  return (
+    <>
+      <div>Hola mundo</div>
+      <p>Id: {params.courseId}</p>
+    </>
+  );
 };
 
 export default CourseIdPage;
