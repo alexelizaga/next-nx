@@ -1,8 +1,7 @@
 import React from 'react';
-import CourseIdPage from '../_components/CourseIdPage';
 
 const CourseId = ({ params }: { params: { courseId: string } }) => {
-  return <CourseIdPage courseId={params.courseId} />;
+  return <div>id: {params.courseId}</div>;
 };
 
 export default CourseId;
