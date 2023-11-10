@@ -1,20 +1,19 @@
 import { withSSRContext } from 'aws-amplify';
-import { NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 
 import { createCourse } from '@/amplify-lms/graphql/mutations';
 
-export async function POST(req: Request) {
+export async function POST(req: NextRequest) {
   try {
-    const { title, userId } = await req.json();
+    const { title } = await req.json();
 
-    const SSR = withSSRContext({ req } as any);
+    const SSR = withSSRContext({ req });
 
     const { data } = await SSR.API.graphql({
       query: createCourse,
       variables: {
         input: {
           title,
-          userId,
         },
       },
     });
