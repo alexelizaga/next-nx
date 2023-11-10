@@ -1,4 +1,4 @@
-const CourseId = ({ params }: { params: { courseId: string } }) => {
+const CourseId = async ({ params }: { params: { courseId: string } }) => {
   return <div>id: {params.courseId}</div>;
 };
 
