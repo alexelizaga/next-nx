@@ -1,7 +1,7 @@
-import CoursePage from './_components/CoursePage';
+import CoursesPage from './_components/CoursesPage';
 
-const CoursesPage = () => {
-  return <CoursePage />;
+const Courses = () => {
+  return <CoursesPage />;
 };
 
-export default CoursesPage;
+export default Courses;
