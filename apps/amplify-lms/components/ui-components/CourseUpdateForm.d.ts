@@ -5,12 +5,8 @@
  **************************************************************************/
 
 import * as React from 'react';
-import {
-  AutocompleteProps,
-  GridProps,
-  TextFieldProps,
-} from '@aws-amplify/ui-react';
-import { Genre, Product } from '@/amplify-lms/API';
+import { GridProps, TextFieldProps } from '@aws-amplify/ui-react';
+import { Course } from '@/amplify-lms/API';
 export declare type EscapeHatchProps = {
   [elementHierarchy: string]: Record<string, unknown>;
 } | null;
@@ -29,44 +25,38 @@ export declare type ValidationFunction<T> = (
   value: T,
   validationResponse: ValidationResponse
 ) => ValidationResponse | Promise<ValidationResponse>;
-export declare type GenreUpdateFormInputValues = {
-  name?: string;
-  value?: string;
-  Products?: Product[];
+export declare type CourseUpdateFormInputValues = {
+  title?: string;
 };
-export declare type GenreUpdateFormValidationValues = {
-  name?: ValidationFunction<string>;
-  value?: ValidationFunction<string>;
-  Products?: ValidationFunction<Product>;
+export declare type CourseUpdateFormValidationValues = {
+  title?: ValidationFunction<string>;
 };
 export declare type PrimitiveOverrideProps<T> = Partial<T> &
   React.DOMAttributes<HTMLDivElement>;
-export declare type GenreUpdateFormOverridesProps = {
-  GenreUpdateFormGrid?: PrimitiveOverrideProps<GridProps>;
-  name?: PrimitiveOverrideProps<TextFieldProps>;
-  value?: PrimitiveOverrideProps<TextFieldProps>;
-  Products?: PrimitiveOverrideProps<AutocompleteProps>;
+export declare type CourseUpdateFormOverridesProps = {
+  CourseUpdateFormGrid?: PrimitiveOverrideProps<GridProps>;
+  title?: PrimitiveOverrideProps<TextFieldProps>;
 } & EscapeHatchProps;
-export declare type GenreUpdateFormProps = React.PropsWithChildren<
+export declare type CourseUpdateFormProps = React.PropsWithChildren<
   {
-    overrides?: GenreUpdateFormOverridesProps | undefined | null;
+    overrides?: CourseUpdateFormOverridesProps | undefined | null;
   } & {
     id?: string;
-    genre?: Genre;
+    course?: Course;
     onSubmit?: (
-      fields: GenreUpdateFormInputValues
-    ) => GenreUpdateFormInputValues;
-    onSuccess?: (fields: GenreUpdateFormInputValues) => void;
+      fields: CourseUpdateFormInputValues
+    ) => CourseUpdateFormInputValues;
+    onSuccess?: (fields: CourseUpdateFormInputValues) => void;
     onError?: (
-      fields: GenreUpdateFormInputValues,
+      fields: CourseUpdateFormInputValues,
       errorMessage: string
     ) => void;
     onChange?: (
-      fields: GenreUpdateFormInputValues
-    ) => GenreUpdateFormInputValues;
-    onValidate?: GenreUpdateFormValidationValues;
+      fields: CourseUpdateFormInputValues
+    ) => CourseUpdateFormInputValues;
+    onValidate?: CourseUpdateFormValidationValues;
   } & React.CSSProperties
 >;
-export default function GenreUpdateForm(
-  props: GenreUpdateFormProps
+export default function CourseUpdateForm(
+  props: CourseUpdateFormProps
 ): React.ReactElement;

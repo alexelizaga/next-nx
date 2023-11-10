@@ -21,8 +21,8 @@ import {
 } from '@aws-amplify/ui-react';
 import { fetchByPath, getOverrideProps, validateField } from './utils';
 import { API } from 'aws-amplify';
-import { listProducts } from '../../graphql/queries';
-import { createPlatform, updateProduct } from '../../graphql/mutations';
+import { listProducts } from '@/amplify-lms/graphql/queries';
+import { createPlatform, updateProduct } from '@/amplify-lms/graphql/mutations';
 function ArrayField({
   items = [],
   onChange,
