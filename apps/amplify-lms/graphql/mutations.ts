@@ -14,7 +14,6 @@ export const createCourse = /* GraphQL */ `mutation CreateCourse(
 ) {
   createCourse(input: $input, condition: $condition) {
     id
-    userId
     title
     createdAt
     updatedAt
@@ -31,7 +30,6 @@ export const updateCourse = /* GraphQL */ `mutation UpdateCourse(
 ) {
   updateCourse(input: $input, condition: $condition) {
     id
-    userId
     title
     createdAt
     updatedAt
@@ -48,7 +46,6 @@ export const deleteCourse = /* GraphQL */ `mutation DeleteCourse(
 ) {
   deleteCourse(input: $input, condition: $condition) {
     id
-    userId
     title
     createdAt
     updatedAt

@@ -4,12 +4,10 @@
 
 export type CreateCourseInput = {
   id?: string | null,
-  userId?: string | null,
   title?: string | null,
 };
 
 export type ModelCourseConditionInput = {
-  userId?: ModelStringInput | null,
   title?: ModelStringInput | null,
   and?: Array< ModelCourseConditionInput | null > | null,
   or?: Array< ModelCourseConditionInput | null > | null,
@@ -59,7 +57,6 @@ export type ModelSizeInput = {
 export type Course = {
   __typename: "Course",
   id: string,
-  userId?: string | null,
   title?: string | null,
   createdAt: string,
   updatedAt: string,
@@ -67,7 +64,6 @@ export type Course = {
 
 export type UpdateCourseInput = {
   id: string,
-  userId?: string | null,
   title?: string | null,
 };
 
@@ -237,7 +233,6 @@ export type DeleteProductInput = {
 
 export type ModelCourseFilterInput = {
   id?: ModelIDInput | null,
-  userId?: ModelStringInput | null,
   title?: ModelStringInput | null,
   and?: Array< ModelCourseFilterInput | null > | null,
   or?: Array< ModelCourseFilterInput | null > | null,
@@ -301,7 +296,6 @@ export enum ModelSortDirection {
 
 export type ModelSubscriptionCourseFilterInput = {
   id?: ModelSubscriptionIDInput | null,
-  userId?: ModelSubscriptionStringInput | null,
   title?: ModelSubscriptionStringInput | null,
   and?: Array< ModelSubscriptionCourseFilterInput | null > | null,
   or?: Array< ModelSubscriptionCourseFilterInput | null > | null,
@@ -391,7 +385,6 @@ export type CreateCourseMutation = {
   createCourse?:  {
     __typename: "Course",
     id: string,
-    userId?: string | null,
     title?: string | null,
     createdAt: string,
     updatedAt: string,
@@ -407,7 +400,6 @@ export type UpdateCourseMutation = {
   updateCourse?:  {
     __typename: "Course",
     id: string,
-    userId?: string | null,
     title?: string | null,
     createdAt: string,
     updatedAt: string,
@@ -423,7 +415,6 @@ export type DeleteCourseMutation = {
   deleteCourse?:  {
     __typename: "Course",
     id: string,
-    userId?: string | null,
     title?: string | null,
     createdAt: string,
     updatedAt: string,
@@ -762,7 +753,6 @@ export type GetCourseQuery = {
   getCourse?:  {
     __typename: "Course",
     id: string,
-    userId?: string | null,
     title?: string | null,
     createdAt: string,
     updatedAt: string,
@@ -781,7 +771,6 @@ export type ListCoursesQuery = {
     items:  Array< {
       __typename: "Course",
       id: string,
-      userId?: string | null,
       title?: string | null,
       createdAt: string,
       updatedAt: string,
@@ -1080,7 +1069,6 @@ export type OnCreateCourseSubscription = {
   onCreateCourse?:  {
     __typename: "Course",
     id: string,
-    userId?: string | null,
     title?: string | null,
     createdAt: string,
     updatedAt: string,
@@ -1095,7 +1083,6 @@ export type OnUpdateCourseSubscription = {
   onUpdateCourse?:  {
     __typename: "Course",
     id: string,
-    userId?: string | null,
     title?: string | null,
     createdAt: string,
     updatedAt: string,
@@ -1110,7 +1097,6 @@ export type OnDeleteCourseSubscription = {
   onDeleteCourse?:  {
     __typename: "Course",
     id: string,
-    userId?: string | null,
     title?: string | null,
     createdAt: string,
     updatedAt: string,

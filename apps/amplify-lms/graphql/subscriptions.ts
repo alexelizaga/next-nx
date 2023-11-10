@@ -11,7 +11,6 @@ type GeneratedSubscription<InputType, OutputType> = string & {
 export const onCreateCourse = /* GraphQL */ `subscription OnCreateCourse($filter: ModelSubscriptionCourseFilterInput) {
   onCreateCourse(filter: $filter) {
     id
-    userId
     title
     createdAt
     updatedAt
@@ -25,7 +24,6 @@ export const onCreateCourse = /* GraphQL */ `subscription OnCreateCourse($filter
 export const onUpdateCourse = /* GraphQL */ `subscription OnUpdateCourse($filter: ModelSubscriptionCourseFilterInput) {
   onUpdateCourse(filter: $filter) {
     id
-    userId
     title
     createdAt
     updatedAt
@@ -39,7 +37,6 @@ export const onUpdateCourse = /* GraphQL */ `subscription OnUpdateCourse($filter
 export const onDeleteCourse = /* GraphQL */ `subscription OnDeleteCourse($filter: ModelSubscriptionCourseFilterInput) {
   onDeleteCourse(filter: $filter) {
     id
-    userId
     title
     createdAt
     updatedAt

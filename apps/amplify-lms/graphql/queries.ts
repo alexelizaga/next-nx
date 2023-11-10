@@ -11,7 +11,6 @@ type GeneratedQuery<InputType, OutputType> = string & {
 export const getCourse = /* GraphQL */ `query GetCourse($id: ID!) {
   getCourse(id: $id) {
     id
-    userId
     title
     createdAt
     updatedAt
@@ -27,7 +26,6 @@ export const listCourses = /* GraphQL */ `query ListCourses(
   listCourses(filter: $filter, limit: $limit, nextToken: $nextToken) {
     items {
       id
-      userId
       title
       createdAt
       updatedAt
