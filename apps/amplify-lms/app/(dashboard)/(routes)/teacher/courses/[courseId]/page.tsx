@@ -1,5 +1,5 @@
-const CourseId = async ({ params }: { params: { courseId: string } }) => {
-  return <div>id: {params.courseId}</div>;
+const CourseId = () => {
+  return <div>CourseId Page!</div>;
 };
 
 export default CourseId;
