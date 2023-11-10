@@ -10,6 +10,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import toast from 'react-hot-toast';
 
 import { createCourse } from '@/amplify-lms/graphql/mutations';
+import axios from 'axios';
 
 const formSchema = z.object({
   title: z.string().min(1, {
@@ -30,32 +31,32 @@ const CreatePage = () => {
   const { isSubmitting, isValid, errors } = form.formState;
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
-    try {
-      const { data } = await API.graphql<any>({
-        query: createCourse,
-        variables: {
-          input: {
-            ...values
-          }
-        }
-      });
-
-      // router.push(`/teacher/courses/${data.createCourse.id}`);
-      toast.success('Course created');
-    } catch (error) {
-      toast.error('Something went wrong');
-    }
-
     // try {
-    //   const response = await axios.post('/api/courses', {
-    //     ...values
+    //   const { data } = await API.graphql<any>({
+    //     query: createCourse,
+    //     variables: {
+    //       input: {
+    //         ...values
+    //       }
+    //     }
     //   });
 
-    //   router.push(`/teacher/courses/${response.data.id}`);
+    //   router.push(`/teacher/courses/${data.createCourse.id}`);
     //   toast.success('Course created');
     // } catch (error) {
     //   toast.error('Something went wrong');
     // }
+
+    try {
+      const response = await axios.post('/api/courses', {
+        ...values
+      });
+
+      router.push(`/teacher/courses/${response.data.id}`);
+      toast.success('Course created');
+    } catch (error) {
+      toast.error('Something went wrong');
+    }
   };
 
   return (
