@@ -20,17 +20,10 @@ import {
   TextField,
   useTheme
 } from '@aws-amplify/ui-react';
-import { StorageManager } from '@aws-amplify/ui-react-storage';
-import {
-  fetchByPath,
-  getOverrideProps,
-  processFile,
-  validateField
-} from './utils';
+import { fetchByPath, getOverrideProps, validateField } from './utils';
 import { API } from 'aws-amplify';
-import { listGenres, listPlatforms } from '../../graphql/queries';
-import { createProduct } from '../../graphql/mutations';
-import { Field } from '@aws-amplify/ui-react/internal';
+import { listGenres, listPlatforms } from '@/amplify-lms/graphql/queries';
+import { createProduct } from '@/amplify-lms/graphql/mutations';
 function ArrayField({
   items = [],
   onChange,
@@ -200,7 +193,7 @@ export default function ProductCreateForm(props) {
     name: '',
     isSold: false,
     price: '',
-    image: undefined,
+    image: '',
     Platform: undefined,
     Genre: undefined
   };
@@ -518,59 +511,35 @@ export default function ProductCreateForm(props) {
         hasError={errors.price?.hasError}
         {...getOverrideProps(overrides, 'price')}
       ></TextField>
-      <Field
-        errorMessage={errors.image?.errorMessage}
-        hasError={errors.image?.hasError}
-        label={'Image'}
+      <TextField
+        label="Image"
         isRequired={false}
         isReadOnly={false}
-      >
-        <StorageManager
-          onUploadSuccess={({ key }) => {
-            setImage((prev) => {
-              let value = key;
-              if (onChange) {
-                const modelFields = {
-                  name,
-                  isSold,
-                  price,
-                  image: value,
-                  Platform,
-                  Genre
-                };
-                const result = onChange(modelFields);
-                value = result?.image ?? value;
-              }
-              return value;
-            });
-          }}
-          onFileRemove={({ key }) => {
-            setImage((prev) => {
-              let value = initialValues?.image;
-              if (onChange) {
-                const modelFields = {
-                  name,
-                  isSold,
-                  price,
-                  image: value,
-                  Platform,
-                  Genre
-                };
-                const result = onChange(modelFields);
-                value = result?.image ?? value;
-              }
-              return value;
-            });
-          }}
-          processFile={processFile}
-          accessLevel={'private'}
-          acceptedFileTypes={[]}
-          isResumable={false}
-          showThumbnails={true}
-          maxFileCount={1}
-          {...getOverrideProps(overrides, 'image')}
-        ></StorageManager>
-      </Field>
+        value={image}
+        onChange={(e) => {
+          let { value } = e.target;
+          if (onChange) {
+            const modelFields = {
+              name,
+              isSold,
+              price,
+              image: value,
+              Platform,
+              Genre
+            };
+            const result = onChange(modelFields);
+            value = result?.image ?? value;
+          }
+          if (errors.image?.hasError) {
+            runValidationTasks('image', value);
+          }
+          setImage(value);
+        }}
+        onBlur={() => runValidationTasks('image', image)}
+        errorMessage={errors.image?.errorMessage}
+        hasError={errors.image?.hasError}
+        {...getOverrideProps(overrides, 'image')}
+      ></TextField>
       <ArrayField
         lengthLimit={1}
         onChange={async (items) => {

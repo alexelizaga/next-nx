@@ -3,7 +3,7 @@
 import { Button } from '@aws-amplify/ui-react';
 import Link from 'next/link';
 
-const CoursePage = () => {
+const CoursesPage = () => {
   return (
     <div className="p-6">
       <Link href="/teacher/create">
@@ -13,4 +13,4 @@ const CoursePage = () => {
   );
 };
 
-export default CoursePage;
+export default CoursesPage;

@@ -11,8 +11,7 @@ import {
   SwitchFieldProps,
   TextFieldProps,
 } from '@aws-amplify/ui-react';
-import { StorageManagerProps } from '@aws-amplify/ui-react-storage';
-import { Genre, Platform } from '../../API.js';
+import { Genre, Platform } from '@/amplify-lms/API';
 export declare type EscapeHatchProps = {
   [elementHierarchy: string]: Record<string, unknown>;
 } | null;
@@ -54,7 +53,7 @@ export declare type ProductCreateFormOverridesProps = {
   name?: PrimitiveOverrideProps<TextFieldProps>;
   isSold?: PrimitiveOverrideProps<SwitchFieldProps>;
   price?: PrimitiveOverrideProps<TextFieldProps>;
-  image?: PrimitiveOverrideProps<StorageManagerProps>;
+  image?: PrimitiveOverrideProps<TextFieldProps>;
   Platform?: PrimitiveOverrideProps<AutocompleteProps>;
   Genre?: PrimitiveOverrideProps<AutocompleteProps>;
 } & EscapeHatchProps;
