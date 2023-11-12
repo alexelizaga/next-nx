@@ -12,6 +12,9 @@ export const getCourse = /* GraphQL */ `query GetCourse($id: ID!) {
   getCourse(id: $id) {
     id
     title
+    description
+    imageUrl
+    price
     createdAt
     updatedAt
     __typename
@@ -27,6 +30,9 @@ export const listCourses = /* GraphQL */ `query ListCourses(
     items {
       id
       title
+      description
+      imageUrl
+      price
       createdAt
       updatedAt
       __typename

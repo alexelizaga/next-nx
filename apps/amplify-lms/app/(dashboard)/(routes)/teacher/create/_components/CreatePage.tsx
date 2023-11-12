@@ -9,6 +9,8 @@ import { createCourse } from '@/amplify-lms/graphql/mutations';
 import toast from 'react-hot-toast';
 import { Button, Flex, Input, Label } from '@aws-amplify/ui-react';
 import Link from 'next/link';
+import { GraphQLQuery } from '@aws-amplify/api';
+import { CreateCourseMutation } from '@/amplify-lms/API';
 
 const formSchema = z.object({
   title: z.string().min(1, {
@@ -30,7 +32,7 @@ const CreatePage = () => {
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     try {
-      const { data } = await API.graphql<any>({
+      const { data } = await API.graphql<GraphQLQuery<CreateCourseMutation>>({
         query: createCourse,
         variables: {
           input: {
@@ -39,7 +41,7 @@ const CreatePage = () => {
         }
       });
 
-      router.push(`/teacher/courses/course?id=${data.createCourse.id}`);
+      router.push(`/teacher/courses/course?id=${data?.createCourse?.id}`);
       toast.success('Course created');
     } catch (error) {
       toast.error('Something went wrong');
@@ -92,7 +94,7 @@ const CreatePage = () => {
                 Cancel
               </Button>
             </Link>
-            <Button type="submit" disabled={!isValid || isSubmitting}>
+            <Button type="submit" disabled={!isValid} isLoading={isSubmitting}>
               Continue
             </Button>
           </div>

@@ -4,11 +4,17 @@
 
 export type CreateCourseInput = {
   id?: string | null,
-  title?: string | null,
+  title: string,
+  description?: string | null,
+  imageUrl?: string | null,
+  price?: number | null,
 };
 
 export type ModelCourseConditionInput = {
   title?: ModelStringInput | null,
+  description?: ModelStringInput | null,
+  imageUrl?: ModelStringInput | null,
+  price?: ModelFloatInput | null,
   and?: Array< ModelCourseConditionInput | null > | null,
   or?: Array< ModelCourseConditionInput | null > | null,
   not?: ModelCourseConditionInput | null,
@@ -54,10 +60,25 @@ export type ModelSizeInput = {
   between?: Array< number | null > | null,
 };
 
+export type ModelFloatInput = {
+  ne?: number | null,
+  eq?: number | null,
+  le?: number | null,
+  lt?: number | null,
+  ge?: number | null,
+  gt?: number | null,
+  between?: Array< number | null > | null,
+  attributeExists?: boolean | null,
+  attributeType?: ModelAttributeTypes | null,
+};
+
 export type Course = {
   __typename: "Course",
   id: string,
-  title?: string | null,
+  title: string,
+  description?: string | null,
+  imageUrl?: string | null,
+  price?: number | null,
   createdAt: string,
   updatedAt: string,
 };
@@ -65,6 +86,9 @@ export type Course = {
 export type UpdateCourseInput = {
   id: string,
   title?: string | null,
+  description?: string | null,
+  imageUrl?: string | null,
+  price?: number | null,
 };
 
 export type DeleteCourseInput = {
@@ -189,18 +213,6 @@ export type ModelBooleanInput = {
   attributeType?: ModelAttributeTypes | null,
 };
 
-export type ModelFloatInput = {
-  ne?: number | null,
-  eq?: number | null,
-  le?: number | null,
-  lt?: number | null,
-  ge?: number | null,
-  gt?: number | null,
-  between?: Array< number | null > | null,
-  attributeExists?: boolean | null,
-  attributeType?: ModelAttributeTypes | null,
-};
-
 export type ModelIDInput = {
   ne?: string | null,
   eq?: string | null,
@@ -234,6 +246,9 @@ export type DeleteProductInput = {
 export type ModelCourseFilterInput = {
   id?: ModelIDInput | null,
   title?: ModelStringInput | null,
+  description?: ModelStringInput | null,
+  imageUrl?: ModelStringInput | null,
+  price?: ModelFloatInput | null,
   and?: Array< ModelCourseFilterInput | null > | null,
   or?: Array< ModelCourseFilterInput | null > | null,
   not?: ModelCourseFilterInput | null,
@@ -297,6 +312,9 @@ export enum ModelSortDirection {
 export type ModelSubscriptionCourseFilterInput = {
   id?: ModelSubscriptionIDInput | null,
   title?: ModelSubscriptionStringInput | null,
+  description?: ModelSubscriptionStringInput | null,
+  imageUrl?: ModelSubscriptionStringInput | null,
+  price?: ModelSubscriptionFloatInput | null,
   and?: Array< ModelSubscriptionCourseFilterInput | null > | null,
   or?: Array< ModelSubscriptionCourseFilterInput | null > | null,
 };
@@ -329,6 +347,18 @@ export type ModelSubscriptionStringInput = {
   beginsWith?: string | null,
   in?: Array< string | null > | null,
   notIn?: Array< string | null > | null,
+};
+
+export type ModelSubscriptionFloatInput = {
+  ne?: number | null,
+  eq?: number | null,
+  le?: number | null,
+  lt?: number | null,
+  ge?: number | null,
+  gt?: number | null,
+  between?: Array< number | null > | null,
+  in?: Array< number | null > | null,
+  notIn?: Array< number | null > | null,
 };
 
 export type ModelSubscriptionPlatformFilterInput = {
@@ -364,18 +394,6 @@ export type ModelSubscriptionBooleanInput = {
   eq?: boolean | null,
 };
 
-export type ModelSubscriptionFloatInput = {
-  ne?: number | null,
-  eq?: number | null,
-  le?: number | null,
-  lt?: number | null,
-  ge?: number | null,
-  gt?: number | null,
-  between?: Array< number | null > | null,
-  in?: Array< number | null > | null,
-  notIn?: Array< number | null > | null,
-};
-
 export type CreateCourseMutationVariables = {
   input: CreateCourseInput,
   condition?: ModelCourseConditionInput | null,
@@ -385,7 +403,10 @@ export type CreateCourseMutation = {
   createCourse?:  {
     __typename: "Course",
     id: string,
-    title?: string | null,
+    title: string,
+    description?: string | null,
+    imageUrl?: string | null,
+    price?: number | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -400,7 +421,10 @@ export type UpdateCourseMutation = {
   updateCourse?:  {
     __typename: "Course",
     id: string,
-    title?: string | null,
+    title: string,
+    description?: string | null,
+    imageUrl?: string | null,
+    price?: number | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -415,7 +439,10 @@ export type DeleteCourseMutation = {
   deleteCourse?:  {
     __typename: "Course",
     id: string,
-    title?: string | null,
+    title: string,
+    description?: string | null,
+    imageUrl?: string | null,
+    price?: number | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -753,7 +780,10 @@ export type GetCourseQuery = {
   getCourse?:  {
     __typename: "Course",
     id: string,
-    title?: string | null,
+    title: string,
+    description?: string | null,
+    imageUrl?: string | null,
+    price?: number | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -771,7 +801,10 @@ export type ListCoursesQuery = {
     items:  Array< {
       __typename: "Course",
       id: string,
-      title?: string | null,
+      title: string,
+      description?: string | null,
+      imageUrl?: string | null,
+      price?: number | null,
       createdAt: string,
       updatedAt: string,
     } | null >,
@@ -1069,7 +1102,10 @@ export type OnCreateCourseSubscription = {
   onCreateCourse?:  {
     __typename: "Course",
     id: string,
-    title?: string | null,
+    title: string,
+    description?: string | null,
+    imageUrl?: string | null,
+    price?: number | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -1083,7 +1119,10 @@ export type OnUpdateCourseSubscription = {
   onUpdateCourse?:  {
     __typename: "Course",
     id: string,
-    title?: string | null,
+    title: string,
+    description?: string | null,
+    imageUrl?: string | null,
+    price?: number | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -1097,7 +1136,10 @@ export type OnDeleteCourseSubscription = {
   onDeleteCourse?:  {
     __typename: "Course",
     id: string,
-    title?: string | null,
+    title: string,
+    description?: string | null,
+    imageUrl?: string | null,
+    price?: number | null,
     createdAt: string,
     updatedAt: string,
   } | null,
