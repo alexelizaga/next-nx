@@ -14,6 +14,7 @@ import { CourseValues } from '@/amplify-lms/types/types';
 import IconBadge from '@/amplify-lms/components/IconBadge';
 
 import TitleForm from './_components/title-form';
+import DescriptionForm from './_components/description-form';
 
 const CoursePage = () => {
   const router = useRouter();
@@ -93,6 +94,7 @@ const CoursePage = () => {
             <h2 className="text-xl">Customize your course</h2>
           </div>
           <TitleForm initialData={course} onSubmit={onSubmit} />
+          <DescriptionForm initialData={course} onSubmit={onSubmit} />
         </div>
       </div>
     </div>
