@@ -31,8 +31,8 @@ const DescriptionForm = ({
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
-    defaultValues: initialData as {
-      description?: string;
+    defaultValues: {
+      description: initialData?.description || ''
     }
   });
 
