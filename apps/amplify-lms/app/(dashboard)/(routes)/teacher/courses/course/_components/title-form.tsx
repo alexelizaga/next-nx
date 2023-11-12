@@ -2,23 +2,16 @@
 
 import React from 'react';
 import * as z from 'zod';
-import axios from 'axios';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import { Pencil } from 'lucide-react';
-import { Button, Flex, Input, Label } from '@aws-amplify/ui-react';
+import { Button, Flex, Input } from '@aws-amplify/ui-react';
 
 import { CourseValues } from '@/amplify-lms/types/types';
-import { updateCourse } from '@/amplify-lms/graphql/mutations';
-import { API } from 'aws-amplify';
-import toast from 'react-hot-toast';
-import { UpdateCourseMutation } from '@/amplify-lms/API';
-import { GraphQLQuery } from '@aws-amplify/api';
-import { useRouter } from 'next/navigation';
 
 interface TitleFormProps {
-  courseId: string;
   initialData: CourseValues;
+  onSubmit: (values: z.infer<typeof formSchema>) => void;
 }
 
 const formSchema = z.object({
@@ -27,8 +20,7 @@ const formSchema = z.object({
   })
 });
 
-const TitleForm = ({ courseId, initialData }: TitleFormProps) => {
-  const router = useRouter();
+const TitleForm = ({ initialData, onSubmit: onSubmitForm }: TitleFormProps) => {
   const [isEditing, setIsEditing] = React.useState(false);
 
   const toggleEdit = () => setIsEditing((current) => !current);
@@ -42,22 +34,8 @@ const TitleForm = ({ courseId, initialData }: TitleFormProps) => {
   const { isSubmitting, isValid, errors } = form.formState;
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
-    try {
-      const { data } = await API.graphql<GraphQLQuery<UpdateCourseMutation>>({
-        query: updateCourse,
-        variables: {
-          input: {
-            id: courseId,
-            ...values
-          }
-        }
-      });
-      toast.success('Course created');
-      toggleEdit();
-      router.refresh();
-    } catch (error) {
-      toast.error('Something went wrong');
-    }
+    toggleEdit();
+    onSubmitForm(values);
   };
 
   return (

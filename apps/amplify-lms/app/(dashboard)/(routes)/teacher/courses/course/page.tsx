@@ -4,10 +4,12 @@ import React from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
 import { API } from 'aws-amplify';
 import { GraphQLQuery } from '@aws-amplify/api';
+import toast from 'react-hot-toast';
 import { LayoutDashboard } from 'lucide-react';
 
-import { GetCourseQuery } from '@/amplify-lms/API';
+import { GetCourseQuery, UpdateCourseMutation } from '@/amplify-lms/API';
 import * as queries from '@/amplify-lms/graphql/queries';
+import { updateCourse } from '@/amplify-lms/graphql/mutations';
 import { CourseValues } from '@/amplify-lms/types/types';
 import IconBadge from '@/amplify-lms/components/IconBadge';
 
@@ -48,6 +50,24 @@ const CoursePage = () => {
 
   const completionText = `(${completedFields}/${totalFields})`;
 
+  const onSubmit = async (values: Record<string, string>) => {
+    try {
+      const { data } = await API.graphql<GraphQLQuery<UpdateCourseMutation>>({
+        query: updateCourse,
+        variables: {
+          input: {
+            id: courseId,
+            ...values
+          }
+        }
+      });
+      setCourse(data?.updateCourse as CourseValues);
+      toast.success('Course created');
+    } catch (error) {
+      toast.error('Something went wrong');
+    }
+  };
+
   if (loading) {
     return <div>Loading ...</div>;
   }
@@ -72,7 +92,7 @@ const CoursePage = () => {
             <IconBadge icon={LayoutDashboard} />
             <h2 className="text-xl">Customize your course</h2>
           </div>
-          <TitleForm initialData={course} courseId={course.id} />
+          <TitleForm initialData={course} onSubmit={onSubmit} />
         </div>
       </div>
     </div>
