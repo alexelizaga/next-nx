@@ -15,6 +15,9 @@ export const createCourse = /* GraphQL */ `mutation CreateCourse(
   createCourse(input: $input, condition: $condition) {
     id
     title
+    description
+    imageUrl
+    price
     createdAt
     updatedAt
     __typename
@@ -31,6 +34,9 @@ export const updateCourse = /* GraphQL */ `mutation UpdateCourse(
   updateCourse(input: $input, condition: $condition) {
     id
     title
+    description
+    imageUrl
+    price
     createdAt
     updatedAt
     __typename
@@ -47,6 +53,9 @@ export const deleteCourse = /* GraphQL */ `mutation DeleteCourse(
   deleteCourse(input: $input, condition: $condition) {
     id
     title
+    description
+    imageUrl
+    price
     createdAt
     updatedAt
     __typename

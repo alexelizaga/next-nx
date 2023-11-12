@@ -12,6 +12,9 @@ export const onCreateCourse = /* GraphQL */ `subscription OnCreateCourse($filter
   onCreateCourse(filter: $filter) {
     id
     title
+    description
+    imageUrl
+    price
     createdAt
     updatedAt
     __typename
@@ -25,6 +28,9 @@ export const onUpdateCourse = /* GraphQL */ `subscription OnUpdateCourse($filter
   onUpdateCourse(filter: $filter) {
     id
     title
+    description
+    imageUrl
+    price
     createdAt
     updatedAt
     __typename
@@ -38,6 +44,9 @@ export const onDeleteCourse = /* GraphQL */ `subscription OnDeleteCourse($filter
   onDeleteCourse(filter: $filter) {
     id
     title
+    description
+    imageUrl
+    price
     createdAt
     updatedAt
     __typename

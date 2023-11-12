@@ -1,6 +1,9 @@
 type Course @model @auth(rules: [{allow: public}]) {
   id: ID!
-  title: String
+  title: String!
+  description: String
+  imageUrl: String
+  price: Float
 }
 
 type Platform @model @auth(rules: [{allow: public}]) {
@@ -27,4 +30,5 @@ type Product @model @auth(rules: [{allow: public}]) {
   genreID: ID! @index(name: "byGenre")
   Platform: Platform @belongsTo(fields: ["platformID"])
   Genre: Genre @belongsTo(fields: ["genreID"])
-} 
+}
+ 
