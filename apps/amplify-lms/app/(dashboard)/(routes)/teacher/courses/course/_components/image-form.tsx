@@ -4,10 +4,11 @@ import React from 'react';
 import * as z from 'zod';
 import { ImageIcon, Pencil, PlusCircle } from 'lucide-react';
 import { Button } from '@aws-amplify/ui-react';
+import { StorageImage } from '@aws-amplify/ui-react-storage';
 
 import { CourseValues } from '@/amplify-lms/types/types';
-import { StorageImage } from '@aws-amplify/ui-react-storage';
 import FileUpload from '@/amplify-lms/components/FileUpload';
+import { removeFile } from '@/amplify-lms/lib/removeFile';
 
 interface ImageFormProps {
   initialData: CourseValues;
@@ -25,8 +26,12 @@ const ImageForm = ({ initialData, onSubmit: onSubmitForm }: ImageFormProps) => {
 
   const toggleEdit = () => setIsEditing((current) => !current);
 
+  const removeLastFile = () => {
+    if (!initialData.imageUrl) return;
+    removeFile(initialData.imageUrl);
+  };
+
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
-    console.log({ values });
     toggleEdit();
     onSubmitForm(values);
   };
@@ -70,7 +75,7 @@ const ImageForm = ({ initialData, onSubmit: onSubmitForm }: ImageFormProps) => {
       {isEditing && (
         <div className="relative aspect-video mt-2">
           <FileUpload
-            variation={'drop'}
+            onStart={removeLastFile}
             fileType={'image'}
             accessLevel={'private'}
             onSuccess={onSubmit}
