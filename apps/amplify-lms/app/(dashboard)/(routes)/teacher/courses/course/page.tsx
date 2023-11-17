@@ -64,7 +64,7 @@ const CoursePage = () => {
         }
       });
       setCourse(data?.updateCourse as CourseValues);
-      toast.success('Course created');
+      toast.success('Course updated');
     } catch (error) {
       toast.error('Something went wrong');
     }
