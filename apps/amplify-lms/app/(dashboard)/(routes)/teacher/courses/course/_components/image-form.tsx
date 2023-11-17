@@ -51,7 +51,7 @@ const ImageForm = ({ initialData, onSubmit: onSubmitForm }: ImageFormProps) => {
           {!isEditing && initialData.imageUrl && (
             <>
               <Pencil className="h-4 w-4 mr-2" />
-              Edit image
+              Edit
             </>
           )}
         </Button>
