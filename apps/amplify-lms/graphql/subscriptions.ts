@@ -8,13 +8,117 @@ type GeneratedSubscription<InputType, OutputType> = string & {
   __generatedSubscriptionOutput: OutputType;
 };
 
+export const onCreateCategory = /* GraphQL */ `subscription OnCreateCategory($filter: ModelSubscriptionCategoryFilterInput) {
+  onCreateCategory(filter: $filter) {
+    id
+    icon
+    name
+    Courses {
+      items {
+        id
+        title
+        description
+        image
+        price
+        isPublished
+        categoryId
+        createdAt
+        updatedAt
+        __typename
+      }
+      nextToken
+      __typename
+    }
+    createdAt
+    updatedAt
+    __typename
+  }
+}
+` as GeneratedSubscription<
+  APITypes.OnCreateCategorySubscriptionVariables,
+  APITypes.OnCreateCategorySubscription
+>;
+export const onUpdateCategory = /* GraphQL */ `subscription OnUpdateCategory($filter: ModelSubscriptionCategoryFilterInput) {
+  onUpdateCategory(filter: $filter) {
+    id
+    icon
+    name
+    Courses {
+      items {
+        id
+        title
+        description
+        image
+        price
+        isPublished
+        categoryId
+        createdAt
+        updatedAt
+        __typename
+      }
+      nextToken
+      __typename
+    }
+    createdAt
+    updatedAt
+    __typename
+  }
+}
+` as GeneratedSubscription<
+  APITypes.OnUpdateCategorySubscriptionVariables,
+  APITypes.OnUpdateCategorySubscription
+>;
+export const onDeleteCategory = /* GraphQL */ `subscription OnDeleteCategory($filter: ModelSubscriptionCategoryFilterInput) {
+  onDeleteCategory(filter: $filter) {
+    id
+    icon
+    name
+    Courses {
+      items {
+        id
+        title
+        description
+        image
+        price
+        isPublished
+        categoryId
+        createdAt
+        updatedAt
+        __typename
+      }
+      nextToken
+      __typename
+    }
+    createdAt
+    updatedAt
+    __typename
+  }
+}
+` as GeneratedSubscription<
+  APITypes.OnDeleteCategorySubscriptionVariables,
+  APITypes.OnDeleteCategorySubscription
+>;
 export const onCreateCourse = /* GraphQL */ `subscription OnCreateCourse($filter: ModelSubscriptionCourseFilterInput) {
   onCreateCourse(filter: $filter) {
     id
     title
     description
-    imageUrl
+    image
     price
+    isPublished
+    categoryId
+    Category {
+      id
+      icon
+      name
+      Courses {
+        nextToken
+        __typename
+      }
+      createdAt
+      updatedAt
+      __typename
+    }
     createdAt
     updatedAt
     __typename
@@ -29,8 +133,22 @@ export const onUpdateCourse = /* GraphQL */ `subscription OnUpdateCourse($filter
     id
     title
     description
-    imageUrl
+    image
     price
+    isPublished
+    categoryId
+    Category {
+      id
+      icon
+      name
+      Courses {
+        nextToken
+        __typename
+      }
+      createdAt
+      updatedAt
+      __typename
+    }
     createdAt
     updatedAt
     __typename
@@ -45,8 +163,22 @@ export const onDeleteCourse = /* GraphQL */ `subscription OnDeleteCourse($filter
     id
     title
     description
-    imageUrl
+    image
     price
+    isPublished
+    categoryId
+    Category {
+      id
+      icon
+      name
+      Courses {
+        nextToken
+        __typename
+      }
+      createdAt
+      updatedAt
+      __typename
+    }
     createdAt
     updatedAt
     __typename

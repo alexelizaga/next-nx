@@ -23,7 +23,7 @@ const IconBadge = ({
   const iconVariants = cn(
     variant === 'default' && 'text-sky-700',
     variant === 'success' && 'text-emerald-700',
-    size === 'default' && 'h-8 w-8',
+    size === 'default' && 'h-6 w-6',
     size === 'sm' && 'h-4 w-4'
   );
 

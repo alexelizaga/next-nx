@@ -5,8 +5,13 @@
  **************************************************************************/
 
 import * as React from 'react';
-import { GridProps, TextFieldProps } from '@aws-amplify/ui-react';
-import { Course } from '@/amplify-lms/API';
+import {
+  AutocompleteProps,
+  GridProps,
+  SwitchFieldProps,
+  TextFieldProps,
+} from '@aws-amplify/ui-react';
+import { Category, Course } from '../../API.js';
 export declare type EscapeHatchProps = {
   [elementHierarchy: string]: Record<string, unknown>;
 } | null;
@@ -27,15 +32,30 @@ export declare type ValidationFunction<T> = (
 ) => ValidationResponse | Promise<ValidationResponse>;
 export declare type CourseUpdateFormInputValues = {
   title?: string;
+  description?: string;
+  image?: string;
+  price?: number;
+  isPublished?: boolean;
+  Category?: Category;
 };
 export declare type CourseUpdateFormValidationValues = {
   title?: ValidationFunction<string>;
+  description?: ValidationFunction<string>;
+  image?: ValidationFunction<string>;
+  price?: ValidationFunction<number>;
+  isPublished?: ValidationFunction<boolean>;
+  Category?: ValidationFunction<Category>;
 };
 export declare type PrimitiveOverrideProps<T> = Partial<T> &
   React.DOMAttributes<HTMLDivElement>;
 export declare type CourseUpdateFormOverridesProps = {
   CourseUpdateFormGrid?: PrimitiveOverrideProps<GridProps>;
   title?: PrimitiveOverrideProps<TextFieldProps>;
+  description?: PrimitiveOverrideProps<TextFieldProps>;
+  image?: PrimitiveOverrideProps<TextFieldProps>;
+  price?: PrimitiveOverrideProps<TextFieldProps>;
+  isPublished?: PrimitiveOverrideProps<SwitchFieldProps>;
+  Category?: PrimitiveOverrideProps<AutocompleteProps>;
 } & EscapeHatchProps;
 export declare type CourseUpdateFormProps = React.PropsWithChildren<
   {

@@ -21,13 +21,10 @@ import {
   useTheme
 } from '@aws-amplify/ui-react';
 import { fetchByPath, getOverrideProps, validateField } from './utils';
-import { API } from 'aws-amplify';
-import {
-  getProduct,
-  listGenres,
-  listPlatforms
-} from '@/amplify-lms/graphql/queries';
-import { updateProduct } from '@/amplify-lms/graphql/mutations';
+import { generateClient } from 'aws-amplify/api';
+import { getProduct, listGenres, listPlatforms } from '../../graphql/queries';
+import { updateProduct } from '../../graphql/mutations';
+const client = generateClient();
 function ArrayField({
   items = [],
   onChange,
@@ -235,7 +232,7 @@ export default function ProductUpdateForm(props) {
     const queryData = async () => {
       const record = idProp
         ? (
-            await API.graphql({
+            await client.graphql({
               query: getProduct.replaceAll('__typename', ''),
               variables: { id: idProp }
             })
@@ -317,7 +314,7 @@ export default function ProductUpdateForm(props) {
         variables['nextToken'] = newNext;
       }
       const result = (
-        await API.graphql({
+        await client.graphql({
           query: listPlatforms.replaceAll('__typename', ''),
           variables
         })
@@ -346,7 +343,7 @@ export default function ProductUpdateForm(props) {
         variables['nextToken'] = newNext;
       }
       const result = (
-        await API.graphql({
+        await client.graphql({
           query: listGenres.replaceAll('__typename', ''),
           variables
         })
@@ -424,7 +421,7 @@ export default function ProductUpdateForm(props) {
             platformID: modelFields?.Platform?.id ?? null,
             genreID: modelFields?.Genre?.id ?? null
           };
-          await API.graphql({
+          await client.graphql({
             query: updateProduct.replaceAll('__typename', ''),
             variables: {
               input: {

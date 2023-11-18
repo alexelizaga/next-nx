@@ -1,9 +1,19 @@
+type Category @model @auth(rules: [{allow: public}]) {
+  id: ID!
+  icon: String
+  name: String
+  Courses: [Course] @hasMany(indexName: "byCategory", fields: ["id"])
+}
+
 type Course @model @auth(rules: [{allow: public}]) {
   id: ID!
   title: String!
   description: String
-  imageUrl: String
+  image: String
   price: Float
+  isPublished: Boolean
+  categoryId: ID @index(name: "byCategory")
+  Category: Category @belongsTo(fields: ["categoryId"])
 }
 
 type Platform @model @auth(rules: [{allow: public}]) {

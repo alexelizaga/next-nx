@@ -8,6 +8,105 @@ type GeneratedMutation<InputType, OutputType> = string & {
   __generatedMutationOutput: OutputType;
 };
 
+export const createCategory = /* GraphQL */ `mutation CreateCategory(
+  $input: CreateCategoryInput!
+  $condition: ModelCategoryConditionInput
+) {
+  createCategory(input: $input, condition: $condition) {
+    id
+    icon
+    name
+    Courses {
+      items {
+        id
+        title
+        description
+        image
+        price
+        isPublished
+        categoryId
+        createdAt
+        updatedAt
+        __typename
+      }
+      nextToken
+      __typename
+    }
+    createdAt
+    updatedAt
+    __typename
+  }
+}
+` as GeneratedMutation<
+  APITypes.CreateCategoryMutationVariables,
+  APITypes.CreateCategoryMutation
+>;
+export const updateCategory = /* GraphQL */ `mutation UpdateCategory(
+  $input: UpdateCategoryInput!
+  $condition: ModelCategoryConditionInput
+) {
+  updateCategory(input: $input, condition: $condition) {
+    id
+    icon
+    name
+    Courses {
+      items {
+        id
+        title
+        description
+        image
+        price
+        isPublished
+        categoryId
+        createdAt
+        updatedAt
+        __typename
+      }
+      nextToken
+      __typename
+    }
+    createdAt
+    updatedAt
+    __typename
+  }
+}
+` as GeneratedMutation<
+  APITypes.UpdateCategoryMutationVariables,
+  APITypes.UpdateCategoryMutation
+>;
+export const deleteCategory = /* GraphQL */ `mutation DeleteCategory(
+  $input: DeleteCategoryInput!
+  $condition: ModelCategoryConditionInput
+) {
+  deleteCategory(input: $input, condition: $condition) {
+    id
+    icon
+    name
+    Courses {
+      items {
+        id
+        title
+        description
+        image
+        price
+        isPublished
+        categoryId
+        createdAt
+        updatedAt
+        __typename
+      }
+      nextToken
+      __typename
+    }
+    createdAt
+    updatedAt
+    __typename
+  }
+}
+` as GeneratedMutation<
+  APITypes.DeleteCategoryMutationVariables,
+  APITypes.DeleteCategoryMutation
+>;
 export const createCourse = /* GraphQL */ `mutation CreateCourse(
   $input: CreateCourseInput!
   $condition: ModelCourseConditionInput
@@ -16,8 +115,22 @@ export const createCourse = /* GraphQL */ `mutation CreateCourse(
     id
     title
     description
-    imageUrl
+    image
     price
+    isPublished
+    categoryId
+    Category {
+      id
+      icon
+      name
+      Courses {
+        nextToken
+        __typename
+      }
+      createdAt
+      updatedAt
+      __typename
+    }
     createdAt
     updatedAt
     __typename
@@ -35,8 +148,22 @@ export const updateCourse = /* GraphQL */ `mutation UpdateCourse(
     id
     title
     description
-    imageUrl
+    image
     price
+    isPublished
+    categoryId
+    Category {
+      id
+      icon
+      name
+      Courses {
+        nextToken
+        __typename
+      }
+      createdAt
+      updatedAt
+      __typename
+    }
     createdAt
     updatedAt
     __typename
@@ -54,8 +181,22 @@ export const deleteCourse = /* GraphQL */ `mutation DeleteCourse(
     id
     title
     description
-    imageUrl
+    image
     price
+    isPublished
+    categoryId
+    Category {
+      id
+      icon
+      name
+      Courses {
+        nextToken
+        __typename
+      }
+      createdAt
+      updatedAt
+      __typename
+    }
     createdAt
     updatedAt
     __typename

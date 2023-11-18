@@ -7,8 +7,9 @@ export type CourseValues = Pick<
   | 'id'
   | 'title'
   | 'description'
-  | 'imageUrl'
+  | 'image'
   | 'price'
+  | 'categoryId'
   | 'createdAt'
   | 'updatedAt'
 >;

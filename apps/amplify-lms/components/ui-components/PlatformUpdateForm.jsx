@@ -20,9 +20,10 @@ import {
   useTheme
 } from '@aws-amplify/ui-react';
 import { fetchByPath, getOverrideProps, validateField } from './utils';
-import { API } from 'aws-amplify';
-import { getPlatform, listProducts } from '@/amplify-lms/graphql/queries';
-import { updatePlatform, updateProduct } from '@/amplify-lms/graphql/mutations';
+import { generateClient } from 'aws-amplify/api';
+import { getPlatform, listProducts } from '../../graphql/queries';
+import { updatePlatform, updateProduct } from '../../graphql/mutations';
+const client = generateClient();
 function ArrayField({
   items = [],
   onChange,
@@ -219,7 +220,7 @@ export default function PlatformUpdateForm(props) {
     const queryData = async () => {
       const record = idProp
         ? (
-            await API.graphql({
+            await client.graphql({
               query: getPlatform.replaceAll('__typename', ''),
               variables: { id: idProp }
             })
@@ -285,7 +286,7 @@ export default function PlatformUpdateForm(props) {
         variables['nextToken'] = newNext;
       }
       const result = (
-        await API.graphql({
+        await client.graphql({
           query: listProducts.replaceAll('__typename', ''),
           variables
         })
@@ -377,7 +378,7 @@ export default function PlatformUpdateForm(props) {
               );
             }
             promises.push(
-              API.graphql({
+              client.graphql({
                 query: updateProduct.replaceAll('__typename', ''),
                 variables: {
                   input: {
@@ -389,7 +390,7 @@ export default function PlatformUpdateForm(props) {
           });
           productsToLink.forEach((original) => {
             promises.push(
-              API.graphql({
+              client.graphql({
                 query: updateProduct.replaceAll('__typename', ''),
                 variables: {
                   input: {
@@ -404,7 +405,7 @@ export default function PlatformUpdateForm(props) {
             value: modelFields.value ?? null
           };
           promises.push(
-            API.graphql({
+            client.graphql({
               query: updatePlatform.replaceAll('__typename', ''),
               variables: {
                 input: {

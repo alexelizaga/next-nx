@@ -8,13 +8,83 @@ type GeneratedQuery<InputType, OutputType> = string & {
   __generatedQueryOutput: OutputType;
 };
 
+export const getCategory = /* GraphQL */ `query GetCategory($id: ID!) {
+  getCategory(id: $id) {
+    id
+    icon
+    name
+    Courses {
+      items {
+        id
+        title
+        description
+        image
+        price
+        isPublished
+        categoryId
+        createdAt
+        updatedAt
+        __typename
+      }
+      nextToken
+      __typename
+    }
+    createdAt
+    updatedAt
+    __typename
+  }
+}
+` as GeneratedQuery<
+  APITypes.GetCategoryQueryVariables,
+  APITypes.GetCategoryQuery
+>;
+export const listCategories = /* GraphQL */ `query ListCategories(
+  $filter: ModelCategoryFilterInput
+  $limit: Int
+  $nextToken: String
+) {
+  listCategories(filter: $filter, limit: $limit, nextToken: $nextToken) {
+    items {
+      id
+      icon
+      name
+      Courses {
+        nextToken
+        __typename
+      }
+      createdAt
+      updatedAt
+      __typename
+    }
+    nextToken
+    __typename
+  }
+}
+` as GeneratedQuery<
+  APITypes.ListCategoriesQueryVariables,
+  APITypes.ListCategoriesQuery
+>;
 export const getCourse = /* GraphQL */ `query GetCourse($id: ID!) {
   getCourse(id: $id) {
     id
     title
     description
-    imageUrl
+    image
     price
+    isPublished
+    categoryId
+    Category {
+      id
+      icon
+      name
+      Courses {
+        nextToken
+        __typename
+      }
+      createdAt
+      updatedAt
+      __typename
+    }
     createdAt
     updatedAt
     __typename
@@ -31,8 +101,18 @@ export const listCourses = /* GraphQL */ `query ListCourses(
       id
       title
       description
-      imageUrl
+      image
       price
+      isPublished
+      categoryId
+      Category {
+        id
+        icon
+        name
+        createdAt
+        updatedAt
+        __typename
+      }
       createdAt
       updatedAt
       __typename
@@ -44,6 +124,48 @@ export const listCourses = /* GraphQL */ `query ListCourses(
 ` as GeneratedQuery<
   APITypes.ListCoursesQueryVariables,
   APITypes.ListCoursesQuery
+>;
+export const coursesByCategoryId = /* GraphQL */ `query CoursesByCategoryId(
+  $categoryId: ID!
+  $sortDirection: ModelSortDirection
+  $filter: ModelCourseFilterInput
+  $limit: Int
+  $nextToken: String
+) {
+  coursesByCategoryId(
+    categoryId: $categoryId
+    sortDirection: $sortDirection
+    filter: $filter
+    limit: $limit
+    nextToken: $nextToken
+  ) {
+    items {
+      id
+      title
+      description
+      image
+      price
+      isPublished
+      categoryId
+      Category {
+        id
+        icon
+        name
+        createdAt
+        updatedAt
+        __typename
+      }
+      createdAt
+      updatedAt
+      __typename
+    }
+    nextToken
+    __typename
+  }
+}
+` as GeneratedQuery<
+  APITypes.CoursesByCategoryIdQueryVariables,
+  APITypes.CoursesByCategoryIdQuery
 >;
 export const getPlatform = /* GraphQL */ `query GetPlatform($id: ID!) {
   getPlatform(id: $id) {

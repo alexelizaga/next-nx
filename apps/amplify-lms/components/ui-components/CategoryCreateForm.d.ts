@@ -10,7 +10,7 @@ import {
   GridProps,
   TextFieldProps,
 } from '@aws-amplify/ui-react';
-import { Genre, Product } from '../../API.js';
+import { Course } from '../../API.js';
 export declare type EscapeHatchProps = {
   [elementHierarchy: string]: Record<string, unknown>;
 } | null;
@@ -29,44 +29,43 @@ export declare type ValidationFunction<T> = (
   value: T,
   validationResponse: ValidationResponse
 ) => ValidationResponse | Promise<ValidationResponse>;
-export declare type GenreUpdateFormInputValues = {
+export declare type CategoryCreateFormInputValues = {
+  icon?: string;
   name?: string;
-  value?: string;
-  Products?: Product[];
+  Courses?: Course[];
 };
-export declare type GenreUpdateFormValidationValues = {
+export declare type CategoryCreateFormValidationValues = {
+  icon?: ValidationFunction<string>;
   name?: ValidationFunction<string>;
-  value?: ValidationFunction<string>;
-  Products?: ValidationFunction<Product>;
+  Courses?: ValidationFunction<Course>;
 };
 export declare type PrimitiveOverrideProps<T> = Partial<T> &
   React.DOMAttributes<HTMLDivElement>;
-export declare type GenreUpdateFormOverridesProps = {
-  GenreUpdateFormGrid?: PrimitiveOverrideProps<GridProps>;
+export declare type CategoryCreateFormOverridesProps = {
+  CategoryCreateFormGrid?: PrimitiveOverrideProps<GridProps>;
+  icon?: PrimitiveOverrideProps<TextFieldProps>;
   name?: PrimitiveOverrideProps<TextFieldProps>;
-  value?: PrimitiveOverrideProps<TextFieldProps>;
-  Products?: PrimitiveOverrideProps<AutocompleteProps>;
+  Courses?: PrimitiveOverrideProps<AutocompleteProps>;
 } & EscapeHatchProps;
-export declare type GenreUpdateFormProps = React.PropsWithChildren<
+export declare type CategoryCreateFormProps = React.PropsWithChildren<
   {
-    overrides?: GenreUpdateFormOverridesProps | undefined | null;
+    overrides?: CategoryCreateFormOverridesProps | undefined | null;
   } & {
-    id?: string;
-    genre?: Genre;
+    clearOnSuccess?: boolean;
     onSubmit?: (
-      fields: GenreUpdateFormInputValues
-    ) => GenreUpdateFormInputValues;
-    onSuccess?: (fields: GenreUpdateFormInputValues) => void;
+      fields: CategoryCreateFormInputValues
+    ) => CategoryCreateFormInputValues;
+    onSuccess?: (fields: CategoryCreateFormInputValues) => void;
     onError?: (
-      fields: GenreUpdateFormInputValues,
+      fields: CategoryCreateFormInputValues,
       errorMessage: string
     ) => void;
     onChange?: (
-      fields: GenreUpdateFormInputValues
-    ) => GenreUpdateFormInputValues;
-    onValidate?: GenreUpdateFormValidationValues;
+      fields: CategoryCreateFormInputValues
+    ) => CategoryCreateFormInputValues;
+    onValidate?: CategoryCreateFormValidationValues;
   } & React.CSSProperties
 >;
-export default function GenreUpdateForm(
-  props: GenreUpdateFormProps
+export default function CategoryCreateForm(
+  props: CategoryCreateFormProps
 ): React.ReactElement;

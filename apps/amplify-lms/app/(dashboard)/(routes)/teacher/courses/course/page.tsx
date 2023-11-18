@@ -42,9 +42,9 @@ const CoursePage = () => {
   const requiredFields = [
     course?.title,
     course?.description,
-    course?.imageUrl,
-    course?.price
-    // course?.categoryId
+    course?.image,
+    course?.price,
+    course?.categoryId
   ];
 
   const totalFields = requiredFields.length;
@@ -88,9 +88,9 @@ const CoursePage = () => {
           </span>
         </div>
       </div>
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-16">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-10">
         <div>
-          <div className="flex items-center gap-x-2">
+          <div className="flex items-center gap-x-3.5">
             <IconBadge icon={LayoutDashboard} />
             <h2 className="text-xl">Customize your course</h2>
           </div>

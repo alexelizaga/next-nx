@@ -11,8 +11,8 @@ interface FileUploadProps {
   accessLevel: 'public' | 'protected' | 'private';
   maxFileCount?: number;
   maxSize?: number;
-  onStart: (values: { imageUrl: string }) => void;
-  onSuccess: (values: { imageUrl: string }) => void;
+  onStart: (values: { image: string }) => void;
+  onSuccess: (values: { image: string }) => void;
 }
 
 const FileUpload = ({
@@ -35,11 +35,11 @@ const FileUpload = ({
   }, [fileType]);
 
   const onStart = ({ key }: Record<string, string>) => {
-    onUploadStart({ imageUrl: key });
+    onUploadStart({ image: key });
   };
 
   const onSuccess = ({ key }: Record<string, string>) => {
-    onSuccessUpload({ imageUrl: key });
+    onSuccessUpload({ image: key });
     setMessage(`Key: ${key}`);
   };
 
