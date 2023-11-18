@@ -8,10 +8,9 @@ import * as React from 'react';
 import {
   AutocompleteProps,
   GridProps,
-  SwitchFieldProps,
   TextFieldProps,
 } from '@aws-amplify/ui-react';
-import { Genre, Platform } from '@/amplify-lms/API.js';
+import { Course } from '@/amplify-lms/API';
 export declare type EscapeHatchProps = {
   [elementHierarchy: string]: Record<string, unknown>;
 } | null;
@@ -30,52 +29,43 @@ export declare type ValidationFunction<T> = (
   value: T,
   validationResponse: ValidationResponse
 ) => ValidationResponse | Promise<ValidationResponse>;
-export declare type ProductCreateFormInputValues = {
+export declare type CategoryCreateFormInputValues = {
+  icon?: string;
   name?: string;
-  isSold?: boolean;
-  price?: number;
-  image?: string;
-  Platform?: Platform;
-  Genre?: Genre;
+  Courses?: Course[];
 };
-export declare type ProductCreateFormValidationValues = {
+export declare type CategoryCreateFormValidationValues = {
+  icon?: ValidationFunction<string>;
   name?: ValidationFunction<string>;
-  isSold?: ValidationFunction<boolean>;
-  price?: ValidationFunction<number>;
-  image?: ValidationFunction<string>;
-  Platform?: ValidationFunction<Platform>;
-  Genre?: ValidationFunction<Genre>;
+  Courses?: ValidationFunction<Course>;
 };
 export declare type PrimitiveOverrideProps<T> = Partial<T> &
   React.DOMAttributes<HTMLDivElement>;
-export declare type ProductCreateFormOverridesProps = {
-  ProductCreateFormGrid?: PrimitiveOverrideProps<GridProps>;
+export declare type CategoryCreateFormOverridesProps = {
+  CategoryCreateFormGrid?: PrimitiveOverrideProps<GridProps>;
+  icon?: PrimitiveOverrideProps<TextFieldProps>;
   name?: PrimitiveOverrideProps<TextFieldProps>;
-  isSold?: PrimitiveOverrideProps<SwitchFieldProps>;
-  price?: PrimitiveOverrideProps<TextFieldProps>;
-  image?: PrimitiveOverrideProps<TextFieldProps>;
-  Platform?: PrimitiveOverrideProps<AutocompleteProps>;
-  Genre?: PrimitiveOverrideProps<AutocompleteProps>;
+  Courses?: PrimitiveOverrideProps<AutocompleteProps>;
 } & EscapeHatchProps;
-export declare type ProductCreateFormProps = React.PropsWithChildren<
+export declare type CategoryCreateFormProps = React.PropsWithChildren<
   {
-    overrides?: ProductCreateFormOverridesProps | undefined | null;
+    overrides?: CategoryCreateFormOverridesProps | undefined | null;
   } & {
     clearOnSuccess?: boolean;
     onSubmit?: (
-      fields: ProductCreateFormInputValues
-    ) => ProductCreateFormInputValues;
-    onSuccess?: (fields: ProductCreateFormInputValues) => void;
+      fields: CategoryCreateFormInputValues
+    ) => CategoryCreateFormInputValues;
+    onSuccess?: (fields: CategoryCreateFormInputValues) => void;
     onError?: (
-      fields: ProductCreateFormInputValues,
+      fields: CategoryCreateFormInputValues,
       errorMessage: string
     ) => void;
     onChange?: (
-      fields: ProductCreateFormInputValues
-    ) => ProductCreateFormInputValues;
-    onValidate?: ProductCreateFormValidationValues;
+      fields: CategoryCreateFormInputValues
+    ) => CategoryCreateFormInputValues;
+    onValidate?: CategoryCreateFormValidationValues;
   } & React.CSSProperties
 >;
-export default function ProductCreateForm(
-  props: ProductCreateFormProps
+export default function CategoryCreateForm(
+  props: CategoryCreateFormProps
 ): React.ReactElement;

@@ -5,29 +5,35 @@ import * as z from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import { Pencil } from 'lucide-react';
-import { Button, Flex, Input } from '@aws-amplify/ui-react';
+import { Button, Flex, TextAreaField } from '@aws-amplify/ui-react';
 
 import { CourseValues } from '@/amplify-lms/types/types';
+import { cn } from '@/amplify-lms/lib/utils';
 
-interface TitleFormProps {
+interface CategoryFormProps {
   initialData: CourseValues;
   onSubmit: (values: z.infer<typeof formSchema>) => void;
+  options?: { label: string; value: string }[];
 }
 
 const formSchema = z.object({
-  title: z.string().min(1, {
-    message: 'Title is required'
-  })
+  categoryId: z.string().min(1)
 });
 
-const TitleForm = ({ initialData, onSubmit: onSubmitForm }: TitleFormProps) => {
+const CategoryForm = ({
+  initialData,
+  options,
+  onSubmit: onSubmitForm
+}: CategoryFormProps) => {
   const [isEditing, setIsEditing] = React.useState(false);
 
   const toggleEdit = () => setIsEditing((current) => !current);
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
-    defaultValues: initialData
+    defaultValues: {
+      categoryId: initialData?.categoryId ?? ''
+    }
   });
 
   const { register } = form;
@@ -41,7 +47,7 @@ const TitleForm = ({ initialData, onSubmit: onSubmitForm }: TitleFormProps) => {
   return (
     <div className="mt-6 border bg-slate-100 rounded-md p-4">
       <div className="font-medium flex items-center justify-between">
-        Title
+        Category
         <Button onClick={toggleEdit} variation="link" size="small">
           {isEditing ? (
             <>Cancel</>
@@ -53,20 +59,32 @@ const TitleForm = ({ initialData, onSubmit: onSubmitForm }: TitleFormProps) => {
           )}
         </Button>
       </div>
-      {!isEditing && <p className="text-sm mt-2">{initialData.title}</p>}
+      {!isEditing && (
+        <p
+          className={cn(
+            'text-sm mt-2',
+            !initialData.description && 'text-slate-500 italic'
+          )}
+        >
+          {initialData.description ?? 'No description'}
+        </p>
+      )}
       {isEditing && (
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 mt-4">
           <Flex direction="column" gap="small">
-            <Input
+            <TextAreaField
+              label=""
               backgroundColor="white"
-              id="title"
-              hasError={!!errors.title}
+              id="description"
+              hasError={!!errors.categoryId}
               disabled={isSubmitting}
-              placeholder="e.g. 'Advanced web development'"
-              {...register('title')}
+              placeholder="e.g. 'This course is about...'"
+              {...register('categoryId')}
             />
-            {errors.title?.message && (
-              <p className="text-sm text-red-800">{errors.title?.message}</p>
+            {errors.categoryId?.message && (
+              <p className="text-sm text-red-800">
+                {errors.categoryId?.message}
+              </p>
             )}
           </Flex>
           <div className="flex items-center gap-x-2">
@@ -80,4 +98,4 @@ const TitleForm = ({ initialData, onSubmit: onSubmitForm }: TitleFormProps) => {
   );
 };
 
-export default TitleForm;
+export default CategoryForm;

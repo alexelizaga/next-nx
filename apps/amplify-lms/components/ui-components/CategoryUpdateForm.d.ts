@@ -10,7 +10,7 @@ import {
   GridProps,
   TextFieldProps,
 } from '@aws-amplify/ui-react';
-import { Platform, Product } from '@/amplify-lms/API.js';
+import { Category, Course } from '@/amplify-lms/API.js';
 export declare type EscapeHatchProps = {
   [elementHierarchy: string]: Record<string, unknown>;
 } | null;
@@ -29,44 +29,44 @@ export declare type ValidationFunction<T> = (
   value: T,
   validationResponse: ValidationResponse
 ) => ValidationResponse | Promise<ValidationResponse>;
-export declare type PlatformUpdateFormInputValues = {
+export declare type CategoryUpdateFormInputValues = {
+  icon?: string;
   name?: string;
-  value?: string;
-  Products?: Product[];
+  Courses?: Course[];
 };
-export declare type PlatformUpdateFormValidationValues = {
+export declare type CategoryUpdateFormValidationValues = {
+  icon?: ValidationFunction<string>;
   name?: ValidationFunction<string>;
-  value?: ValidationFunction<string>;
-  Products?: ValidationFunction<Product>;
+  Courses?: ValidationFunction<Course>;
 };
 export declare type PrimitiveOverrideProps<T> = Partial<T> &
   React.DOMAttributes<HTMLDivElement>;
-export declare type PlatformUpdateFormOverridesProps = {
-  PlatformUpdateFormGrid?: PrimitiveOverrideProps<GridProps>;
+export declare type CategoryUpdateFormOverridesProps = {
+  CategoryUpdateFormGrid?: PrimitiveOverrideProps<GridProps>;
+  icon?: PrimitiveOverrideProps<TextFieldProps>;
   name?: PrimitiveOverrideProps<TextFieldProps>;
-  value?: PrimitiveOverrideProps<TextFieldProps>;
-  Products?: PrimitiveOverrideProps<AutocompleteProps>;
+  Courses?: PrimitiveOverrideProps<AutocompleteProps>;
 } & EscapeHatchProps;
-export declare type PlatformUpdateFormProps = React.PropsWithChildren<
+export declare type CategoryUpdateFormProps = React.PropsWithChildren<
   {
-    overrides?: PlatformUpdateFormOverridesProps | undefined | null;
+    overrides?: CategoryUpdateFormOverridesProps | undefined | null;
   } & {
     id?: string;
-    platform?: Platform;
+    category?: Category;
     onSubmit?: (
-      fields: PlatformUpdateFormInputValues
-    ) => PlatformUpdateFormInputValues;
-    onSuccess?: (fields: PlatformUpdateFormInputValues) => void;
+      fields: CategoryUpdateFormInputValues
+    ) => CategoryUpdateFormInputValues;
+    onSuccess?: (fields: CategoryUpdateFormInputValues) => void;
     onError?: (
-      fields: PlatformUpdateFormInputValues,
+      fields: CategoryUpdateFormInputValues,
       errorMessage: string
     ) => void;
     onChange?: (
-      fields: PlatformUpdateFormInputValues
-    ) => PlatformUpdateFormInputValues;
-    onValidate?: PlatformUpdateFormValidationValues;
+      fields: CategoryUpdateFormInputValues
+    ) => CategoryUpdateFormInputValues;
+    onValidate?: CategoryUpdateFormValidationValues;
   } & React.CSSProperties
 >;
-export default function PlatformUpdateForm(
-  props: PlatformUpdateFormProps
+export default function CategoryUpdateForm(
+  props: CategoryUpdateFormProps
 ): React.ReactElement;

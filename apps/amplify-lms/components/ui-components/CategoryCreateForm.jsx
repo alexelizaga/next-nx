@@ -21,8 +21,8 @@ import {
 } from '@aws-amplify/ui-react';
 import { fetchByPath, getOverrideProps, validateField } from './utils';
 import { generateClient } from '@aws-amplify/api';
-import { getPlatform, listProducts } from '@/amplify-lms/graphql/queries';
-import { updatePlatform, updateProduct } from '@/amplify-lms/graphql/mutations';
+import { listCourses } from '@/amplify-lms/graphql/queries';
+import { createCategory, updateCourse } from '@/amplify-lms/graphql/mutations';
 const client = generateClient();
 function ArrayField({
   items = [],
@@ -178,10 +178,9 @@ function ArrayField({
     </React.Fragment>
   );
 }
-export default function PlatformUpdateForm(props) {
+export default function CategoryCreateForm(props) {
   const {
-    id: idProp,
-    platform: platformModelProp,
+    clearOnSuccess = true,
     onSuccess,
     onError,
     onSubmit,
@@ -191,68 +190,45 @@ export default function PlatformUpdateForm(props) {
     ...rest
   } = props;
   const initialValues = {
+    icon: '',
     name: '',
-    value: '',
-    Products: []
+    Courses: []
   };
+  const [icon, setIcon] = React.useState(initialValues.icon);
   const [name, setName] = React.useState(initialValues.name);
-  const [value, setValue] = React.useState(initialValues.value);
-  const [Products, setProducts] = React.useState(initialValues.Products);
-  const [ProductsLoading, setProductsLoading] = React.useState(false);
-  const [ProductsRecords, setProductsRecords] = React.useState([]);
+  const [Courses, setCourses] = React.useState(initialValues.Courses);
+  const [CoursesLoading, setCoursesLoading] = React.useState(false);
+  const [CoursesRecords, setCoursesRecords] = React.useState([]);
   const autocompleteLength = 10;
   const [errors, setErrors] = React.useState({});
   const resetStateValues = () => {
-    const cleanValues = platformRecord
-      ? { ...initialValues, ...platformRecord, Products: linkedProducts }
-      : initialValues;
-    setName(cleanValues.name);
-    setValue(cleanValues.value);
-    setProducts(cleanValues.Products ?? []);
-    setCurrentProductsValue(undefined);
-    setCurrentProductsDisplayValue('');
+    setIcon(initialValues.icon);
+    setName(initialValues.name);
+    setCourses(initialValues.Courses);
+    setCurrentCoursesValue(undefined);
+    setCurrentCoursesDisplayValue('');
     setErrors({});
   };
-  const [platformRecord, setPlatformRecord] = React.useState(platformModelProp);
-  const [linkedProducts, setLinkedProducts] = React.useState([]);
-  const canUnlinkProducts = true;
-  React.useEffect(() => {
-    const queryData = async () => {
-      const record = idProp
-        ? (
-            await client.graphql({
-              query: getPlatform.replaceAll('__typename', ''),
-              variables: { id: idProp }
-            })
-          )?.data?.getPlatform
-        : platformModelProp;
-      const linkedProducts = record?.Products?.items ?? [];
-      setLinkedProducts(linkedProducts);
-      setPlatformRecord(record);
-    };
-    queryData();
-  }, [idProp, platformModelProp]);
-  React.useEffect(resetStateValues, [platformRecord, linkedProducts]);
-  const [currentProductsDisplayValue, setCurrentProductsDisplayValue] =
+  const [currentCoursesDisplayValue, setCurrentCoursesDisplayValue] =
     React.useState('');
-  const [currentProductsValue, setCurrentProductsValue] =
+  const [currentCoursesValue, setCurrentCoursesValue] =
     React.useState(undefined);
-  const ProductsRef = React.createRef();
+  const CoursesRef = React.createRef();
   const getIDValue = {
-    Products: (r) => JSON.stringify({ id: r?.id })
+    Courses: (r) => JSON.stringify({ id: r?.id })
   };
-  const ProductsIdSet = new Set(
-    Array.isArray(Products)
-      ? Products.map((r) => getIDValue.Products?.(r))
-      : getIDValue.Products?.(Products)
+  const CoursesIdSet = new Set(
+    Array.isArray(Courses)
+      ? Courses.map((r) => getIDValue.Courses?.(r))
+      : getIDValue.Courses?.(Courses)
   );
   const getDisplayValue = {
-    Products: (r) => `${r?.name ? r?.name + ' - ' : ''}${r?.id}`
+    Courses: (r) => `${r?.title ? r?.title + ' - ' : ''}${r?.id}`
   };
   const validations = {
-    name: [],
-    value: [],
-    Products: []
+    icon: [],
+    name: [{ type: 'Required' }],
+    Courses: []
   };
   const runValidationTasks = async (
     fieldName,
@@ -271,15 +247,15 @@ export default function PlatformUpdateForm(props) {
     setErrors((errors) => ({ ...errors, [fieldName]: validationResponse }));
     return validationResponse;
   };
-  const fetchProductsRecords = async (value) => {
-    setProductsLoading(true);
+  const fetchCoursesRecords = async (value) => {
+    setCoursesLoading(true);
     const newOptions = [];
     let newNext = '';
     while (newOptions.length < autocompleteLength && newNext != null) {
       const variables = {
         limit: autocompleteLength * 5,
         filter: {
-          or: [{ name: { contains: value } }, { id: { contains: value } }]
+          or: [{ title: { contains: value } }, { id: { contains: value } }]
         }
       };
       if (newNext) {
@@ -287,21 +263,21 @@ export default function PlatformUpdateForm(props) {
       }
       const result = (
         await client.graphql({
-          query: listProducts.replaceAll('__typename', ''),
+          query: listCourses.replaceAll('__typename', ''),
           variables
         })
-      )?.data?.listProducts?.items;
+      )?.data?.listCourses?.items;
       var loaded = result.filter(
-        (item) => !ProductsIdSet.has(getIDValue.Products?.(item))
+        (item) => !CoursesIdSet.has(getIDValue.Courses?.(item))
       );
       newOptions.push(...loaded);
       newNext = result.nextToken;
     }
-    setProductsRecords(newOptions.slice(0, autocompleteLength));
-    setProductsLoading(false);
+    setCoursesRecords(newOptions.slice(0, autocompleteLength));
+    setCoursesLoading(false);
   };
   React.useEffect(() => {
-    fetchProductsRecords('');
+    fetchCoursesRecords('');
   }, []);
   return (
     <Grid
@@ -312,9 +288,9 @@ export default function PlatformUpdateForm(props) {
       onSubmit={async (event) => {
         event.preventDefault();
         let modelFields = {
-          name: name ?? null,
-          value: value ?? null,
-          Products: Products ?? null
+          icon,
+          name,
+          Courses
         };
         const validationResponses = await Promise.all(
           Object.keys(validations).reduce((promises, fieldName) => {
@@ -352,72 +328,42 @@ export default function PlatformUpdateForm(props) {
               modelFields[key] = null;
             }
           });
-          const promises = [];
-          const productsToLink = [];
-          const productsToUnLink = [];
-          const productsSet = new Set();
-          const linkedProductsSet = new Set();
-          Products.forEach((r) => productsSet.add(getIDValue.Products?.(r)));
-          linkedProducts.forEach((r) =>
-            linkedProductsSet.add(getIDValue.Products?.(r))
-          );
-          linkedProducts.forEach((r) => {
-            if (!productsSet.has(getIDValue.Products?.(r))) {
-              productsToUnLink.push(r);
-            }
-          });
-          Products.forEach((r) => {
-            if (!linkedProductsSet.has(getIDValue.Products?.(r))) {
-              productsToLink.push(r);
-            }
-          });
-          productsToUnLink.forEach((original) => {
-            if (!canUnlinkProducts) {
-              throw Error(
-                `Product ${original.id} cannot be unlinked from Platform because undefined is a required field.`
-              );
-            }
-            promises.push(
-              client.graphql({
-                query: updateProduct.replaceAll('__typename', ''),
-                variables: {
-                  input: {
-                    id: original.id
-                  }
-                }
-              })
-            );
-          });
-          productsToLink.forEach((original) => {
-            promises.push(
-              client.graphql({
-                query: updateProduct.replaceAll('__typename', ''),
-                variables: {
-                  input: {
-                    id: original.id
-                  }
-                }
-              })
-            );
-          });
           const modelFieldsToSave = {
-            name: modelFields.name ?? null,
-            value: modelFields.value ?? null
+            icon: modelFields.icon,
+            name: modelFields.name
           };
-          promises.push(
-            client.graphql({
-              query: updatePlatform.replaceAll('__typename', ''),
+          const category = (
+            await client.graphql({
+              query: createCategory.replaceAll('__typename', ''),
               variables: {
                 input: {
-                  id: platformRecord.id,
                   ...modelFieldsToSave
                 }
               }
             })
+          )?.data?.createCategory;
+          const promises = [];
+          promises.push(
+            ...Courses.reduce((promises, original) => {
+              promises.push(
+                client.graphql({
+                  query: updateCourse.replaceAll('__typename', ''),
+                  variables: {
+                    input: {
+                      id: original.id
+                    }
+                  }
+                })
+              );
+              return promises;
+            }, [])
           );
           await Promise.all(promises);
           if (onSuccess) {
             onSuccess(modelFields);
+          }
+          if (clearOnSuccess) {
+            resetStateValues();
           }
         } catch (err) {
           if (onError) {
@@ -426,21 +372,47 @@ export default function PlatformUpdateForm(props) {
           }
         }
       }}
-      {...getOverrideProps(overrides, 'PlatformUpdateForm')}
+      {...getOverrideProps(overrides, 'CategoryCreateForm')}
       {...rest}
     >
       <TextField
-        label="Name"
+        label="Icon"
         isRequired={false}
+        isReadOnly={false}
+        value={icon}
+        onChange={(e) => {
+          let { value } = e.target;
+          if (onChange) {
+            const modelFields = {
+              icon: value,
+              name,
+              Courses
+            };
+            const result = onChange(modelFields);
+            value = result?.icon ?? value;
+          }
+          if (errors.icon?.hasError) {
+            runValidationTasks('icon', value);
+          }
+          setIcon(value);
+        }}
+        onBlur={() => runValidationTasks('icon', icon)}
+        errorMessage={errors.icon?.errorMessage}
+        hasError={errors.icon?.hasError}
+        {...getOverrideProps(overrides, 'icon')}
+      ></TextField>
+      <TextField
+        label="Name"
+        isRequired={true}
         isReadOnly={false}
         value={name}
         onChange={(e) => {
           let { value } = e.target;
           if (onChange) {
             const modelFields = {
+              icon,
               name: value,
-              value,
-              Products
+              Courses
             };
             const result = onChange(modelFields);
             value = result?.name ?? value;
@@ -455,108 +427,82 @@ export default function PlatformUpdateForm(props) {
         hasError={errors.name?.hasError}
         {...getOverrideProps(overrides, 'name')}
       ></TextField>
-      <TextField
-        label="Value"
-        isRequired={false}
-        isReadOnly={false}
-        value={value}
-        onChange={(e) => {
-          let { value } = e.target;
-          if (onChange) {
-            const modelFields = {
-              name,
-              value: value,
-              Products
-            };
-            const result = onChange(modelFields);
-            value = result?.value ?? value;
-          }
-          if (errors.value?.hasError) {
-            runValidationTasks('value', value);
-          }
-          setValue(value);
-        }}
-        onBlur={() => runValidationTasks('value', value)}
-        errorMessage={errors.value?.errorMessage}
-        hasError={errors.value?.hasError}
-        {...getOverrideProps(overrides, 'value')}
-      ></TextField>
       <ArrayField
         onChange={async (items) => {
           let values = items;
           if (onChange) {
             const modelFields = {
+              icon,
               name,
-              value,
-              Products: values
+              Courses: values
             };
             const result = onChange(modelFields);
-            values = result?.Products ?? values;
+            values = result?.Courses ?? values;
           }
-          setProducts(values);
-          setCurrentProductsValue(undefined);
-          setCurrentProductsDisplayValue('');
+          setCourses(values);
+          setCurrentCoursesValue(undefined);
+          setCurrentCoursesDisplayValue('');
         }}
-        currentFieldValue={currentProductsValue}
-        label={'Products'}
-        items={Products}
-        hasError={errors?.Products?.hasError}
+        currentFieldValue={currentCoursesValue}
+        label={'Courses'}
+        items={Courses}
+        hasError={errors?.Courses?.hasError}
         runValidationTasks={async () =>
-          await runValidationTasks('Products', currentProductsValue)
+          await runValidationTasks('Courses', currentCoursesValue)
         }
-        errorMessage={errors?.Products?.errorMessage}
-        getBadgeText={getDisplayValue.Products}
+        errorMessage={errors?.Courses?.errorMessage}
+        getBadgeText={getDisplayValue.Courses}
         setFieldValue={(model) => {
-          setCurrentProductsDisplayValue(
-            model ? getDisplayValue.Products(model) : ''
+          setCurrentCoursesDisplayValue(
+            model ? getDisplayValue.Courses(model) : ''
           );
-          setCurrentProductsValue(model);
+          setCurrentCoursesValue(model);
         }}
-        inputFieldRef={ProductsRef}
+        inputFieldRef={CoursesRef}
         defaultFieldValue={''}
       >
         <Autocomplete
-          label="Products"
+          label="Courses"
           isRequired={false}
           isReadOnly={false}
-          placeholder="Search Product"
-          value={currentProductsDisplayValue}
-          options={ProductsRecords.map((r) => ({
-            id: getIDValue.Products?.(r),
-            label: getDisplayValue.Products?.(r)
+          placeholder="Search Course"
+          value={currentCoursesDisplayValue}
+          options={CoursesRecords.map((r) => ({
+            id: getIDValue.Courses?.(r),
+            label: getDisplayValue.Courses?.(r)
           }))}
-          isLoading={ProductsLoading}
+          isLoading={CoursesLoading}
           onSelect={({ id, label }) => {
-            setCurrentProductsValue(
-              ProductsRecords.find((r) =>
+            setCurrentCoursesValue(
+              CoursesRecords.find((r) =>
                 Object.entries(JSON.parse(id)).every(
                   ([key, value]) => r[key] === value
                 )
               )
             );
-            setCurrentProductsDisplayValue(label);
-            runValidationTasks('Products', label);
+            setCurrentCoursesDisplayValue(label);
+            runValidationTasks('Courses', label);
           }}
           onClear={() => {
-            setCurrentProductsDisplayValue('');
+            setCurrentCoursesDisplayValue('');
           }}
           onChange={(e) => {
             let { value } = e.target;
-            fetchProductsRecords(value);
-            if (errors.Products?.hasError) {
-              runValidationTasks('Products', value);
+            fetchCoursesRecords(value);
+            if (errors.Courses?.hasError) {
+              runValidationTasks('Courses', value);
             }
-            setCurrentProductsDisplayValue(value);
-            setCurrentProductsValue(undefined);
+            setCurrentCoursesDisplayValue(value);
+            setCurrentCoursesValue(undefined);
           }}
           onBlur={() =>
-            runValidationTasks('Products', currentProductsDisplayValue)
+            runValidationTasks('Courses', currentCoursesDisplayValue)
           }
-          errorMessage={errors.Products?.errorMessage}
-          hasError={errors.Products?.hasError}
-          ref={ProductsRef}
+          errorMessage={errors.Courses?.errorMessage}
+          hasError={errors.Courses?.hasError}
+          ref={CoursesRef}
           labelHidden={true}
-          {...getOverrideProps(overrides, 'Products')}
+          {...getOverrideProps(overrides, 'Courses')}
         ></Autocomplete>
       </ArrayField>
       <Flex
@@ -564,14 +510,13 @@ export default function PlatformUpdateForm(props) {
         {...getOverrideProps(overrides, 'CTAFlex')}
       >
         <Button
-          children="Reset"
+          children="Clear"
           type="reset"
           onClick={(event) => {
             event.preventDefault();
             resetStateValues();
           }}
-          isDisabled={!(idProp || platformModelProp)}
-          {...getOverrideProps(overrides, 'ResetButton')}
+          {...getOverrideProps(overrides, 'ClearButton')}
         ></Button>
         <Flex
           gap="15px"
@@ -581,10 +526,7 @@ export default function PlatformUpdateForm(props) {
             children="Submit"
             type="submit"
             variation="primary"
-            isDisabled={
-              !(idProp || platformModelProp) ||
-              Object.values(errors).some((e) => e?.hasError)
-            }
+            isDisabled={Object.values(errors).some((e) => e?.hasError)}
             {...getOverrideProps(overrides, 'SubmitButton')}
           ></Button>
         </Flex>

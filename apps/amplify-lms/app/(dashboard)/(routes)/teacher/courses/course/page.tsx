@@ -7,21 +7,27 @@ import { GraphQLQuery } from '@aws-amplify/api';
 import toast from 'react-hot-toast';
 import { LayoutDashboard } from 'lucide-react';
 
-import { GetCourseQuery, UpdateCourseMutation } from '@/amplify-lms/API';
+import {
+  GetCourseQuery,
+  ListCategoriesQuery,
+  UpdateCourseMutation
+} from '@/amplify-lms/API';
 import * as queries from '@/amplify-lms/graphql/queries';
 import { updateCourse } from '@/amplify-lms/graphql/mutations';
-import { CourseValues } from '@/amplify-lms/types/types';
+import { CategoryValues, CourseValues } from '@/amplify-lms/types/types';
 import IconBadge from '@/amplify-lms/components/IconBadge';
 
 import TitleForm from './_components/title-form';
 import DescriptionForm from './_components/description-form';
 import ImageForm from './_components/image-form';
+import CategoryForm from './_components/category-form';
 
 const CoursePage = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
   const [loading, setLoading] = React.useState(false);
   const [course, setCourse] = React.useState<CourseValues>();
+  const [categories, setCategories] = React.useState<CategoryValues[]>();
 
   const courseId = searchParams.get('id');
 
@@ -39,12 +45,29 @@ const CoursePage = () => {
       .finally(() => setLoading(false));
   }, [courseId, router]);
 
+  React.useEffect(() => {
+    API.graphql<GraphQLQuery<ListCategoriesQuery>>({
+      query: queries.listCategories
+    })
+      .then(({ data }) => {
+        setCategories(data?.listCategories?.items as CategoryValues[]);
+      })
+      .finally(() => setLoading(false));
+  }, [courseId, router]);
+
+  const categoryOptions = React.useMemo(() => {
+    return categories?.map((category) => ({
+      label: category.name,
+      value: category.id
+    }));
+  }, [categories]);
+
   const requiredFields = [
     course?.title,
     course?.description,
-    course?.imageUrl,
-    course?.price
-    // course?.categoryId
+    course?.image,
+    course?.price,
+    course?.categoryId
   ];
 
   const totalFields = requiredFields.length;
@@ -88,15 +111,20 @@ const CoursePage = () => {
           </span>
         </div>
       </div>
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-16">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-10">
         <div>
-          <div className="flex items-center gap-x-2">
+          <div className="flex items-center gap-x-3.5">
             <IconBadge icon={LayoutDashboard} />
             <h2 className="text-xl">Customize your course</h2>
           </div>
           <TitleForm initialData={course} onSubmit={onSubmit} />
           <DescriptionForm initialData={course} onSubmit={onSubmit} />
           <ImageForm initialData={course} onSubmit={onSubmit} />
+          <CategoryForm
+            initialData={course}
+            options={categoryOptions}
+            onSubmit={onSubmit}
+          />
         </div>
       </div>
     </div>

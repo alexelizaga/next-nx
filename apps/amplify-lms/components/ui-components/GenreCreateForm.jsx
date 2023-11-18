@@ -20,9 +20,10 @@ import {
   useTheme
 } from '@aws-amplify/ui-react';
 import { fetchByPath, getOverrideProps, validateField } from './utils';
-import { API } from 'aws-amplify';
+import { generateClient } from '@aws-amplify/api';
 import { listProducts } from '@/amplify-lms/graphql/queries';
 import { createGenre, updateProduct } from '@/amplify-lms/graphql/mutations';
+const client = generateClient();
 function ArrayField({
   items = [],
   onChange,
@@ -261,7 +262,7 @@ export default function GenreCreateForm(props) {
         variables['nextToken'] = newNext;
       }
       const result = (
-        await API.graphql({
+        await client.graphql({
           query: listProducts.replaceAll('__typename', ''),
           variables
         })
@@ -332,7 +333,7 @@ export default function GenreCreateForm(props) {
             value: modelFields.value
           };
           const genre = (
-            await API.graphql({
+            await client.graphql({
               query: createGenre.replaceAll('__typename', ''),
               variables: {
                 input: {
@@ -345,7 +346,7 @@ export default function GenreCreateForm(props) {
           promises.push(
             ...Products.reduce((promises, original) => {
               promises.push(
-                API.graphql({
+                client.graphql({
                   query: updateProduct.replaceAll('__typename', ''),
                   variables: {
                     input: {

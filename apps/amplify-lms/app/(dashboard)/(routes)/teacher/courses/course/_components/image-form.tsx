@@ -16,7 +16,7 @@ interface ImageFormProps {
 }
 
 const formSchema = z.object({
-  imageUrl: z.string().min(1, {
+  image: z.string().min(1, {
     message: 'Image is required'
   })
 });
@@ -27,8 +27,8 @@ const ImageForm = ({ initialData, onSubmit: onSubmitForm }: ImageFormProps) => {
   const toggleEdit = () => setIsEditing((current) => !current);
 
   const removeLastFile = () => {
-    if (!initialData.imageUrl) return;
-    removeFile(initialData.imageUrl);
+    if (!initialData.image) return;
+    removeFile(initialData.image);
   };
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
@@ -39,16 +39,16 @@ const ImageForm = ({ initialData, onSubmit: onSubmitForm }: ImageFormProps) => {
   return (
     <div className="mt-6 border bg-slate-100 rounded-md p-4">
       <div className="font-medium flex items-center justify-between">
-        Course image
+        Image
         <Button onClick={toggleEdit} variation="link" size="small">
           {isEditing && <>Cancel</>}
-          {!isEditing && !initialData.imageUrl && (
+          {!isEditing && !initialData.image && (
             <>
               <PlusCircle className="h-4 w-4 mr-2" />
               Add an image
             </>
           )}
-          {!isEditing && initialData.imageUrl && (
+          {!isEditing && initialData.image && (
             <>
               <Pencil className="h-4 w-4 mr-2" />
               Edit
@@ -57,7 +57,7 @@ const ImageForm = ({ initialData, onSubmit: onSubmitForm }: ImageFormProps) => {
         </Button>
       </div>
       {!isEditing &&
-        (!initialData.imageUrl ? (
+        (!initialData.image ? (
           <div className="flex items-center justify-center  bg-slate-200 rounded-md relative aspect-video mt-2">
             <ImageIcon className="h-10 w-10 text-slate-500" />
           </div>
@@ -67,7 +67,7 @@ const ImageForm = ({ initialData, onSubmit: onSubmitForm }: ImageFormProps) => {
               width="100%"
               accessLevel="private"
               alt="upload"
-              imgKey={initialData.imageUrl}
+              imgKey={initialData.image}
               className="object-cover rounded-md"
             ></StorageImage>
           </div>
