@@ -13,7 +13,7 @@ import { cn } from '@/amplify-lms/lib/utils';
 interface CategoryFormProps {
   initialData: CourseValues;
   onSubmit: (values: z.infer<typeof formSchema>) => void;
-  options: { label: string; value: string }[];
+  options?: { label: string; value: string }[];
 }
 
 const formSchema = z.object({

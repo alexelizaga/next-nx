@@ -1,4 +1,4 @@
-import { Course, Genre } from '@/amplify-lms/API';
+import { Category, Course, Genre } from '@/amplify-lms/API';
 
 export type TableValues = Pick<Genre, 'name' | 'value' | 'createdAt'>;
 
@@ -13,3 +13,5 @@ export type CourseValues = Pick<
   | 'createdAt'
   | 'updatedAt'
 >;
+
+export type CategoryValues = Pick<Category, 'id' | 'icon' | 'name'>;

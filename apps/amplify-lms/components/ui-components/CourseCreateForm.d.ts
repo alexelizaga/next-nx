@@ -11,7 +11,7 @@ import {
   SwitchFieldProps,
   TextFieldProps,
 } from '@aws-amplify/ui-react';
-import { Category } from '../../API.js';
+import { Category } from '@/amplify-lms/API.js';
 export declare type EscapeHatchProps = {
   [elementHierarchy: string]: Record<string, unknown>;
 } | null;

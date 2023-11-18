@@ -20,9 +20,9 @@ import {
   useTheme
 } from '@aws-amplify/ui-react';
 import { fetchByPath, getOverrideProps, validateField } from './utils';
-import { generateClient } from 'aws-amplify/api';
-import { getPlatform, listProducts } from '../../graphql/queries';
-import { updatePlatform, updateProduct } from '../../graphql/mutations';
+import { generateClient } from '@aws-amplify/api';
+import { getPlatform, listProducts } from '@/amplify-lms/graphql/queries';
+import { updatePlatform, updateProduct } from '@/amplify-lms/graphql/mutations';
 const client = generateClient();
 function ArrayField({
   items = [],

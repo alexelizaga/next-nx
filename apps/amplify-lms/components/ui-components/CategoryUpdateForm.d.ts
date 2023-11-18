@@ -10,7 +10,7 @@ import {
   GridProps,
   TextFieldProps,
 } from '@aws-amplify/ui-react';
-import { Category, Course } from '../../API.js';
+import { Category, Course } from '@/amplify-lms/API.js';
 export declare type EscapeHatchProps = {
   [elementHierarchy: string]: Record<string, unknown>;
 } | null;

@@ -20,9 +20,9 @@ import {
   useTheme
 } from '@aws-amplify/ui-react';
 import { fetchByPath, getOverrideProps, validateField } from './utils';
-import { generateClient } from 'aws-amplify/api';
-import { listCourses } from '../../graphql/queries';
-import { createCategory, updateCourse } from '../../graphql/mutations';
+import { generateClient } from '@aws-amplify/api';
+import { listCourses } from '@/amplify-lms/graphql/queries';
+import { createCategory, updateCourse } from '@/amplify-lms/graphql/mutations';
 const client = generateClient();
 function ArrayField({
   items = [],
@@ -227,7 +227,7 @@ export default function CategoryCreateForm(props) {
   };
   const validations = {
     icon: [],
-    name: [],
+    name: [{ type: 'Required' }],
     Courses: []
   };
   const runValidationTasks = async (
@@ -403,7 +403,7 @@ export default function CategoryCreateForm(props) {
       ></TextField>
       <TextField
         label="Name"
-        isRequired={false}
+        isRequired={true}
         isReadOnly={false}
         value={name}
         onChange={(e) => {

@@ -20,9 +20,9 @@ import {
   useTheme
 } from '@aws-amplify/ui-react';
 import { fetchByPath, getOverrideProps, validateField } from './utils';
-import { generateClient } from 'aws-amplify/api';
-import { getCategory, listCourses } from '../../graphql/queries';
-import { updateCategory, updateCourse } from '../../graphql/mutations';
+import { generateClient } from '@aws-amplify/api';
+import { getCategory, listCourses } from '@/amplify-lms/graphql/queries';
+import { updateCategory, updateCourse } from '@/amplify-lms/graphql/mutations';
 const client = generateClient();
 function ArrayField({
   items = [],
@@ -251,7 +251,7 @@ export default function CategoryUpdateForm(props) {
   };
   const validations = {
     icon: [],
-    name: [],
+    name: [{ type: 'Required' }],
     Courses: []
   };
   const runValidationTasks = async (
@@ -313,7 +313,7 @@ export default function CategoryUpdateForm(props) {
         event.preventDefault();
         let modelFields = {
           icon: icon ?? null,
-          name: name ?? null,
+          name,
           Courses: Courses ?? null
         };
         const validationResponses = await Promise.all(
@@ -402,7 +402,7 @@ export default function CategoryUpdateForm(props) {
           });
           const modelFieldsToSave = {
             icon: modelFields.icon ?? null,
-            name: modelFields.name ?? null
+            name: modelFields.name
           };
           promises.push(
             client.graphql({
@@ -457,7 +457,7 @@ export default function CategoryUpdateForm(props) {
       ></TextField>
       <TextField
         label="Name"
-        isRequired={false}
+        isRequired={true}
         isReadOnly={false}
         value={name}
         onChange={(e) => {

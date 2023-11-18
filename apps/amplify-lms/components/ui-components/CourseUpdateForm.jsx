@@ -21,9 +21,9 @@ import {
   useTheme
 } from '@aws-amplify/ui-react';
 import { fetchByPath, getOverrideProps, validateField } from './utils';
-import { generateClient } from 'aws-amplify/api';
-import { getCourse, listCategories } from '../../graphql/queries';
-import { updateCourse } from '../../graphql/mutations';
+import { generateClient } from '@aws-amplify/api';
+import { getCourse, listCategories } from '@/amplify-lms/graphql/queries';
+import { updateCourse } from '@/amplify-lms/graphql/mutations';
 const client = generateClient();
 function ArrayField({
   items = [],
