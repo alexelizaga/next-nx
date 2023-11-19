@@ -23,21 +23,6 @@ const guestRoutes = [
     icon: Compass,
     label: 'Browse',
     href: '/search'
-  },
-  {
-    icon: Joystick,
-    label: 'Products',
-    href: '/products'
-  },
-  {
-    icon: Sword,
-    label: 'Genres',
-    href: '/genre'
-  },
-  {
-    icon: MonitorSmartphone,
-    label: 'Platforms',
-    href: '/platform'
   }
 ];
 

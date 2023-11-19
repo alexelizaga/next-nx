@@ -6,12 +6,8 @@
 
 export { default as CategoryCreateForm } from "./CategoryCreateForm";
 export { default as CategoryUpdateForm } from "./CategoryUpdateForm";
+export { default as ChapterCreateForm } from "./ChapterCreateForm";
+export { default as ChapterUpdateForm } from "./ChapterUpdateForm";
 export { default as CourseCreateForm } from "./CourseCreateForm";
 export { default as CourseUpdateForm } from "./CourseUpdateForm";
-export { default as GenreCreateForm } from "./GenreCreateForm";
-export { default as GenreUpdateForm } from "./GenreUpdateForm";
-export { default as PlatformCreateForm } from "./PlatformCreateForm";
-export { default as PlatformUpdateForm } from "./PlatformUpdateForm";
-export { default as ProductCreateForm } from "./ProductCreateForm";
-export { default as ProductUpdateForm } from "./ProductUpdateForm";
 export { default as studioTheme } from "./studioTheme";

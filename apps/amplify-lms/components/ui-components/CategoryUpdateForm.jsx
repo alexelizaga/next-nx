@@ -20,7 +20,7 @@ import {
   useTheme
 } from '@aws-amplify/ui-react';
 import { fetchByPath, getOverrideProps, validateField } from './utils';
-import { generateClient } from '@aws-amplify/api';
+import { generateClient } from 'aws-amplify/api';
 import { getCategory, listCourses } from '@/amplify-lms/graphql/queries';
 import { updateCategory, updateCourse } from '@/amplify-lms/graphql/mutations';
 const client = generateClient();

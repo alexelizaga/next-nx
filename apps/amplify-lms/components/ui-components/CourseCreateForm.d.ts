@@ -11,7 +11,7 @@ import {
   SwitchFieldProps,
   TextFieldProps,
 } from '@aws-amplify/ui-react';
-import { Category } from '@/amplify-lms/API.js';
+import { Category, Chapter } from '@/amplify-lms/API.js';
 export declare type EscapeHatchProps = {
   [elementHierarchy: string]: Record<string, unknown>;
 } | null;
@@ -37,6 +37,7 @@ export declare type CourseCreateFormInputValues = {
   price?: number;
   isPublished?: boolean;
   Category?: Category;
+  Chapters?: Chapter[];
 };
 export declare type CourseCreateFormValidationValues = {
   title?: ValidationFunction<string>;
@@ -45,6 +46,7 @@ export declare type CourseCreateFormValidationValues = {
   price?: ValidationFunction<number>;
   isPublished?: ValidationFunction<boolean>;
   Category?: ValidationFunction<Category>;
+  Chapters?: ValidationFunction<Chapter>;
 };
 export declare type PrimitiveOverrideProps<T> = Partial<T> &
   React.DOMAttributes<HTMLDivElement>;
@@ -56,6 +58,7 @@ export declare type CourseCreateFormOverridesProps = {
   price?: PrimitiveOverrideProps<TextFieldProps>;
   isPublished?: PrimitiveOverrideProps<SwitchFieldProps>;
   Category?: PrimitiveOverrideProps<AutocompleteProps>;
+  Chapters?: PrimitiveOverrideProps<AutocompleteProps>;
 } & EscapeHatchProps;
 export declare type CourseCreateFormProps = React.PropsWithChildren<
   {

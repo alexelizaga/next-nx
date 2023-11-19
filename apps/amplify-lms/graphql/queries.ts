@@ -8,6 +8,141 @@ type GeneratedQuery<InputType, OutputType> = string & {
   __generatedQueryOutput: OutputType;
 };
 
+export const getChapter = /* GraphQL */ `query GetChapter($id: ID!) {
+  getChapter(id: $id) {
+    id
+    title
+    description
+    video
+    videoUrl
+    videoProvider
+    position
+    isPublished
+    isFree
+    courseId
+    Course {
+      id
+      title
+      description
+      image
+      price
+      isPublished
+      categoryId
+      Category {
+        id
+        icon
+        name
+        createdAt
+        updatedAt
+        __typename
+      }
+      Chapters {
+        nextToken
+        __typename
+      }
+      createdAt
+      updatedAt
+      __typename
+    }
+    createdAt
+    updatedAt
+    __typename
+  }
+}
+` as GeneratedQuery<
+  APITypes.GetChapterQueryVariables,
+  APITypes.GetChapterQuery
+>;
+export const listChapters = /* GraphQL */ `query ListChapters(
+  $filter: ModelChapterFilterInput
+  $limit: Int
+  $nextToken: String
+) {
+  listChapters(filter: $filter, limit: $limit, nextToken: $nextToken) {
+    items {
+      id
+      title
+      description
+      video
+      videoUrl
+      videoProvider
+      position
+      isPublished
+      isFree
+      courseId
+      Course {
+        id
+        title
+        description
+        image
+        price
+        isPublished
+        categoryId
+        createdAt
+        updatedAt
+        __typename
+      }
+      createdAt
+      updatedAt
+      __typename
+    }
+    nextToken
+    __typename
+  }
+}
+` as GeneratedQuery<
+  APITypes.ListChaptersQueryVariables,
+  APITypes.ListChaptersQuery
+>;
+export const chaptersByCourseId = /* GraphQL */ `query ChaptersByCourseId(
+  $courseId: ID!
+  $sortDirection: ModelSortDirection
+  $filter: ModelChapterFilterInput
+  $limit: Int
+  $nextToken: String
+) {
+  chaptersByCourseId(
+    courseId: $courseId
+    sortDirection: $sortDirection
+    filter: $filter
+    limit: $limit
+    nextToken: $nextToken
+  ) {
+    items {
+      id
+      title
+      description
+      video
+      videoUrl
+      videoProvider
+      position
+      isPublished
+      isFree
+      courseId
+      Course {
+        id
+        title
+        description
+        image
+        price
+        isPublished
+        categoryId
+        createdAt
+        updatedAt
+        __typename
+      }
+      createdAt
+      updatedAt
+      __typename
+    }
+    nextToken
+    __typename
+  }
+}
+` as GeneratedQuery<
+  APITypes.ChaptersByCourseIdQueryVariables,
+  APITypes.ChaptersByCourseIdQuery
+>;
 export const getCategory = /* GraphQL */ `query GetCategory($id: ID!) {
   getCategory(id: $id) {
     id
@@ -85,6 +220,25 @@ export const getCourse = /* GraphQL */ `query GetCourse($id: ID!) {
       updatedAt
       __typename
     }
+    Chapters {
+      items {
+        id
+        title
+        description
+        video
+        videoUrl
+        videoProvider
+        position
+        isPublished
+        isFree
+        courseId
+        createdAt
+        updatedAt
+        __typename
+      }
+      nextToken
+      __typename
+    }
     createdAt
     updatedAt
     __typename
@@ -111,6 +265,10 @@ export const listCourses = /* GraphQL */ `query ListCourses(
         name
         createdAt
         updatedAt
+        __typename
+      }
+      Chapters {
+        nextToken
         __typename
       }
       createdAt
@@ -155,6 +313,10 @@ export const coursesByCategoryId = /* GraphQL */ `query CoursesByCategoryId(
         updatedAt
         __typename
       }
+      Chapters {
+        nextToken
+        __typename
+      }
       createdAt
       updatedAt
       __typename
@@ -166,297 +328,4 @@ export const coursesByCategoryId = /* GraphQL */ `query CoursesByCategoryId(
 ` as GeneratedQuery<
   APITypes.CoursesByCategoryIdQueryVariables,
   APITypes.CoursesByCategoryIdQuery
->;
-export const getPlatform = /* GraphQL */ `query GetPlatform($id: ID!) {
-  getPlatform(id: $id) {
-    id
-    name
-    value
-    Products {
-      items {
-        id
-        name
-        isSold
-        price
-        image
-        platformID
-        genreID
-        createdAt
-        updatedAt
-        __typename
-      }
-      nextToken
-      __typename
-    }
-    createdAt
-    updatedAt
-    __typename
-  }
-}
-` as GeneratedQuery<
-  APITypes.GetPlatformQueryVariables,
-  APITypes.GetPlatformQuery
->;
-export const listPlatforms = /* GraphQL */ `query ListPlatforms(
-  $filter: ModelPlatformFilterInput
-  $limit: Int
-  $nextToken: String
-) {
-  listPlatforms(filter: $filter, limit: $limit, nextToken: $nextToken) {
-    items {
-      id
-      name
-      value
-      Products {
-        nextToken
-        __typename
-      }
-      createdAt
-      updatedAt
-      __typename
-    }
-    nextToken
-    __typename
-  }
-}
-` as GeneratedQuery<
-  APITypes.ListPlatformsQueryVariables,
-  APITypes.ListPlatformsQuery
->;
-export const getGenre = /* GraphQL */ `query GetGenre($id: ID!) {
-  getGenre(id: $id) {
-    id
-    name
-    value
-    Products {
-      items {
-        id
-        name
-        isSold
-        price
-        image
-        platformID
-        genreID
-        createdAt
-        updatedAt
-        __typename
-      }
-      nextToken
-      __typename
-    }
-    createdAt
-    updatedAt
-    __typename
-  }
-}
-` as GeneratedQuery<APITypes.GetGenreQueryVariables, APITypes.GetGenreQuery>;
-export const listGenres = /* GraphQL */ `query ListGenres(
-  $filter: ModelGenreFilterInput
-  $limit: Int
-  $nextToken: String
-) {
-  listGenres(filter: $filter, limit: $limit, nextToken: $nextToken) {
-    items {
-      id
-      name
-      value
-      Products {
-        nextToken
-        __typename
-      }
-      createdAt
-      updatedAt
-      __typename
-    }
-    nextToken
-    __typename
-  }
-}
-` as GeneratedQuery<
-  APITypes.ListGenresQueryVariables,
-  APITypes.ListGenresQuery
->;
-export const getProduct = /* GraphQL */ `query GetProduct($id: ID!) {
-  getProduct(id: $id) {
-    id
-    name
-    isSold
-    price
-    image
-    platformID
-    genreID
-    Platform {
-      id
-      name
-      value
-      Products {
-        nextToken
-        __typename
-      }
-      createdAt
-      updatedAt
-      __typename
-    }
-    Genre {
-      id
-      name
-      value
-      Products {
-        nextToken
-        __typename
-      }
-      createdAt
-      updatedAt
-      __typename
-    }
-    createdAt
-    updatedAt
-    __typename
-  }
-}
-` as GeneratedQuery<
-  APITypes.GetProductQueryVariables,
-  APITypes.GetProductQuery
->;
-export const listProducts = /* GraphQL */ `query ListProducts(
-  $filter: ModelProductFilterInput
-  $limit: Int
-  $nextToken: String
-) {
-  listProducts(filter: $filter, limit: $limit, nextToken: $nextToken) {
-    items {
-      id
-      name
-      isSold
-      price
-      image
-      platformID
-      genreID
-      Platform {
-        id
-        name
-        value
-        createdAt
-        updatedAt
-        __typename
-      }
-      Genre {
-        id
-        name
-        value
-        createdAt
-        updatedAt
-        __typename
-      }
-      createdAt
-      updatedAt
-      __typename
-    }
-    nextToken
-    __typename
-  }
-}
-` as GeneratedQuery<
-  APITypes.ListProductsQueryVariables,
-  APITypes.ListProductsQuery
->;
-export const productsByPlatformID = /* GraphQL */ `query ProductsByPlatformID(
-  $platformID: ID!
-  $sortDirection: ModelSortDirection
-  $filter: ModelProductFilterInput
-  $limit: Int
-  $nextToken: String
-) {
-  productsByPlatformID(
-    platformID: $platformID
-    sortDirection: $sortDirection
-    filter: $filter
-    limit: $limit
-    nextToken: $nextToken
-  ) {
-    items {
-      id
-      name
-      isSold
-      price
-      image
-      platformID
-      genreID
-      Platform {
-        id
-        name
-        value
-        createdAt
-        updatedAt
-        __typename
-      }
-      Genre {
-        id
-        name
-        value
-        createdAt
-        updatedAt
-        __typename
-      }
-      createdAt
-      updatedAt
-      __typename
-    }
-    nextToken
-    __typename
-  }
-}
-` as GeneratedQuery<
-  APITypes.ProductsByPlatformIDQueryVariables,
-  APITypes.ProductsByPlatformIDQuery
->;
-export const productsByGenreID = /* GraphQL */ `query ProductsByGenreID(
-  $genreID: ID!
-  $sortDirection: ModelSortDirection
-  $filter: ModelProductFilterInput
-  $limit: Int
-  $nextToken: String
-) {
-  productsByGenreID(
-    genreID: $genreID
-    sortDirection: $sortDirection
-    filter: $filter
-    limit: $limit
-    nextToken: $nextToken
-  ) {
-    items {
-      id
-      name
-      isSold
-      price
-      image
-      platformID
-      genreID
-      Platform {
-        id
-        name
-        value
-        createdAt
-        updatedAt
-        __typename
-      }
-      Genre {
-        id
-        name
-        value
-        createdAt
-        updatedAt
-        __typename
-      }
-      createdAt
-      updatedAt
-      __typename
-    }
-    nextToken
-    __typename
-  }
-}
-` as GeneratedQuery<
-  APITypes.ProductsByGenreIDQueryVariables,
-  APITypes.ProductsByGenreIDQuery
 >;
