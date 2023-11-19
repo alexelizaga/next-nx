@@ -8,6 +8,150 @@ type GeneratedMutation<InputType, OutputType> = string & {
   __generatedMutationOutput: OutputType;
 };
 
+export const createChapter = /* GraphQL */ `mutation CreateChapter(
+  $input: CreateChapterInput!
+  $condition: ModelChapterConditionInput
+) {
+  createChapter(input: $input, condition: $condition) {
+    id
+    title
+    description
+    video
+    videoUrl
+    videoProvider
+    position
+    isPublished
+    isFree
+    courseId
+    Course {
+      id
+      title
+      description
+      image
+      price
+      isPublished
+      categoryId
+      Category {
+        id
+        icon
+        name
+        createdAt
+        updatedAt
+        __typename
+      }
+      Chapters {
+        nextToken
+        __typename
+      }
+      createdAt
+      updatedAt
+      __typename
+    }
+    createdAt
+    updatedAt
+    __typename
+  }
+}
+` as GeneratedMutation<
+  APITypes.CreateChapterMutationVariables,
+  APITypes.CreateChapterMutation
+>;
+export const updateChapter = /* GraphQL */ `mutation UpdateChapter(
+  $input: UpdateChapterInput!
+  $condition: ModelChapterConditionInput
+) {
+  updateChapter(input: $input, condition: $condition) {
+    id
+    title
+    description
+    video
+    videoUrl
+    videoProvider
+    position
+    isPublished
+    isFree
+    courseId
+    Course {
+      id
+      title
+      description
+      image
+      price
+      isPublished
+      categoryId
+      Category {
+        id
+        icon
+        name
+        createdAt
+        updatedAt
+        __typename
+      }
+      Chapters {
+        nextToken
+        __typename
+      }
+      createdAt
+      updatedAt
+      __typename
+    }
+    createdAt
+    updatedAt
+    __typename
+  }
+}
+` as GeneratedMutation<
+  APITypes.UpdateChapterMutationVariables,
+  APITypes.UpdateChapterMutation
+>;
+export const deleteChapter = /* GraphQL */ `mutation DeleteChapter(
+  $input: DeleteChapterInput!
+  $condition: ModelChapterConditionInput
+) {
+  deleteChapter(input: $input, condition: $condition) {
+    id
+    title
+    description
+    video
+    videoUrl
+    videoProvider
+    position
+    isPublished
+    isFree
+    courseId
+    Course {
+      id
+      title
+      description
+      image
+      price
+      isPublished
+      categoryId
+      Category {
+        id
+        icon
+        name
+        createdAt
+        updatedAt
+        __typename
+      }
+      Chapters {
+        nextToken
+        __typename
+      }
+      createdAt
+      updatedAt
+      __typename
+    }
+    createdAt
+    updatedAt
+    __typename
+  }
+}
+` as GeneratedMutation<
+  APITypes.DeleteChapterMutationVariables,
+  APITypes.DeleteChapterMutation
+>;
 export const createCategory = /* GraphQL */ `mutation CreateCategory(
   $input: CreateCategoryInput!
   $condition: ModelCategoryConditionInput
@@ -131,6 +275,25 @@ export const createCourse = /* GraphQL */ `mutation CreateCourse(
       updatedAt
       __typename
     }
+    Chapters {
+      items {
+        id
+        title
+        description
+        video
+        videoUrl
+        videoProvider
+        position
+        isPublished
+        isFree
+        courseId
+        createdAt
+        updatedAt
+        __typename
+      }
+      nextToken
+      __typename
+    }
     createdAt
     updatedAt
     __typename
@@ -162,6 +325,25 @@ export const updateCourse = /* GraphQL */ `mutation UpdateCourse(
       }
       createdAt
       updatedAt
+      __typename
+    }
+    Chapters {
+      items {
+        id
+        title
+        description
+        video
+        videoUrl
+        videoProvider
+        position
+        isPublished
+        isFree
+        courseId
+        createdAt
+        updatedAt
+        __typename
+      }
+      nextToken
       __typename
     }
     createdAt
@@ -197,6 +379,25 @@ export const deleteCourse = /* GraphQL */ `mutation DeleteCourse(
       updatedAt
       __typename
     }
+    Chapters {
+      items {
+        id
+        title
+        description
+        video
+        videoUrl
+        videoProvider
+        position
+        isPublished
+        isFree
+        courseId
+        createdAt
+        updatedAt
+        __typename
+      }
+      nextToken
+      __typename
+    }
     createdAt
     updatedAt
     __typename
@@ -205,337 +406,4 @@ export const deleteCourse = /* GraphQL */ `mutation DeleteCourse(
 ` as GeneratedMutation<
   APITypes.DeleteCourseMutationVariables,
   APITypes.DeleteCourseMutation
->;
-export const createPlatform = /* GraphQL */ `mutation CreatePlatform(
-  $input: CreatePlatformInput!
-  $condition: ModelPlatformConditionInput
-) {
-  createPlatform(input: $input, condition: $condition) {
-    id
-    name
-    value
-    Products {
-      items {
-        id
-        name
-        isSold
-        price
-        image
-        platformID
-        genreID
-        createdAt
-        updatedAt
-        __typename
-      }
-      nextToken
-      __typename
-    }
-    createdAt
-    updatedAt
-    __typename
-  }
-}
-` as GeneratedMutation<
-  APITypes.CreatePlatformMutationVariables,
-  APITypes.CreatePlatformMutation
->;
-export const updatePlatform = /* GraphQL */ `mutation UpdatePlatform(
-  $input: UpdatePlatformInput!
-  $condition: ModelPlatformConditionInput
-) {
-  updatePlatform(input: $input, condition: $condition) {
-    id
-    name
-    value
-    Products {
-      items {
-        id
-        name
-        isSold
-        price
-        image
-        platformID
-        genreID
-        createdAt
-        updatedAt
-        __typename
-      }
-      nextToken
-      __typename
-    }
-    createdAt
-    updatedAt
-    __typename
-  }
-}
-` as GeneratedMutation<
-  APITypes.UpdatePlatformMutationVariables,
-  APITypes.UpdatePlatformMutation
->;
-export const deletePlatform = /* GraphQL */ `mutation DeletePlatform(
-  $input: DeletePlatformInput!
-  $condition: ModelPlatformConditionInput
-) {
-  deletePlatform(input: $input, condition: $condition) {
-    id
-    name
-    value
-    Products {
-      items {
-        id
-        name
-        isSold
-        price
-        image
-        platformID
-        genreID
-        createdAt
-        updatedAt
-        __typename
-      }
-      nextToken
-      __typename
-    }
-    createdAt
-    updatedAt
-    __typename
-  }
-}
-` as GeneratedMutation<
-  APITypes.DeletePlatformMutationVariables,
-  APITypes.DeletePlatformMutation
->;
-export const createGenre = /* GraphQL */ `mutation CreateGenre(
-  $input: CreateGenreInput!
-  $condition: ModelGenreConditionInput
-) {
-  createGenre(input: $input, condition: $condition) {
-    id
-    name
-    value
-    Products {
-      items {
-        id
-        name
-        isSold
-        price
-        image
-        platformID
-        genreID
-        createdAt
-        updatedAt
-        __typename
-      }
-      nextToken
-      __typename
-    }
-    createdAt
-    updatedAt
-    __typename
-  }
-}
-` as GeneratedMutation<
-  APITypes.CreateGenreMutationVariables,
-  APITypes.CreateGenreMutation
->;
-export const updateGenre = /* GraphQL */ `mutation UpdateGenre(
-  $input: UpdateGenreInput!
-  $condition: ModelGenreConditionInput
-) {
-  updateGenre(input: $input, condition: $condition) {
-    id
-    name
-    value
-    Products {
-      items {
-        id
-        name
-        isSold
-        price
-        image
-        platformID
-        genreID
-        createdAt
-        updatedAt
-        __typename
-      }
-      nextToken
-      __typename
-    }
-    createdAt
-    updatedAt
-    __typename
-  }
-}
-` as GeneratedMutation<
-  APITypes.UpdateGenreMutationVariables,
-  APITypes.UpdateGenreMutation
->;
-export const deleteGenre = /* GraphQL */ `mutation DeleteGenre(
-  $input: DeleteGenreInput!
-  $condition: ModelGenreConditionInput
-) {
-  deleteGenre(input: $input, condition: $condition) {
-    id
-    name
-    value
-    Products {
-      items {
-        id
-        name
-        isSold
-        price
-        image
-        platformID
-        genreID
-        createdAt
-        updatedAt
-        __typename
-      }
-      nextToken
-      __typename
-    }
-    createdAt
-    updatedAt
-    __typename
-  }
-}
-` as GeneratedMutation<
-  APITypes.DeleteGenreMutationVariables,
-  APITypes.DeleteGenreMutation
->;
-export const createProduct = /* GraphQL */ `mutation CreateProduct(
-  $input: CreateProductInput!
-  $condition: ModelProductConditionInput
-) {
-  createProduct(input: $input, condition: $condition) {
-    id
-    name
-    isSold
-    price
-    image
-    platformID
-    genreID
-    Platform {
-      id
-      name
-      value
-      Products {
-        nextToken
-        __typename
-      }
-      createdAt
-      updatedAt
-      __typename
-    }
-    Genre {
-      id
-      name
-      value
-      Products {
-        nextToken
-        __typename
-      }
-      createdAt
-      updatedAt
-      __typename
-    }
-    createdAt
-    updatedAt
-    __typename
-  }
-}
-` as GeneratedMutation<
-  APITypes.CreateProductMutationVariables,
-  APITypes.CreateProductMutation
->;
-export const updateProduct = /* GraphQL */ `mutation UpdateProduct(
-  $input: UpdateProductInput!
-  $condition: ModelProductConditionInput
-) {
-  updateProduct(input: $input, condition: $condition) {
-    id
-    name
-    isSold
-    price
-    image
-    platformID
-    genreID
-    Platform {
-      id
-      name
-      value
-      Products {
-        nextToken
-        __typename
-      }
-      createdAt
-      updatedAt
-      __typename
-    }
-    Genre {
-      id
-      name
-      value
-      Products {
-        nextToken
-        __typename
-      }
-      createdAt
-      updatedAt
-      __typename
-    }
-    createdAt
-    updatedAt
-    __typename
-  }
-}
-` as GeneratedMutation<
-  APITypes.UpdateProductMutationVariables,
-  APITypes.UpdateProductMutation
->;
-export const deleteProduct = /* GraphQL */ `mutation DeleteProduct(
-  $input: DeleteProductInput!
-  $condition: ModelProductConditionInput
-) {
-  deleteProduct(input: $input, condition: $condition) {
-    id
-    name
-    isSold
-    price
-    image
-    platformID
-    genreID
-    Platform {
-      id
-      name
-      value
-      Products {
-        nextToken
-        __typename
-      }
-      createdAt
-      updatedAt
-      __typename
-    }
-    Genre {
-      id
-      name
-      value
-      Products {
-        nextToken
-        __typename
-      }
-      createdAt
-      updatedAt
-      __typename
-    }
-    createdAt
-    updatedAt
-    __typename
-  }
-}
-` as GeneratedMutation<
-  APITypes.DeleteProductMutationVariables,
-  APITypes.DeleteProductMutation
 >;

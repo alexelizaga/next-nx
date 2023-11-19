@@ -22,12 +22,8 @@ import {
 } from '@aws-amplify/ui-react';
 import { fetchByPath, getOverrideProps, validateField } from './utils';
 import { generateClient } from 'aws-amplify/api';
-import {
-  getCourse,
-  listCategories,
-  listChapters
-} from '@/amplify-lms/graphql/queries';
-import { updateChapter, updateCourse } from '@/amplify-lms/graphql/mutations';
+import { getChapter, listCourses } from '@/amplify-lms/graphql/queries';
+import { updateChapter } from '@/amplify-lms/graphql/mutations';
 const client = generateClient();
 function ArrayField({
   items = [],
@@ -183,10 +179,10 @@ function ArrayField({
     </React.Fragment>
   );
 }
-export default function CourseUpdateForm(props) {
+export default function ChapterUpdateForm(props) {
   const {
     id: idProp,
-    course: courseModelProp,
+    chapter: chapterModelProp,
     onSuccess,
     onError,
     onSubmit,
@@ -198,109 +194,93 @@ export default function CourseUpdateForm(props) {
   const initialValues = {
     title: '',
     description: '',
-    image: '',
-    price: '',
+    video: '',
+    videoUrl: '',
+    videoProvider: '',
+    position: '',
     isPublished: false,
-    Category: undefined,
-    Chapters: []
+    isFree: false,
+    Course: undefined
   };
   const [title, setTitle] = React.useState(initialValues.title);
   const [description, setDescription] = React.useState(
     initialValues.description
   );
-  const [image, setImage] = React.useState(initialValues.image);
-  const [price, setPrice] = React.useState(initialValues.price);
+  const [video, setVideo] = React.useState(initialValues.video);
+  const [videoUrl, setVideoUrl] = React.useState(initialValues.videoUrl);
+  const [videoProvider, setVideoProvider] = React.useState(
+    initialValues.videoProvider
+  );
+  const [position, setPosition] = React.useState(initialValues.position);
   const [isPublished, setIsPublished] = React.useState(
     initialValues.isPublished
   );
-  const [Category, setCategory] = React.useState(initialValues.Category);
-  const [CategoryLoading, setCategoryLoading] = React.useState(false);
-  const [CategoryRecords, setCategoryRecords] = React.useState([]);
-  const [Chapters, setChapters] = React.useState(initialValues.Chapters);
-  const [ChaptersLoading, setChaptersLoading] = React.useState(false);
-  const [ChaptersRecords, setChaptersRecords] = React.useState([]);
+  const [isFree, setIsFree] = React.useState(initialValues.isFree);
+  const [Course, setCourse] = React.useState(initialValues.Course);
+  const [CourseLoading, setCourseLoading] = React.useState(false);
+  const [CourseRecords, setCourseRecords] = React.useState([]);
   const autocompleteLength = 10;
   const [errors, setErrors] = React.useState({});
   const resetStateValues = () => {
-    const cleanValues = courseRecord
-      ? {
-          ...initialValues,
-          ...courseRecord,
-          Category,
-          Chapters: linkedChapters
-        }
+    const cleanValues = chapterRecord
+      ? { ...initialValues, ...chapterRecord, Course }
       : initialValues;
     setTitle(cleanValues.title);
     setDescription(cleanValues.description);
-    setImage(cleanValues.image);
-    setPrice(cleanValues.price);
+    setVideo(cleanValues.video);
+    setVideoUrl(cleanValues.videoUrl);
+    setVideoProvider(cleanValues.videoProvider);
+    setPosition(cleanValues.position);
     setIsPublished(cleanValues.isPublished);
-    setCategory(cleanValues.Category);
-    setCurrentCategoryValue(undefined);
-    setCurrentCategoryDisplayValue('');
-    setChapters(cleanValues.Chapters ?? []);
-    setCurrentChaptersValue(undefined);
-    setCurrentChaptersDisplayValue('');
+    setIsFree(cleanValues.isFree);
+    setCourse(cleanValues.Course);
+    setCurrentCourseValue(undefined);
+    setCurrentCourseDisplayValue('');
     setErrors({});
   };
-  const [courseRecord, setCourseRecord] = React.useState(courseModelProp);
-  const [linkedChapters, setLinkedChapters] = React.useState([]);
-  const canUnlinkChapters = true;
+  const [chapterRecord, setChapterRecord] = React.useState(chapterModelProp);
   React.useEffect(() => {
     const queryData = async () => {
       const record = idProp
         ? (
             await client.graphql({
-              query: getCourse.replaceAll('__typename', ''),
+              query: getChapter.replaceAll('__typename', ''),
               variables: { id: idProp }
             })
-          )?.data?.getCourse
-        : courseModelProp;
-      const CategoryRecord = record ? await record.Category : undefined;
-      setCategory(CategoryRecord);
-      const linkedChapters = record?.Chapters?.items ?? [];
-      setLinkedChapters(linkedChapters);
-      setCourseRecord(record);
+          )?.data?.getChapter
+        : chapterModelProp;
+      const CourseRecord = record ? await record.Course : undefined;
+      setCourse(CourseRecord);
+      setChapterRecord(record);
     };
     queryData();
-  }, [idProp, courseModelProp]);
-  React.useEffect(resetStateValues, [courseRecord, Category, linkedChapters]);
-  const [currentCategoryDisplayValue, setCurrentCategoryDisplayValue] =
+  }, [idProp, chapterModelProp]);
+  React.useEffect(resetStateValues, [chapterRecord, Course]);
+  const [currentCourseDisplayValue, setCurrentCourseDisplayValue] =
     React.useState('');
-  const [currentCategoryValue, setCurrentCategoryValue] =
-    React.useState(undefined);
-  const CategoryRef = React.createRef();
-  const [currentChaptersDisplayValue, setCurrentChaptersDisplayValue] =
-    React.useState('');
-  const [currentChaptersValue, setCurrentChaptersValue] =
-    React.useState(undefined);
-  const ChaptersRef = React.createRef();
+  const [currentCourseValue, setCurrentCourseValue] = React.useState(undefined);
+  const CourseRef = React.createRef();
   const getIDValue = {
-    Category: (r) => JSON.stringify({ id: r?.id }),
-    Chapters: (r) => JSON.stringify({ id: r?.id })
+    Course: (r) => JSON.stringify({ id: r?.id })
   };
-  const CategoryIdSet = new Set(
-    Array.isArray(Category)
-      ? Category.map((r) => getIDValue.Category?.(r))
-      : getIDValue.Category?.(Category)
-  );
-  const ChaptersIdSet = new Set(
-    Array.isArray(Chapters)
-      ? Chapters.map((r) => getIDValue.Chapters?.(r))
-      : getIDValue.Chapters?.(Chapters)
+  const CourseIdSet = new Set(
+    Array.isArray(Course)
+      ? Course.map((r) => getIDValue.Course?.(r))
+      : getIDValue.Course?.(Course)
   );
   const getDisplayValue = {
-    Category: (r) => `${r?.icon ? r?.icon + ' - ' : ''}${r?.id}`,
-    Chapters: (r) => `${r?.title ? r?.title + ' - ' : ''}${r?.id}`
+    Course: (r) => `${r?.title ? r?.title + ' - ' : ''}${r?.id}`
   };
   const validations = {
     title: [{ type: 'Required' }],
     description: [],
-    image: [],
-    price: [],
-    isPublished: [],
-    Category: [],
-    Chapters: []
+    video: [],
+    videoUrl: [],
+    videoProvider: [],
+    position: [{ type: 'Required' }],
+    isPublished: [{ type: 'Required' }],
+    isFree: [{ type: 'Required' }],
+    Course: []
   };
   const runValidationTasks = async (
     fieldName,
@@ -319,37 +299,8 @@ export default function CourseUpdateForm(props) {
     setErrors((errors) => ({ ...errors, [fieldName]: validationResponse }));
     return validationResponse;
   };
-  const fetchCategoryRecords = async (value) => {
-    setCategoryLoading(true);
-    const newOptions = [];
-    let newNext = '';
-    while (newOptions.length < autocompleteLength && newNext != null) {
-      const variables = {
-        limit: autocompleteLength * 5,
-        filter: {
-          or: [{ icon: { contains: value } }, { id: { contains: value } }]
-        }
-      };
-      if (newNext) {
-        variables['nextToken'] = newNext;
-      }
-      const result = (
-        await client.graphql({
-          query: listCategories.replaceAll('__typename', ''),
-          variables
-        })
-      )?.data?.listCategories?.items;
-      var loaded = result.filter(
-        (item) => !CategoryIdSet.has(getIDValue.Category?.(item))
-      );
-      newOptions.push(...loaded);
-      newNext = result.nextToken;
-    }
-    setCategoryRecords(newOptions.slice(0, autocompleteLength));
-    setCategoryLoading(false);
-  };
-  const fetchChaptersRecords = async (value) => {
-    setChaptersLoading(true);
+  const fetchCourseRecords = async (value) => {
+    setCourseLoading(true);
     const newOptions = [];
     let newNext = '';
     while (newOptions.length < autocompleteLength && newNext != null) {
@@ -364,22 +315,21 @@ export default function CourseUpdateForm(props) {
       }
       const result = (
         await client.graphql({
-          query: listChapters.replaceAll('__typename', ''),
+          query: listCourses.replaceAll('__typename', ''),
           variables
         })
-      )?.data?.listChapters?.items;
+      )?.data?.listCourses?.items;
       var loaded = result.filter(
-        (item) => !ChaptersIdSet.has(getIDValue.Chapters?.(item))
+        (item) => !CourseIdSet.has(getIDValue.Course?.(item))
       );
       newOptions.push(...loaded);
       newNext = result.nextToken;
     }
-    setChaptersRecords(newOptions.slice(0, autocompleteLength));
-    setChaptersLoading(false);
+    setCourseRecords(newOptions.slice(0, autocompleteLength));
+    setCourseLoading(false);
   };
   React.useEffect(() => {
-    fetchCategoryRecords('');
-    fetchChaptersRecords('');
+    fetchCourseRecords('');
   }, []);
   return (
     <Grid
@@ -392,11 +342,13 @@ export default function CourseUpdateForm(props) {
         let modelFields = {
           title,
           description: description ?? null,
-          image: image ?? null,
-          price: price ?? null,
-          isPublished: isPublished ?? null,
-          Category: Category ?? null,
-          Chapters: Chapters ?? null
+          video: video ?? null,
+          videoUrl: videoUrl ?? null,
+          videoProvider: videoProvider ?? null,
+          position,
+          isPublished,
+          isFree,
+          Course: Course ?? null
         };
         const validationResponses = await Promise.all(
           Object.keys(validations).reduce((promises, fieldName) => {
@@ -434,74 +386,26 @@ export default function CourseUpdateForm(props) {
               modelFields[key] = null;
             }
           });
-          const promises = [];
-          const chaptersToLink = [];
-          const chaptersToUnLink = [];
-          const chaptersSet = new Set();
-          const linkedChaptersSet = new Set();
-          Chapters.forEach((r) => chaptersSet.add(getIDValue.Chapters?.(r)));
-          linkedChapters.forEach((r) =>
-            linkedChaptersSet.add(getIDValue.Chapters?.(r))
-          );
-          linkedChapters.forEach((r) => {
-            if (!chaptersSet.has(getIDValue.Chapters?.(r))) {
-              chaptersToUnLink.push(r);
-            }
-          });
-          Chapters.forEach((r) => {
-            if (!linkedChaptersSet.has(getIDValue.Chapters?.(r))) {
-              chaptersToLink.push(r);
-            }
-          });
-          chaptersToUnLink.forEach((original) => {
-            if (!canUnlinkChapters) {
-              throw Error(
-                `Chapter ${original.id} cannot be unlinked from Course because undefined is a required field.`
-              );
-            }
-            promises.push(
-              client.graphql({
-                query: updateChapter.replaceAll('__typename', ''),
-                variables: {
-                  input: {
-                    id: original.id
-                  }
-                }
-              })
-            );
-          });
-          chaptersToLink.forEach((original) => {
-            promises.push(
-              client.graphql({
-                query: updateChapter.replaceAll('__typename', ''),
-                variables: {
-                  input: {
-                    id: original.id
-                  }
-                }
-              })
-            );
-          });
           const modelFieldsToSave = {
             title: modelFields.title,
             description: modelFields.description ?? null,
-            image: modelFields.image ?? null,
-            price: modelFields.price ?? null,
-            isPublished: modelFields.isPublished ?? null,
-            categoryId: modelFields?.Category?.id ?? null
+            video: modelFields.video ?? null,
+            videoUrl: modelFields.videoUrl ?? null,
+            videoProvider: modelFields.videoProvider ?? null,
+            position: modelFields.position,
+            isPublished: modelFields.isPublished,
+            isFree: modelFields.isFree,
+            courseId: modelFields?.Course?.id ?? null
           };
-          promises.push(
-            client.graphql({
-              query: updateCourse.replaceAll('__typename', ''),
-              variables: {
-                input: {
-                  id: courseRecord.id,
-                  ...modelFieldsToSave
-                }
+          await client.graphql({
+            query: updateChapter.replaceAll('__typename', ''),
+            variables: {
+              input: {
+                id: chapterRecord.id,
+                ...modelFieldsToSave
               }
-            })
-          );
-          await Promise.all(promises);
+            }
+          });
           if (onSuccess) {
             onSuccess(modelFields);
           }
@@ -512,7 +416,7 @@ export default function CourseUpdateForm(props) {
           }
         }
       }}
-      {...getOverrideProps(overrides, 'CourseUpdateForm')}
+      {...getOverrideProps(overrides, 'ChapterUpdateForm')}
       {...rest}
     >
       <TextField
@@ -526,11 +430,13 @@ export default function CourseUpdateForm(props) {
             const modelFields = {
               title: value,
               description,
-              image,
-              price,
+              video,
+              videoUrl,
+              videoProvider,
+              position,
               isPublished,
-              Category,
-              Chapters
+              isFree,
+              Course
             };
             const result = onChange(modelFields);
             value = result?.title ?? value;
@@ -556,11 +462,13 @@ export default function CourseUpdateForm(props) {
             const modelFields = {
               title,
               description: value,
-              image,
-              price,
+              video,
+              videoUrl,
+              videoProvider,
+              position,
               isPublished,
-              Category,
-              Chapters
+              isFree,
+              Course
             };
             const result = onChange(modelFields);
             value = result?.description ?? value;
@@ -576,68 +484,136 @@ export default function CourseUpdateForm(props) {
         {...getOverrideProps(overrides, 'description')}
       ></TextField>
       <TextField
-        label="Image"
+        label="Video"
         isRequired={false}
         isReadOnly={false}
-        value={image}
+        value={video}
         onChange={(e) => {
           let { value } = e.target;
           if (onChange) {
             const modelFields = {
               title,
               description,
-              image: value,
-              price,
+              video: value,
+              videoUrl,
+              videoProvider,
+              position,
               isPublished,
-              Category,
-              Chapters
+              isFree,
+              Course
             };
             const result = onChange(modelFields);
-            value = result?.image ?? value;
+            value = result?.video ?? value;
           }
-          if (errors.image?.hasError) {
-            runValidationTasks('image', value);
+          if (errors.video?.hasError) {
+            runValidationTasks('video', value);
           }
-          setImage(value);
+          setVideo(value);
         }}
-        onBlur={() => runValidationTasks('image', image)}
-        errorMessage={errors.image?.errorMessage}
-        hasError={errors.image?.hasError}
-        {...getOverrideProps(overrides, 'image')}
+        onBlur={() => runValidationTasks('video', video)}
+        errorMessage={errors.video?.errorMessage}
+        hasError={errors.video?.hasError}
+        {...getOverrideProps(overrides, 'video')}
       ></TextField>
       <TextField
-        label="Price"
+        label="Video url"
         isRequired={false}
         isReadOnly={false}
-        type="number"
-        step="any"
-        value={price}
+        value={videoUrl}
         onChange={(e) => {
-          let value = isNaN(parseFloat(e.target.value))
-            ? e.target.value
-            : parseFloat(e.target.value);
+          let { value } = e.target;
           if (onChange) {
             const modelFields = {
               title,
               description,
-              image,
-              price: value,
+              video,
+              videoUrl: value,
+              videoProvider,
+              position,
               isPublished,
-              Category,
-              Chapters
+              isFree,
+              Course
             };
             const result = onChange(modelFields);
-            value = result?.price ?? value;
+            value = result?.videoUrl ?? value;
           }
-          if (errors.price?.hasError) {
-            runValidationTasks('price', value);
+          if (errors.videoUrl?.hasError) {
+            runValidationTasks('videoUrl', value);
           }
-          setPrice(value);
+          setVideoUrl(value);
         }}
-        onBlur={() => runValidationTasks('price', price)}
-        errorMessage={errors.price?.errorMessage}
-        hasError={errors.price?.hasError}
-        {...getOverrideProps(overrides, 'price')}
+        onBlur={() => runValidationTasks('videoUrl', videoUrl)}
+        errorMessage={errors.videoUrl?.errorMessage}
+        hasError={errors.videoUrl?.hasError}
+        {...getOverrideProps(overrides, 'videoUrl')}
+      ></TextField>
+      <TextField
+        label="Video provider"
+        isRequired={false}
+        isReadOnly={false}
+        value={videoProvider}
+        onChange={(e) => {
+          let { value } = e.target;
+          if (onChange) {
+            const modelFields = {
+              title,
+              description,
+              video,
+              videoUrl,
+              videoProvider: value,
+              position,
+              isPublished,
+              isFree,
+              Course
+            };
+            const result = onChange(modelFields);
+            value = result?.videoProvider ?? value;
+          }
+          if (errors.videoProvider?.hasError) {
+            runValidationTasks('videoProvider', value);
+          }
+          setVideoProvider(value);
+        }}
+        onBlur={() => runValidationTasks('videoProvider', videoProvider)}
+        errorMessage={errors.videoProvider?.errorMessage}
+        hasError={errors.videoProvider?.hasError}
+        {...getOverrideProps(overrides, 'videoProvider')}
+      ></TextField>
+      <TextField
+        label="Position"
+        isRequired={true}
+        isReadOnly={false}
+        type="number"
+        step="any"
+        value={position}
+        onChange={(e) => {
+          let value = isNaN(parseInt(e.target.value))
+            ? e.target.value
+            : parseInt(e.target.value);
+          if (onChange) {
+            const modelFields = {
+              title,
+              description,
+              video,
+              videoUrl,
+              videoProvider,
+              position: value,
+              isPublished,
+              isFree,
+              Course
+            };
+            const result = onChange(modelFields);
+            value = result?.position ?? value;
+          }
+          if (errors.position?.hasError) {
+            runValidationTasks('position', value);
+          }
+          setPosition(value);
+        }}
+        onBlur={() => runValidationTasks('position', position)}
+        errorMessage={errors.position?.errorMessage}
+        hasError={errors.position?.hasError}
+        {...getOverrideProps(overrides, 'position')}
       ></TextField>
       <SwitchField
         label="Is published"
@@ -650,11 +626,13 @@ export default function CourseUpdateForm(props) {
             const modelFields = {
               title,
               description,
-              image,
-              price,
+              video,
+              videoUrl,
+              videoProvider,
+              position,
               isPublished: value,
-              Category,
-              Chapters
+              isFree,
+              Course
             };
             const result = onChange(modelFields);
             value = result?.isPublished ?? value;
@@ -669,6 +647,38 @@ export default function CourseUpdateForm(props) {
         hasError={errors.isPublished?.hasError}
         {...getOverrideProps(overrides, 'isPublished')}
       ></SwitchField>
+      <SwitchField
+        label="Is free"
+        defaultChecked={false}
+        isDisabled={false}
+        isChecked={isFree}
+        onChange={(e) => {
+          let value = e.target.checked;
+          if (onChange) {
+            const modelFields = {
+              title,
+              description,
+              video,
+              videoUrl,
+              videoProvider,
+              position,
+              isPublished,
+              isFree: value,
+              Course
+            };
+            const result = onChange(modelFields);
+            value = result?.isFree ?? value;
+          }
+          if (errors.isFree?.hasError) {
+            runValidationTasks('isFree', value);
+          }
+          setIsFree(value);
+        }}
+        onBlur={() => runValidationTasks('isFree', isFree)}
+        errorMessage={errors.isFree?.errorMessage}
+        hasError={errors.isFree?.hasError}
+        {...getOverrideProps(overrides, 'isFree')}
+      ></SwitchField>
       <ArrayField
         lengthLimit={1}
         onChange={async (items) => {
@@ -677,164 +687,82 @@ export default function CourseUpdateForm(props) {
             const modelFields = {
               title,
               description,
-              image,
-              price,
+              video,
+              videoUrl,
+              videoProvider,
+              position,
               isPublished,
-              Category: value,
-              Chapters
+              isFree,
+              Course: value
             };
             const result = onChange(modelFields);
-            value = result?.Category ?? value;
+            value = result?.Course ?? value;
           }
-          setCategory(value);
-          setCurrentCategoryValue(undefined);
-          setCurrentCategoryDisplayValue('');
+          setCourse(value);
+          setCurrentCourseValue(undefined);
+          setCurrentCourseDisplayValue('');
         }}
-        currentFieldValue={currentCategoryValue}
-        label={'Category'}
-        items={Category ? [Category] : []}
-        hasError={errors?.Category?.hasError}
+        currentFieldValue={currentCourseValue}
+        label={'Course'}
+        items={Course ? [Course] : []}
+        hasError={errors?.Course?.hasError}
         runValidationTasks={async () =>
-          await runValidationTasks('Category', currentCategoryValue)
+          await runValidationTasks('Course', currentCourseValue)
         }
-        errorMessage={errors?.Category?.errorMessage}
-        getBadgeText={getDisplayValue.Category}
+        errorMessage={errors?.Course?.errorMessage}
+        getBadgeText={getDisplayValue.Course}
         setFieldValue={(model) => {
-          setCurrentCategoryDisplayValue(
-            model ? getDisplayValue.Category(model) : ''
+          setCurrentCourseDisplayValue(
+            model ? getDisplayValue.Course(model) : ''
           );
-          setCurrentCategoryValue(model);
+          setCurrentCourseValue(model);
         }}
-        inputFieldRef={CategoryRef}
+        inputFieldRef={CourseRef}
         defaultFieldValue={''}
       >
         <Autocomplete
-          label="Category"
+          label="Course"
           isRequired={false}
           isReadOnly={false}
-          placeholder="Search Category"
-          value={currentCategoryDisplayValue}
-          options={CategoryRecords.filter(
-            (r) => !CategoryIdSet.has(getIDValue.Category?.(r))
+          placeholder="Search Course"
+          value={currentCourseDisplayValue}
+          options={CourseRecords.filter(
+            (r) => !CourseIdSet.has(getIDValue.Course?.(r))
           ).map((r) => ({
-            id: getIDValue.Category?.(r),
-            label: getDisplayValue.Category?.(r)
+            id: getIDValue.Course?.(r),
+            label: getDisplayValue.Course?.(r)
           }))}
-          isLoading={CategoryLoading}
+          isLoading={CourseLoading}
           onSelect={({ id, label }) => {
-            setCurrentCategoryValue(
-              CategoryRecords.find((r) =>
+            setCurrentCourseValue(
+              CourseRecords.find((r) =>
                 Object.entries(JSON.parse(id)).every(
                   ([key, value]) => r[key] === value
                 )
               )
             );
-            setCurrentCategoryDisplayValue(label);
-            runValidationTasks('Category', label);
+            setCurrentCourseDisplayValue(label);
+            runValidationTasks('Course', label);
           }}
           onClear={() => {
-            setCurrentCategoryDisplayValue('');
+            setCurrentCourseDisplayValue('');
           }}
-          defaultValue={Category}
+          defaultValue={Course}
           onChange={(e) => {
             let { value } = e.target;
-            fetchCategoryRecords(value);
-            if (errors.Category?.hasError) {
-              runValidationTasks('Category', value);
+            fetchCourseRecords(value);
+            if (errors.Course?.hasError) {
+              runValidationTasks('Course', value);
             }
-            setCurrentCategoryDisplayValue(value);
-            setCurrentCategoryValue(undefined);
+            setCurrentCourseDisplayValue(value);
+            setCurrentCourseValue(undefined);
           }}
-          onBlur={() =>
-            runValidationTasks('Category', currentCategoryDisplayValue)
-          }
-          errorMessage={errors.Category?.errorMessage}
-          hasError={errors.Category?.hasError}
-          ref={CategoryRef}
+          onBlur={() => runValidationTasks('Course', currentCourseDisplayValue)}
+          errorMessage={errors.Course?.errorMessage}
+          hasError={errors.Course?.hasError}
+          ref={CourseRef}
           labelHidden={true}
-          {...getOverrideProps(overrides, 'Category')}
-        ></Autocomplete>
-      </ArrayField>
-      <ArrayField
-        onChange={async (items) => {
-          let values = items;
-          if (onChange) {
-            const modelFields = {
-              title,
-              description,
-              image,
-              price,
-              isPublished,
-              Category,
-              Chapters: values
-            };
-            const result = onChange(modelFields);
-            values = result?.Chapters ?? values;
-          }
-          setChapters(values);
-          setCurrentChaptersValue(undefined);
-          setCurrentChaptersDisplayValue('');
-        }}
-        currentFieldValue={currentChaptersValue}
-        label={'Chapters'}
-        items={Chapters}
-        hasError={errors?.Chapters?.hasError}
-        runValidationTasks={async () =>
-          await runValidationTasks('Chapters', currentChaptersValue)
-        }
-        errorMessage={errors?.Chapters?.errorMessage}
-        getBadgeText={getDisplayValue.Chapters}
-        setFieldValue={(model) => {
-          setCurrentChaptersDisplayValue(
-            model ? getDisplayValue.Chapters(model) : ''
-          );
-          setCurrentChaptersValue(model);
-        }}
-        inputFieldRef={ChaptersRef}
-        defaultFieldValue={''}
-      >
-        <Autocomplete
-          label="Chapters"
-          isRequired={false}
-          isReadOnly={false}
-          placeholder="Search Chapter"
-          value={currentChaptersDisplayValue}
-          options={ChaptersRecords.map((r) => ({
-            id: getIDValue.Chapters?.(r),
-            label: getDisplayValue.Chapters?.(r)
-          }))}
-          isLoading={ChaptersLoading}
-          onSelect={({ id, label }) => {
-            setCurrentChaptersValue(
-              ChaptersRecords.find((r) =>
-                Object.entries(JSON.parse(id)).every(
-                  ([key, value]) => r[key] === value
-                )
-              )
-            );
-            setCurrentChaptersDisplayValue(label);
-            runValidationTasks('Chapters', label);
-          }}
-          onClear={() => {
-            setCurrentChaptersDisplayValue('');
-          }}
-          onChange={(e) => {
-            let { value } = e.target;
-            fetchChaptersRecords(value);
-            if (errors.Chapters?.hasError) {
-              runValidationTasks('Chapters', value);
-            }
-            setCurrentChaptersDisplayValue(value);
-            setCurrentChaptersValue(undefined);
-          }}
-          onBlur={() =>
-            runValidationTasks('Chapters', currentChaptersDisplayValue)
-          }
-          errorMessage={errors.Chapters?.errorMessage}
-          hasError={errors.Chapters?.hasError}
-          ref={ChaptersRef}
-          labelHidden={true}
-          {...getOverrideProps(overrides, 'Chapters')}
+          {...getOverrideProps(overrides, 'Course')}
         ></Autocomplete>
       </ArrayField>
       <Flex
@@ -848,7 +776,7 @@ export default function CourseUpdateForm(props) {
             event.preventDefault();
             resetStateValues();
           }}
-          isDisabled={!(idProp || courseModelProp)}
+          isDisabled={!(idProp || chapterModelProp)}
           {...getOverrideProps(overrides, 'ResetButton')}
         ></Button>
         <Flex
@@ -860,7 +788,7 @@ export default function CourseUpdateForm(props) {
             type="submit"
             variation="primary"
             isDisabled={
-              !(idProp || courseModelProp) ||
+              !(idProp || chapterModelProp) ||
               Object.values(errors).some((e) => e?.hasError)
             }
             {...getOverrideProps(overrides, 'SubmitButton')}

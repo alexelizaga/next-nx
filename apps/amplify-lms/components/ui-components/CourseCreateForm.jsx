@@ -21,9 +21,9 @@ import {
   useTheme
 } from '@aws-amplify/ui-react';
 import { fetchByPath, getOverrideProps, validateField } from './utils';
-import { generateClient } from '@aws-amplify/api';
-import { listCategories } from '@/amplify-lms/graphql/queries';
-import { createCourse } from '@/amplify-lms/graphql/mutations';
+import { generateClient } from 'aws-amplify/api';
+import { listCategories, listChapters } from '@/amplify-lms/graphql/queries';
+import { createCourse, updateChapter } from '@/amplify-lms/graphql/mutations';
 const client = generateClient();
 function ArrayField({
   items = [],
@@ -196,7 +196,8 @@ export default function CourseCreateForm(props) {
     image: '',
     price: '',
     isPublished: false,
-    Category: undefined
+    Category: undefined,
+    Chapters: []
   };
   const [title, setTitle] = React.useState(initialValues.title);
   const [description, setDescription] = React.useState(
@@ -210,6 +211,9 @@ export default function CourseCreateForm(props) {
   const [Category, setCategory] = React.useState(initialValues.Category);
   const [CategoryLoading, setCategoryLoading] = React.useState(false);
   const [CategoryRecords, setCategoryRecords] = React.useState([]);
+  const [Chapters, setChapters] = React.useState(initialValues.Chapters);
+  const [ChaptersLoading, setChaptersLoading] = React.useState(false);
+  const [ChaptersRecords, setChaptersRecords] = React.useState([]);
   const autocompleteLength = 10;
   const [errors, setErrors] = React.useState({});
   const resetStateValues = () => {
@@ -221,6 +225,9 @@ export default function CourseCreateForm(props) {
     setCategory(initialValues.Category);
     setCurrentCategoryValue(undefined);
     setCurrentCategoryDisplayValue('');
+    setChapters(initialValues.Chapters);
+    setCurrentChaptersValue(undefined);
+    setCurrentChaptersDisplayValue('');
     setErrors({});
   };
   const [currentCategoryDisplayValue, setCurrentCategoryDisplayValue] =
@@ -228,16 +235,28 @@ export default function CourseCreateForm(props) {
   const [currentCategoryValue, setCurrentCategoryValue] =
     React.useState(undefined);
   const CategoryRef = React.createRef();
+  const [currentChaptersDisplayValue, setCurrentChaptersDisplayValue] =
+    React.useState('');
+  const [currentChaptersValue, setCurrentChaptersValue] =
+    React.useState(undefined);
+  const ChaptersRef = React.createRef();
   const getIDValue = {
-    Category: (r) => JSON.stringify({ id: r?.id })
+    Category: (r) => JSON.stringify({ id: r?.id }),
+    Chapters: (r) => JSON.stringify({ id: r?.id })
   };
   const CategoryIdSet = new Set(
     Array.isArray(Category)
       ? Category.map((r) => getIDValue.Category?.(r))
       : getIDValue.Category?.(Category)
   );
+  const ChaptersIdSet = new Set(
+    Array.isArray(Chapters)
+      ? Chapters.map((r) => getIDValue.Chapters?.(r))
+      : getIDValue.Chapters?.(Chapters)
+  );
   const getDisplayValue = {
-    Category: (r) => `${r?.icon ? r?.icon + ' - ' : ''}${r?.id}`
+    Category: (r) => `${r?.icon ? r?.icon + ' - ' : ''}${r?.id}`,
+    Chapters: (r) => `${r?.title ? r?.title + ' - ' : ''}${r?.id}`
   };
   const validations = {
     title: [{ type: 'Required' }],
@@ -245,7 +264,8 @@ export default function CourseCreateForm(props) {
     image: [],
     price: [],
     isPublished: [],
-    Category: []
+    Category: [],
+    Chapters: []
   };
   const runValidationTasks = async (
     fieldName,
@@ -293,8 +313,38 @@ export default function CourseCreateForm(props) {
     setCategoryRecords(newOptions.slice(0, autocompleteLength));
     setCategoryLoading(false);
   };
+  const fetchChaptersRecords = async (value) => {
+    setChaptersLoading(true);
+    const newOptions = [];
+    let newNext = '';
+    while (newOptions.length < autocompleteLength && newNext != null) {
+      const variables = {
+        limit: autocompleteLength * 5,
+        filter: {
+          or: [{ title: { contains: value } }, { id: { contains: value } }]
+        }
+      };
+      if (newNext) {
+        variables['nextToken'] = newNext;
+      }
+      const result = (
+        await client.graphql({
+          query: listChapters.replaceAll('__typename', ''),
+          variables
+        })
+      )?.data?.listChapters?.items;
+      var loaded = result.filter(
+        (item) => !ChaptersIdSet.has(getIDValue.Chapters?.(item))
+      );
+      newOptions.push(...loaded);
+      newNext = result.nextToken;
+    }
+    setChaptersRecords(newOptions.slice(0, autocompleteLength));
+    setChaptersLoading(false);
+  };
   React.useEffect(() => {
     fetchCategoryRecords('');
+    fetchChaptersRecords('');
   }, []);
   return (
     <Grid
@@ -310,7 +360,8 @@ export default function CourseCreateForm(props) {
           image,
           price,
           isPublished,
-          Category
+          Category,
+          Chapters
         };
         const validationResponses = await Promise.all(
           Object.keys(validations).reduce((promises, fieldName) => {
@@ -356,14 +407,33 @@ export default function CourseCreateForm(props) {
             isPublished: modelFields.isPublished,
             categoryId: modelFields?.Category?.id
           };
-          await client.graphql({
-            query: createCourse.replaceAll('__typename', ''),
-            variables: {
-              input: {
-                ...modelFieldsToSave
+          const course = (
+            await client.graphql({
+              query: createCourse.replaceAll('__typename', ''),
+              variables: {
+                input: {
+                  ...modelFieldsToSave
+                }
               }
-            }
-          });
+            })
+          )?.data?.createCourse;
+          const promises = [];
+          promises.push(
+            ...Chapters.reduce((promises, original) => {
+              promises.push(
+                client.graphql({
+                  query: updateChapter.replaceAll('__typename', ''),
+                  variables: {
+                    input: {
+                      id: original.id
+                    }
+                  }
+                })
+              );
+              return promises;
+            }, [])
+          );
+          await Promise.all(promises);
           if (onSuccess) {
             onSuccess(modelFields);
           }
@@ -394,7 +464,8 @@ export default function CourseCreateForm(props) {
               image,
               price,
               isPublished,
-              Category
+              Category,
+              Chapters
             };
             const result = onChange(modelFields);
             value = result?.title ?? value;
@@ -423,7 +494,8 @@ export default function CourseCreateForm(props) {
               image,
               price,
               isPublished,
-              Category
+              Category,
+              Chapters
             };
             const result = onChange(modelFields);
             value = result?.description ?? value;
@@ -452,7 +524,8 @@ export default function CourseCreateForm(props) {
               image: value,
               price,
               isPublished,
-              Category
+              Category,
+              Chapters
             };
             const result = onChange(modelFields);
             value = result?.image ?? value;
@@ -485,7 +558,8 @@ export default function CourseCreateForm(props) {
               image,
               price: value,
               isPublished,
-              Category
+              Category,
+              Chapters
             };
             const result = onChange(modelFields);
             value = result?.price ?? value;
@@ -514,7 +588,8 @@ export default function CourseCreateForm(props) {
               image,
               price,
               isPublished: value,
-              Category
+              Category,
+              Chapters
             };
             const result = onChange(modelFields);
             value = result?.isPublished ?? value;
@@ -540,7 +615,8 @@ export default function CourseCreateForm(props) {
               image,
               price,
               isPublished,
-              Category: value
+              Category: value,
+              Chapters
             };
             const result = onChange(modelFields);
             value = result?.Category ?? value;
@@ -611,6 +687,88 @@ export default function CourseCreateForm(props) {
           ref={CategoryRef}
           labelHidden={true}
           {...getOverrideProps(overrides, 'Category')}
+        ></Autocomplete>
+      </ArrayField>
+      <ArrayField
+        onChange={async (items) => {
+          let values = items;
+          if (onChange) {
+            const modelFields = {
+              title,
+              description,
+              image,
+              price,
+              isPublished,
+              Category,
+              Chapters: values
+            };
+            const result = onChange(modelFields);
+            values = result?.Chapters ?? values;
+          }
+          setChapters(values);
+          setCurrentChaptersValue(undefined);
+          setCurrentChaptersDisplayValue('');
+        }}
+        currentFieldValue={currentChaptersValue}
+        label={'Chapters'}
+        items={Chapters}
+        hasError={errors?.Chapters?.hasError}
+        runValidationTasks={async () =>
+          await runValidationTasks('Chapters', currentChaptersValue)
+        }
+        errorMessage={errors?.Chapters?.errorMessage}
+        getBadgeText={getDisplayValue.Chapters}
+        setFieldValue={(model) => {
+          setCurrentChaptersDisplayValue(
+            model ? getDisplayValue.Chapters(model) : ''
+          );
+          setCurrentChaptersValue(model);
+        }}
+        inputFieldRef={ChaptersRef}
+        defaultFieldValue={''}
+      >
+        <Autocomplete
+          label="Chapters"
+          isRequired={false}
+          isReadOnly={false}
+          placeholder="Search Chapter"
+          value={currentChaptersDisplayValue}
+          options={ChaptersRecords.map((r) => ({
+            id: getIDValue.Chapters?.(r),
+            label: getDisplayValue.Chapters?.(r)
+          }))}
+          isLoading={ChaptersLoading}
+          onSelect={({ id, label }) => {
+            setCurrentChaptersValue(
+              ChaptersRecords.find((r) =>
+                Object.entries(JSON.parse(id)).every(
+                  ([key, value]) => r[key] === value
+                )
+              )
+            );
+            setCurrentChaptersDisplayValue(label);
+            runValidationTasks('Chapters', label);
+          }}
+          onClear={() => {
+            setCurrentChaptersDisplayValue('');
+          }}
+          onChange={(e) => {
+            let { value } = e.target;
+            fetchChaptersRecords(value);
+            if (errors.Chapters?.hasError) {
+              runValidationTasks('Chapters', value);
+            }
+            setCurrentChaptersDisplayValue(value);
+            setCurrentChaptersValue(undefined);
+          }}
+          onBlur={() =>
+            runValidationTasks('Chapters', currentChaptersDisplayValue)
+          }
+          errorMessage={errors.Chapters?.errorMessage}
+          hasError={errors.Chapters?.hasError}
+          ref={ChaptersRef}
+          labelHidden={true}
+          {...getOverrideProps(overrides, 'Chapters')}
         ></Autocomplete>
       </ArrayField>
       <Flex

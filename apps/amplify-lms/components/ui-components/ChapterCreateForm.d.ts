@@ -11,7 +11,7 @@ import {
   SwitchFieldProps,
   TextFieldProps,
 } from '@aws-amplify/ui-react';
-import { Category, Chapter, Course } from '@/amplify-lms/API.js';
+import { Course } from '../../API.js';
 export declare type EscapeHatchProps = {
   [elementHierarchy: string]: Record<string, unknown>;
 } | null;
@@ -30,56 +30,61 @@ export declare type ValidationFunction<T> = (
   value: T,
   validationResponse: ValidationResponse
 ) => ValidationResponse | Promise<ValidationResponse>;
-export declare type CourseUpdateFormInputValues = {
+export declare type ChapterCreateFormInputValues = {
   title?: string;
   description?: string;
-  image?: string;
-  price?: number;
+  video?: string;
+  videoUrl?: string;
+  videoProvider?: string;
+  position?: number;
   isPublished?: boolean;
-  Category?: Category;
-  Chapters?: Chapter[];
+  isFree?: boolean;
+  Course?: Course;
 };
-export declare type CourseUpdateFormValidationValues = {
+export declare type ChapterCreateFormValidationValues = {
   title?: ValidationFunction<string>;
   description?: ValidationFunction<string>;
-  image?: ValidationFunction<string>;
-  price?: ValidationFunction<number>;
+  video?: ValidationFunction<string>;
+  videoUrl?: ValidationFunction<string>;
+  videoProvider?: ValidationFunction<string>;
+  position?: ValidationFunction<number>;
   isPublished?: ValidationFunction<boolean>;
-  Category?: ValidationFunction<Category>;
-  Chapters?: ValidationFunction<Chapter>;
+  isFree?: ValidationFunction<boolean>;
+  Course?: ValidationFunction<Course>;
 };
 export declare type PrimitiveOverrideProps<T> = Partial<T> &
   React.DOMAttributes<HTMLDivElement>;
-export declare type CourseUpdateFormOverridesProps = {
-  CourseUpdateFormGrid?: PrimitiveOverrideProps<GridProps>;
+export declare type ChapterCreateFormOverridesProps = {
+  ChapterCreateFormGrid?: PrimitiveOverrideProps<GridProps>;
   title?: PrimitiveOverrideProps<TextFieldProps>;
   description?: PrimitiveOverrideProps<TextFieldProps>;
-  image?: PrimitiveOverrideProps<TextFieldProps>;
-  price?: PrimitiveOverrideProps<TextFieldProps>;
+  video?: PrimitiveOverrideProps<TextFieldProps>;
+  videoUrl?: PrimitiveOverrideProps<TextFieldProps>;
+  videoProvider?: PrimitiveOverrideProps<TextFieldProps>;
+  position?: PrimitiveOverrideProps<TextFieldProps>;
   isPublished?: PrimitiveOverrideProps<SwitchFieldProps>;
-  Category?: PrimitiveOverrideProps<AutocompleteProps>;
-  Chapters?: PrimitiveOverrideProps<AutocompleteProps>;
+  isFree?: PrimitiveOverrideProps<SwitchFieldProps>;
+  Course?: PrimitiveOverrideProps<AutocompleteProps>;
 } & EscapeHatchProps;
-export declare type CourseUpdateFormProps = React.PropsWithChildren<
+export declare type ChapterCreateFormProps = React.PropsWithChildren<
   {
-    overrides?: CourseUpdateFormOverridesProps | undefined | null;
+    overrides?: ChapterCreateFormOverridesProps | undefined | null;
   } & {
-    id?: string;
-    course?: Course;
+    clearOnSuccess?: boolean;
     onSubmit?: (
-      fields: CourseUpdateFormInputValues
-    ) => CourseUpdateFormInputValues;
-    onSuccess?: (fields: CourseUpdateFormInputValues) => void;
+      fields: ChapterCreateFormInputValues
+    ) => ChapterCreateFormInputValues;
+    onSuccess?: (fields: ChapterCreateFormInputValues) => void;
     onError?: (
-      fields: CourseUpdateFormInputValues,
+      fields: ChapterCreateFormInputValues,
       errorMessage: string
     ) => void;
     onChange?: (
-      fields: CourseUpdateFormInputValues
-    ) => CourseUpdateFormInputValues;
-    onValidate?: CourseUpdateFormValidationValues;
+      fields: ChapterCreateFormInputValues
+    ) => ChapterCreateFormInputValues;
+    onValidate?: ChapterCreateFormValidationValues;
   } & React.CSSProperties
 >;
-export default function CourseUpdateForm(
-  props: CourseUpdateFormProps
+export default function ChapterCreateForm(
+  props: ChapterCreateFormProps
 ): React.ReactElement;
