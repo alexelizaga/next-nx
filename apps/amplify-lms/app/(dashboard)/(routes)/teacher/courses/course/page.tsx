@@ -58,7 +58,7 @@ const CoursePage = () => {
   const categoryOptions = React.useMemo(() => {
     return categories?.map((category) => ({
       label: category.name,
-      value: category.id
+      id: category.id
     }));
   }, [categories]);
 

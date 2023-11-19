@@ -2,31 +2,27 @@ import React from 'react';
 import { Autocomplete } from '@aws-amplify/ui-react';
 
 interface ComboboxProps {
-  options: { label: string; value: string }[];
+  options?: { label: string; id: string }[];
   value?: string;
-  onChange: (value: string) => void;
+  onChange: (valor: string) => void;
 }
 
 const Combobox = ({
   options,
   value,
-  onChange: onChangeValue
+  onChange: onSelectValue
 }: ComboboxProps) => {
-  const onChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    onChangeValue(event.target.value);
+  const onSelect = (option: { id: string; label: string }) => {
+    onSelectValue(option.id);
   };
-
-  const autocompleteOptions = React.useMemo(() => {
-    return options.map((option) => ({ id: option.value, label: option.label }));
-  }, [options]);
 
   return (
     <Autocomplete
       label="ComboBox"
       placeholder="Select option..."
-      options={autocompleteOptions}
+      options={options ?? []}
       value={value}
-      onChange={onChange}
+      onSelect={onSelect}
     />
   );
 };
