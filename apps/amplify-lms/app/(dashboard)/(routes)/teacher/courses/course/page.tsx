@@ -8,12 +8,13 @@ import toast from 'react-hot-toast';
 import { CircleDollarSign, LayoutDashboard, ListChecks } from 'lucide-react';
 
 import {
+  CreateChapterMutation,
   GetCourseQuery,
   ListCategoriesQuery,
   UpdateCourseMutation
 } from '@/amplify-lms/API';
 import * as queries from '@/amplify-lms/graphql/queries';
-import { updateCourse } from '@/amplify-lms/graphql/mutations';
+import { createChapter, updateCourse } from '@/amplify-lms/graphql/mutations';
 import { CategoryValues, CourseValues } from '@/amplify-lms/types/types';
 import IconBadge from '@/amplify-lms/components/IconBadge';
 
@@ -22,6 +23,7 @@ import DescriptionForm from './_components/description-form';
 import ImageForm from './_components/image-form';
 import CategoryForm from './_components/category-form';
 import PriceForm from './_components/price-form';
+import ChaptersForm from './_components/chapters-form';
 
 const CoursePage = () => {
   const router = useRouter();
@@ -32,19 +34,26 @@ const CoursePage = () => {
 
   const courseId = searchParams.get('id');
 
+  const getCourseById = React.useCallback(
+    (courseId: string | null | undefined) => {
+      if (!courseId) return;
+      API.graphql<GraphQLQuery<GetCourseQuery>>({
+        query: queries.getCourse,
+        variables: { id: courseId }
+      })
+        .then(({ data }) => {
+          if (!data?.getCourse) router.push('/');
+          setCourse(data?.getCourse as CourseValues);
+        })
+        .finally(() => setLoading(false));
+    },
+    [router]
+  );
+
   React.useEffect(() => {
     setLoading(true);
-    if (!courseId) return;
-    API.graphql<GraphQLQuery<GetCourseQuery>>({
-      query: queries.getCourse,
-      variables: { id: courseId }
-    })
-      .then(({ data }) => {
-        if (!data?.getCourse) router.push('/');
-        setCourse(data?.getCourse as CourseValues);
-      })
-      .finally(() => setLoading(false));
-  }, [courseId, router]);
+    getCourseById(courseId);
+  }, [courseId, getCourseById, router]);
 
   React.useEffect(() => {
     API.graphql<GraphQLQuery<ListCategoriesQuery>>({
@@ -68,7 +77,8 @@ const CoursePage = () => {
     course?.description,
     course?.image,
     course?.price,
-    course?.categoryId
+    course?.categoryId,
+    course?.Chapters?.items.some((chapter) => chapter?.isPublished)
   ];
 
   const totalFields = requiredFields.length;
@@ -89,6 +99,58 @@ const CoursePage = () => {
       });
       setCourse(data?.updateCourse as CourseValues);
       toast.success('Course updated');
+    } catch (error) {
+      toast.error('Something went wrong');
+    }
+  };
+
+  const onSubmitChapter = async (values: Record<string, string>) => {
+    try {
+      await API.graphql<GraphQLQuery<CreateChapterMutation>>({
+        query: createChapter,
+        variables: {
+          input: {
+            ...values,
+            position: course?.Chapters?.items.length
+              ? course?.Chapters?.items.length + 1
+              : 1,
+            isPublished: false,
+            isFree: false,
+            courseId: course?.id
+          }
+        }
+      });
+
+      getCourseById(course?.id);
+      toast.success('Chapter created');
+    } catch (error) {
+      toast.error('Something went wrong');
+    }
+  };
+
+  const onReorderChapter = async (
+    updateData: { id: string; position: number }[]
+  ) => {
+    try {
+      console.log({ updateData });
+
+      // await API.graphql<GraphQLQuery<CreateChapterMutation>>({
+      //   query: createChapter,
+      //   variables: {
+      //     input: {
+      //       ...values,
+      //       position: course?.Chapters?.items.length
+      //         ? course?.Chapters?.items.length + 1
+      //         : 1,
+      //       isPublished: false,
+      //       isFree: false,
+      //       courseId: course?.id
+      //     }
+      //   }
+      // });
+
+      // getCourseById(course?.id);
+      toast.success('Chapter reorder');
     } catch (error) {
       toast.error('Something went wrong');
     }
@@ -133,7 +195,11 @@ const CoursePage = () => {
               <IconBadge icon={ListChecks} />
               <h2 className="text-xl">Course chapters</h2>
             </div>
-            <div>TODO: CHAPTERS</div>
+            <ChaptersForm
+              initialData={course}
+              onSubmit={onSubmitChapter}
+              onReorder={onReorderChapter}
+            />
           </div>
           <div>
             <div className="flex items-center gap-x-2">

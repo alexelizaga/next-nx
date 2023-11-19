@@ -1,4 +1,4 @@
-import { Category, Course } from '@/amplify-lms/API';
+import { Category, Chapter, Course } from '@/amplify-lms/API';
 
 export type CourseValues = Pick<
   Course,
@@ -8,8 +8,22 @@ export type CourseValues = Pick<
   | 'image'
   | 'price'
   | 'categoryId'
+  | 'Chapters'
+  | 'isPublished'
   | 'createdAt'
   | 'updatedAt'
 >;
 
 export type CategoryValues = Pick<Category, 'id' | 'icon' | 'name'>;
+
+export type ChapterValues = Pick<
+  Chapter,
+  | 'id'
+  | 'title'
+  | 'description'
+  | 'video'
+  | 'videoUrl'
+  | 'videoProvider'
+  | 'isPublished'
+  | 'isFree'
+>;
