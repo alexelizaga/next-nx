@@ -5,15 +5,21 @@ import { useSearchParams, useRouter } from 'next/navigation';
 import { API } from 'aws-amplify';
 import { GraphQLQuery } from '@aws-amplify/api';
 import toast from 'react-hot-toast';
-import { CircleDollarSign, LayoutDashboard, ListChecks } from 'lucide-react';
+import {
+  CircleDollarSign,
+  LayoutDashboard,
+  ListChecks,
+  Loader2
+} from 'lucide-react';
 
 import {
+  CreateChapterMutation,
   GetCourseQuery,
   ListCategoriesQuery,
   UpdateCourseMutation
 } from '@/amplify-lms/API';
 import * as queries from '@/amplify-lms/graphql/queries';
-import { updateCourse } from '@/amplify-lms/graphql/mutations';
+import { createChapter, updateCourse } from '@/amplify-lms/graphql/mutations';
 import { CategoryValues, CourseValues } from '@/amplify-lms/types/types';
 import IconBadge from '@/amplify-lms/components/IconBadge';
 
@@ -22,6 +28,7 @@ import DescriptionForm from './_components/description-form';
 import ImageForm from './_components/image-form';
 import CategoryForm from './_components/category-form';
 import PriceForm from './_components/price-form';
+import ChaptersForm from './_components/chapters-form';
 
 const CoursePage = () => {
   const router = useRouter();
@@ -32,19 +39,26 @@ const CoursePage = () => {
 
   const courseId = searchParams.get('id');
 
+  const getCourseById = React.useCallback(
+    (courseId: string | null | undefined) => {
+      if (!courseId) return;
+      API.graphql<GraphQLQuery<GetCourseQuery>>({
+        query: queries.getCourse,
+        variables: { id: courseId }
+      })
+        .then(({ data }) => {
+          if (!data?.getCourse) router.push('/');
+          setCourse(data?.getCourse as CourseValues);
+        })
+        .finally(() => setLoading(false));
+    },
+    [router]
+  );
+
   React.useEffect(() => {
     setLoading(true);
-    if (!courseId) return;
-    API.graphql<GraphQLQuery<GetCourseQuery>>({
-      query: queries.getCourse,
-      variables: { id: courseId }
-    })
-      .then(({ data }) => {
-        if (!data?.getCourse) router.push('/');
-        setCourse(data?.getCourse as CourseValues);
-      })
-      .finally(() => setLoading(false));
-  }, [courseId, router]);
+    getCourseById(courseId);
+  }, [courseId, getCourseById, router]);
 
   React.useEffect(() => {
     API.graphql<GraphQLQuery<ListCategoriesQuery>>({
@@ -68,7 +82,8 @@ const CoursePage = () => {
     course?.description,
     course?.image,
     course?.price,
-    course?.categoryId
+    course?.categoryId,
+    course?.Chapters?.items.some((chapter) => chapter?.isPublished)
   ];
 
   const totalFields = requiredFields.length;
@@ -94,12 +109,36 @@ const CoursePage = () => {
     }
   };
 
-  if (loading) {
-    return <div>Loading ...</div>;
-  }
+  const onSubmitChapter = async (values: Record<string, string>) => {
+    try {
+      await API.graphql<GraphQLQuery<CreateChapterMutation>>({
+        query: createChapter,
+        variables: {
+          input: {
+            ...values,
+            position: course?.Chapters?.items.length
+              ? course?.Chapters?.items.length + 1
+              : 1,
+            isPublished: false,
+            isFree: false,
+            courseId: course?.id
+          }
+        }
+      });
 
-  if (!course) {
-    return <div>There is no course</div>;
+      getCourseById(course?.id);
+      toast.success('Chapter created');
+    } catch (error) {
+      toast.error('Something went wrong');
+    }
+  };
+
+  if (loading || !course) {
+    return (
+      <div className="h-full flex items-center justify-center">
+        <Loader2 className="animate-spin h-6 w-6 text-sky-700" />
+      </div>
+    );
   }
 
   return (
@@ -133,7 +172,7 @@ const CoursePage = () => {
               <IconBadge icon={ListChecks} />
               <h2 className="text-xl">Course chapters</h2>
             </div>
-            <div>TODO: CHAPTERS</div>
+            <ChaptersForm initialData={course} onSubmit={onSubmitChapter} />
           </div>
           <div>
             <div className="flex items-center gap-x-2">
