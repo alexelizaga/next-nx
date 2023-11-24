@@ -20,6 +20,7 @@ export type ChapterValues = Pick<
   Chapter,
   | 'id'
   | 'title'
+  | 'position'
   | 'description'
   | 'video'
   | 'videoUrl'

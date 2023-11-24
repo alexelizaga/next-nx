@@ -1,22 +1,26 @@
 'use client';
 
 import React from 'react';
+import { useRouter } from 'next/navigation';
 import * as z from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
-import { PlusCircle } from 'lucide-react';
+import { API } from 'aws-amplify';
+import { GraphQLQuery } from '@aws-amplify/api';
 import { Button, Flex, Input } from '@aws-amplify/ui-react';
+import toast from 'react-hot-toast';
+import { Loader2, PlusCircle } from 'lucide-react';
 
 import { ChapterValues, CourseValues } from '@/amplify-lms/types/types';
 import { cn } from '@/amplify-lms/lib/utils';
+import { UpdateChapterMutation } from '@/amplify-lms/API';
+import { updateChapter } from '@/amplify-lms/graphql/mutations';
 
 import ChaptersList from './chapters-list';
-import toast from 'react-hot-toast';
 
 interface ChaptersFormProps {
   initialData: CourseValues;
   onSubmit: (values: z.infer<typeof formSchema>) => void;
-  onReorder: (updateData: { id: string; position: number }[]) => void;
 }
 
 const formSchema = z.object({
@@ -25,9 +29,9 @@ const formSchema = z.object({
 
 const ChaptersForm = ({
   initialData,
-  onSubmit: onSubmitChapter,
-  onReorder: onReorderChapters
+  onSubmit: onSubmitChapter
 }: ChaptersFormProps) => {
+  const router = useRouter();
   const [isCreating, setIsCreating] = React.useState(false);
   const [isUpdating, setIsUpdating] = React.useState(false);
 
@@ -51,7 +55,20 @@ const ChaptersForm = ({
   const onReorder = async (updateData: { id: string; position: number }[]) => {
     try {
       setIsUpdating(true);
-      onReorderChapters(updateData);
+
+      for (const item of updateData) {
+        await API.graphql<GraphQLQuery<UpdateChapterMutation>>({
+          query: updateChapter,
+          variables: {
+            input: {
+              id: item.id,
+              position: item.position
+            }
+          }
+        });
+      }
+
+      toast.success('Chapter reorder');
     } catch {
       toast.error('Something went wrong');
     } finally {
@@ -59,8 +76,19 @@ const ChaptersForm = ({
     }
   };
 
+  const onEdit = (id: string) => {
+    router.push(
+      `/teacher/courses/course/chapters/chapter?courseId=${initialData.id}&chapterId=${id}`
+    );
+  };
+
   return (
-    <div className="mt-6 border bg-slate-100 rounded-md p-4">
+    <div className="relative mt-6 border bg-slate-100 rounded-md p-4">
+      {isUpdating && (
+        <div className="absolute h-full w-full bg-slate-500/20 top-0 right-0 rounded-md flex items-center justify-center">
+          <Loader2 className="animate-spin h-6 w-6 text-sky-700" />
+        </div>
+      )}
       <div className="font-medium flex items-center justify-between">
         Chapters
         <Button onClick={toggleCreating} variation="link" size="small">
@@ -104,7 +132,7 @@ const ChaptersForm = ({
         >
           {!initialData.Chapters?.items.length && 'No chapters'}
           <ChaptersList
-            onEdit={() => null}
+            onEdit={onEdit}
             onReorder={onReorder}
             items={(initialData.Chapters?.items as ChapterValues[]) ?? []}
           />

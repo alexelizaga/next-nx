@@ -28,6 +28,7 @@ const ChaptersList = ({ items, onEdit, onReorder }: ChaptersListProps) => {
   }, []);
 
   React.useEffect(() => {
+    items.sort((a, b) => (a?.position || 0) - (b?.position || 0));
     setChapters(items);
   }, [items]);
 

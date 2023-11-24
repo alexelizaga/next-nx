@@ -5,7 +5,12 @@ import { useSearchParams, useRouter } from 'next/navigation';
 import { API } from 'aws-amplify';
 import { GraphQLQuery } from '@aws-amplify/api';
 import toast from 'react-hot-toast';
-import { CircleDollarSign, LayoutDashboard, ListChecks } from 'lucide-react';
+import {
+  CircleDollarSign,
+  LayoutDashboard,
+  ListChecks,
+  Loader2
+} from 'lucide-react';
 
 import {
   CreateChapterMutation,
@@ -128,40 +133,12 @@ const CoursePage = () => {
     }
   };
 
-  const onReorderChapter = async (
-    updateData: { id: string; position: number }[]
-  ) => {
-    try {
-      console.log({ updateData });
-
-      // await API.graphql<GraphQLQuery<CreateChapterMutation>>({
-      //   query: createChapter,
-      //   variables: {
-      //     input: {
-      //       ...values,
-      //       position: course?.Chapters?.items.length
-      //         ? course?.Chapters?.items.length + 1
-      //         : 1,
-      //       isPublished: false,
-      //       isFree: false,
-      //       courseId: course?.id
-      //     }
-      //   }
-      // });
-
-      // getCourseById(course?.id);
-      toast.success('Chapter reorder');
-    } catch (error) {
-      toast.error('Something went wrong');
-    }
-  };
-
-  if (loading) {
-    return <div>Loading ...</div>;
-  }
-
-  if (!course) {
-    return <div>There is no course</div>;
+  if (loading || !course) {
+    return (
+      <div className="h-full flex items-center justify-center">
+        <Loader2 className="animate-spin h-6 w-6 text-sky-700" />
+      </div>
+    );
   }
 
   return (
@@ -195,11 +172,7 @@ const CoursePage = () => {
               <IconBadge icon={ListChecks} />
               <h2 className="text-xl">Course chapters</h2>
             </div>
-            <ChaptersForm
-              initialData={course}
-              onSubmit={onSubmitChapter}
-              onReorder={onReorderChapter}
-            />
+            <ChaptersForm initialData={course} onSubmit={onSubmitChapter} />
           </div>
           <div>
             <div className="flex items-center gap-x-2">
