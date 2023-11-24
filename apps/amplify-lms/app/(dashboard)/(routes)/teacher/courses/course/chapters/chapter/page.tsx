@@ -15,6 +15,7 @@ import IconBadge from '@/amplify-lms/components/IconBadge';
 import { updateChapter } from '@/amplify-lms/graphql/mutations';
 
 import ChapterTitleForm from './_components/chapter-title-form';
+import ChapterDescriptionForm from './_components/chapter-description-form';
 
 const ChapterIdPage = () => {
   const router = useRouter();
@@ -109,6 +110,7 @@ const ChapterIdPage = () => {
             </div>
           </div>
           <ChapterTitleForm initialData={chapter} onSubmit={onSubmit} />
+          <ChapterDescriptionForm initialData={chapter} onSubmit={onSubmit} />
         </div>
       </div>
     </div>
